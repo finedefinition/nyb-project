@@ -40,6 +40,6 @@ build/
 
 ### Custom ###
 .env
-!**/src/main/resources/liquibase.properties
+/backend/src/main/resources/liquibase.properties
 
 
