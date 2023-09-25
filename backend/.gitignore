@@ -36,4 +36,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Custom ###
 .env
+!**/src/main/resources/liquibase.properties
