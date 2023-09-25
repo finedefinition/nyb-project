@@ -9,13 +9,13 @@
         <dbms type="mysql"/>
     </preConditions>
 
-    <changeSet id="0" author="finedefinition">
+    <changeSet id="0" author="sergii_bezrukov">
         <tagDatabase tag="db_init"/>
     </changeSet>
 
     <include file="v-1.0/db.changelog-v.1.0.xml" relativeToChangelogFile="true"/>
 
-    <changeSet id="5" author="finedefinition">
+    <changeSet id="5" author="sergii_bezrukov">
         <tagDatabase tag="v.1.0"/>
     </changeSet>
     
