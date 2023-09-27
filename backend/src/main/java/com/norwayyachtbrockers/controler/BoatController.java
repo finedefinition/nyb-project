@@ -2,22 +2,16 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.service.BoatService;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Comparator;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/boats")
 public class BoatController {
-    BoatService boatService;
+    private final BoatService boatService;
 
     public BoatController(BoatService boatService) {
         this.boatService = boatService;
@@ -39,6 +33,5 @@ public class BoatController {
     public List<Boat> findAll() {
         return boatService.findAll();
     }
-
 
 }

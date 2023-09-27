@@ -1,7 +1,6 @@
 package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.model.Boat;
-
 import java.util.List;
 
 public interface BoatService {

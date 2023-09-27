@@ -19,12 +19,12 @@ public class AmazonS3Config {
 
     @Bean
     public AmazonS3 getAmazonS3Client() {
-        final BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKeyId,
+        final BasicAWSCredentials credentials = new BasicAWSCredentials(accessKeyId,
                 accessKeySecret);
 
         return AmazonS3ClientBuilder
                 .standard()
-                .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(s3RegionName)
                 .build();
     }
