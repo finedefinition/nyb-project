@@ -2,9 +2,8 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.repository.BoatRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BoatServiceImpl implements BoatService {
