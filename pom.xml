@@ -6,10 +6,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Parent Bundle</name>
-    <url>http://maven.apache.org</url>
-
     <modules>
         <module>frontend</module>
         <module>backend</module>
     </modules>
+
 </project>

@@ -3,9 +3,8 @@ package com.norwayyachtbrockers.config;
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.service.BoatServiceImpl;
 import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
+import org.springframework.stereotype.Component;
 
 @Component
 public class DataInitializer {
