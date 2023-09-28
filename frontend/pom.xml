@@ -8,6 +8,7 @@
         <groupId>com.norwayyachtbrokers</groupId>
         <artifactId>nyb-project</artifactId>
         <version>1.0</version>
+        <relativePath>/../pom.xml</relativePath>
     </parent>
     <artifactId>frontend</artifactId>
     <version>1.0</version>
