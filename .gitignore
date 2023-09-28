@@ -39,7 +39,7 @@ build/
 .DS_Store
 
 ### Custom ###
-#.env
-#/backend/src/main/resources/liquibase.properties
-#
-#
+.env
+/backend/src/main/resources/liquibase.properties
+
+
