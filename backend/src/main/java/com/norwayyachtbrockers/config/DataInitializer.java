@@ -16,7 +16,7 @@ public class DataInitializer {
 
     @PostConstruct
     public void inject() {
-        Boat boatOne = new Boat("Julia", new BigDecimal(80000), "Beneteau", 2016);
+        Boat boatOne = new Boat("Serenity", new BigDecimal(180000), "Amel", 2016);
         boatService.save(boatOne);
     }
 }
