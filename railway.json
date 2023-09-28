@@ -5,7 +5,7 @@
   },
   "deploy": {
     "numReplicas": 1,
-    "startCommand": "java  $JAVA_OPTS -jar /target/*jar",
+    "startCommand": "java  $JAVA_OPTS -jar backend/target/backend-1.0.jar",
     "sleepApplication": false,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
