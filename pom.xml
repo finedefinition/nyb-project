@@ -10,5 +10,7 @@
         <module>frontend</module>
         <module>backend</module>
     </modules>
-
+    <build>
+        <directory>${project.basedir}/target</directory>
+    </build>
 </project>
