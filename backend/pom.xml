@@ -115,6 +115,7 @@
                     <mainClass>com.norwayyachtbrockers.Application</mainClass>
                     <layout>JAR</layout>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.liquibase</groupId>
