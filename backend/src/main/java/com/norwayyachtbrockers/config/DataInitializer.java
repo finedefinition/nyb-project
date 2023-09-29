@@ -20,7 +20,7 @@ public class DataInitializer {
     @PostConstruct
     public void inject() {
         Boat boatOne = new Boat("Serenity", new BigDecimal(180000),
-                "Amel", 2016, LocalDateTime.now(Clock.systemUTC()));
+                "Amel", 2016, LocalDateTime.now());
         boatService.save(boatOne);
     }
 }
