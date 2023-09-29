@@ -27,13 +27,14 @@ public class BoatController {
     @GetMapping("/{boatId}")
     public ResponseEntity<Boat> getBoatById(@PathVariable Long boatId) {
         Boat boat = boatService.findById(boatId);
+
         if (boat == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(boat);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Boat> findAll() {
         return boatService.findAll();
     }
