@@ -1,0 +1,3 @@
+ALTER TABLE boats
+DROP COLUMN created_at
+GO

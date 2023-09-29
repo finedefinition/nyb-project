@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "boats")
@@ -27,14 +28,18 @@ public class Boat {
     @Column(name = "year", nullable = false)
     private int boatYear;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
     public Boat() {
     }
 
-    public Boat(String boatName, BigDecimal boatPrice, String boatBrand, int boatYear) {
+    public Boat(String boatName, BigDecimal boatPrice, String boatBrand, int boatYear, LocalDateTime createdAt) {
         this.boatName = boatName;
         this.boatPrice = boatPrice;
         this.boatBrand = boatBrand;
         this.boatYear = boatYear;
+        this.createdAt = createdAt;
     }
 
     public Long getId() {
@@ -75,5 +80,13 @@ public class Boat {
 
     public void setBoatYear(int boatYear) {
         this.boatYear = boatYear;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

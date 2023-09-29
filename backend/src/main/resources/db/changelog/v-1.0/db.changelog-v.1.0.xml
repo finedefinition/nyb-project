@@ -6,5 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="01-changeset-boats-table.xml" relativeToChangelogFile="true" />
+    <include file="10-changset-add-created_at.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>
