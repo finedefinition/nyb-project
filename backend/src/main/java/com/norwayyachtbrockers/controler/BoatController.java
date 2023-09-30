@@ -2,8 +2,14 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.service.BoatService;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,8 +41,23 @@ public class BoatController {
     }
 
     @GetMapping
-    public List<Boat> findAll() {
-        return boatService.findAll();
+    public ResponseEntity<Map<String, Object>> findAll() {
+        List<Boat> boats = boatService.findAll();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", boats);
+        response.put("page", createPaginationInfo(boats.size(), 0, boats.size())); // Customize this as needed
+
+        return ResponseEntity.ok(response);
+    }
+
+    private Map<String, Integer> createPaginationInfo(int size, int number, int totalElements) {
+        Map<String, Integer> paginationInfo = new HashMap<>();
+        paginationInfo.put("size", size);
+        paginationInfo.put("number", number);
+        paginationInfo.put("totalElements", totalElements);
+        paginationInfo.put("totalPages", (int) Math.ceil((double) totalElements / size));
+        return paginationInfo;
     }
 
     @PostMapping("/create")

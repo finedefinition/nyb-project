@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.repository.BoatRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ public class BoatServiceImpl implements BoatService {
 
     @Override
     public Boat save(Boat boat) {
+        boat.setCreatedAt(LocalDateTime.now());
         return boatRepository.save(boat);
     }
 
