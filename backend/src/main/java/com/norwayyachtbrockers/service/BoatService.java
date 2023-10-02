@@ -2,12 +2,13 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.model.Boat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BoatService {
-    Boat save(Boat boat);
+    public Boat save(Boat boat, MultipartFile imageFile);
 
     public Boat update(Long boatId, Boat updatedBoat);
 
