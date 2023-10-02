@@ -1,0 +1,3 @@
+ALTER TABLE boats
+    ADD COLUMN image_key VARCHAR(255)
+GO

@@ -31,15 +31,20 @@ public class Boat {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "image_key")
+    private String imageKey;
+
     public Boat() {
     }
 
-    public Boat(String boatName, BigDecimal boatPrice, String boatBrand, int boatYear, LocalDateTime createdAt) {
+    public Boat(String boatName, BigDecimal boatPrice, String boatBrand,
+                int boatYear, LocalDateTime createdAt, String imageKey) {
         this.boatName = boatName;
         this.boatPrice = boatPrice;
         this.boatBrand = boatBrand;
         this.boatYear = boatYear;
         this.createdAt = createdAt;
+        this.imageKey = imageKey;
     }
 
     public Long getId() {
@@ -88,5 +93,13 @@ public class Boat {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getImageKey() {
+        return imageKey;
+    }
+
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
 }

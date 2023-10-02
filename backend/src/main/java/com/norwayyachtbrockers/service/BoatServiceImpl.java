@@ -1,27 +1,54 @@
 package com.norwayyachtbrockers.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.repository.BoatRepository;
-
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.UUID;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class BoatServiceImpl implements BoatService {
-    private final BoatRepository boatRepository;
+        private final BoatRepository boatRepository;
+        private final AmazonS3 amazonS3;
+        private final String s3BucketName;
 
-    public BoatServiceImpl(BoatRepository boatRepository) {
-        this.boatRepository = boatRepository;
-    }
+        @Autowired
+        public BoatServiceImpl(BoatRepository boatRepository, AmazonS3 amazonS3, @Value("${s3.bucket.name}") String s3BucketName) {
+            this.boatRepository = boatRepository;
+            this.amazonS3 = amazonS3;
+            this.s3BucketName = s3BucketName;
+        }
 
     @Override
-    public Boat save(Boat boat) {
+    public Boat save(Boat boat, MultipartFile imageFile) {
+        // Set other properties of the boat as before
         boat.setCreatedAt(LocalDateTime.now());
+
+        // Generate a unique key for the image in S3 (e.g., using UUID)
+        String imageKey = UUID.randomUUID().toString();
+
+        try {
+            // Upload the image to S3
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(imageFile.getContentType());
+
+            amazonS3.putObject(s3BucketName, imageKey, imageFile.getInputStream(), metadata);
+
+            // Set the image key in the boat entity
+            boat.setImageKey(imageKey);
+        } catch (IOException e) {
+            // Handle the exception (e.g., log it or throw a custom exception)
+        throw new RuntimeException("Failed to upload image to S3: " + e.getMessage());
+    }
+
         return boatRepository.save(boat);
     }
 

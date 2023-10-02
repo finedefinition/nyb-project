@@ -1,0 +1,3 @@
+ALTER TABLE boats
+DROP COLUMN image_key
+GO
