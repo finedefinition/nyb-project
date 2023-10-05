@@ -10,6 +10,7 @@ export const SectionCard = () => {
       <button className='section__btn'>See all</button>
     </div>
       <GoodList goods={goods}/>
+      <GoodList goods={goods}/>
     </section>
   )
 }
