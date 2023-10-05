@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/nyb-project/static/css/main.1ff5e337.css",
+    "main.js": "/nyb-project/static/js/main.61f74c29.js",
+    "static/media/baltic-sea-2052893_1280.jpg": "/nyb-project/static/media/baltic-sea-2052893_1280.b481f42bd0cd6410a5f6.jpg",
+    "index.html": "/nyb-project/index.html",
+    "main.1ff5e337.css.map": "/nyb-project/static/css/main.1ff5e337.css.map",
+    "main.61f74c29.js.map": "/nyb-project/static/js/main.61f74c29.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1ff5e337.css",
+    "static/js/main.61f74c29.js"
+  ]
+}
