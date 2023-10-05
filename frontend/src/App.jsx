@@ -13,5 +13,6 @@ export const App = () => {
       {/* <GoodList goods={goods}/> */}
       <SectionCard />
     </>
+      //comment line
   )
 }
