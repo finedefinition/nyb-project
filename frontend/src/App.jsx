@@ -11,7 +11,7 @@ export const App = () => {
       <Header />
       <Main />
       {/* <GoodList goods={goods}/> */}
-      {/*<SectionCard />*/}
+      <SectionCard />
     </>
   )
 }
