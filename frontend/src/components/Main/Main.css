@@ -1,5 +1,5 @@
 .main__img {
-  background-image: url('./yacht-mainpage.jpg');
+  background-image: url('../../../public/Images/Main/yacht-mainpage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
