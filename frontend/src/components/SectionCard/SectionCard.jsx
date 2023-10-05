@@ -9,7 +9,7 @@ export const SectionCard = () => {
       <h2 className='section__title'>Featured yachts</h2>
       <button className='section__btn'>See all</button>
     </div>
-      <GoodList goods={goods}/>
+      {/*<GoodList goods={goods}/>*/}
     </section>
   )
 }
