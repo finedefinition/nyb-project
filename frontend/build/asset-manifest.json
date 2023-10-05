@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/nyb-project/static/css/main.1ff5e337.css",
-    "main.js": "/nyb-project/static/js/main.ff21445e.js",
-    "static/media/baltic-sea-2052893_1280.jpg": "/nyb-project/static/media/baltic-sea-2052893_1280.b481f42bd0cd6410a5f6.jpg",
-    "index.html": "/nyb-project/index.html",
-    "main.1ff5e337.css.map": "/nyb-project/static/css/main.1ff5e337.css.map",
-    "main.ff21445e.js.map": "/nyb-project/static/js/main.ff21445e.js.map"
+    "main.css": "/static/css/main.01ccad7c.css",
+    "main.js": "/static/js/main.34178f84.js",
+    "static/media/yacht-mainpage.jpg": "/static/media/yacht-mainpage.d8afec5fc2ab20a312ea.jpg",
+    "index.html": "/index.html",
+    "main.01ccad7c.css.map": "/static/css/main.01ccad7c.css.map",
+    "main.34178f84.js.map": "/static/js/main.34178f84.js.map"
   },
   "entrypoints": [
-    "static/css/main.1ff5e337.css",
-    "static/js/main.ff21445e.js"
+    "static/css/main.01ccad7c.css",
+    "static/js/main.34178f84.js"
   ]
 }
