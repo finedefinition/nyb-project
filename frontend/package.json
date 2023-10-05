@@ -1,5 +1,4 @@
 {
-  "homepage": "https://finedefinition.github.io/nyb-project",
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
@@ -18,13 +17,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "node_modules/.bin/react-scripts start",
     "build": "node_modules/.bin/react-scripts build",
     "test": "node_modules/.bin/react-scripts test",
     "eject": "node_modules/.bin/react-scripts eject"
   },
+
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -42,8 +40,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "gh-pages": "^6.0.0"
   }
 }
