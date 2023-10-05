@@ -82,11 +82,26 @@ public class BoatController {
 
     // PUT update an existing boat (replace entire resource)
     @PutMapping("/{boatId}")
-    public ResponseEntity<Boat> updateBoat(@PathVariable Long boatId, @RequestBody Boat updatedBoat) {
-        Boat updated = boatService.update(boatId, updatedBoat);
+    public ResponseEntity<Boat> update(
+            @PathVariable Long boatId,
+            @RequestParam("boatName") String boatName,
+            @RequestParam("boatPrice") BigDecimal boatPrice,
+            @RequestParam("boatBrand") String boatBrand,
+            @RequestParam("boatYear") int boatYear,
+            @RequestPart("imageFile") MultipartFile imageFile
+    ) {
+        // Create a new Boat object and set its properties
+        Boat updatedBoat = new Boat();
+        updatedBoat.setBoatName(boatName);
+        updatedBoat.setBoatPrice(boatPrice);
+        updatedBoat.setBoatBrand(boatBrand);
+        updatedBoat.setBoatYear(boatYear);
+
+        // Update the Boat object with the image file
+        Boat updated = boatService.update(boatId, updatedBoat, imageFile);
         return ResponseEntity.ok(updated);
     }
-
+//Add ResponceEntity
     @DeleteMapping("/{boatId}")
     public ResponseEntity<Void> deleteBoat(@PathVariable Long boatId) {
         boatService.deleteById(boatId);
