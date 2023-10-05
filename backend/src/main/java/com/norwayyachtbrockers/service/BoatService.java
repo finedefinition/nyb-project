@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface BoatService {
     public Boat save(Boat boat, MultipartFile imageFile);
 
-    public Boat update(Long boatId, Boat updatedBoat);
+    public Boat update(Long boatId, Boat boat, MultipartFile imageFile);
 
     Boat findById(Long theId);
 

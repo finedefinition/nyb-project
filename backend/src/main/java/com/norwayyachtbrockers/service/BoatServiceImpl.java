@@ -53,16 +53,16 @@ public class BoatServiceImpl implements BoatService {
     }
 
     @Override
-    public Boat update(Long boatId, Boat updatedBoat) {
+    public Boat update(Long boatId, Boat boat, MultipartFile imageFile) {
         // First, check if the boat with the given ID exists
         Boat existingBoat = boatRepository.findById(boatId)
                 .orElseThrow(() -> new EntityNotFoundException("Boat not found with ID: " + boatId));
 
         // Update the existing boat entity with the new data
-        existingBoat.setBoatName(updatedBoat.getBoatName());
-        existingBoat.setBoatPrice(updatedBoat.getBoatPrice());
-        existingBoat.setBoatBrand(updatedBoat.getBoatBrand());
-        existingBoat.setBoatYear(updatedBoat.getBoatYear());
+        existingBoat.setBoatName(boat.getBoatName());
+        existingBoat.setBoatPrice(boat.getBoatPrice());
+        existingBoat.setBoatBrand(boat.getBoatBrand());
+        existingBoat.setBoatYear(boat.getBoatYear());
 
         // Save the updated boat entity
         return boatRepository.save(existingBoat);
