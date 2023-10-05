@@ -1,3 +1,6 @@
 [
-  { "id": 1, "name": "Princessa1", "price": "85,990", "place": "Norway"}
+  { "id": 1, "name": "Juliya", "price": "85,990", "place": "Norway",
+    "id": 2, "name": "Ivanka", "price": "85,990", "place": "Norway",
+    "id": 3, "name": "Princessa", "price": "85,990", "place": "Norway"
+  }
 ]
