@@ -1,5 +1,5 @@
 .main__img {
-  background-image: url('./baltic-sea-2052893_1280.jpg');
+  background-image: url('./yacht-mainpage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -12,11 +12,11 @@
 .main__btn {
   z-index: 1;
   position: absolute;
-  top: 50%;
+  top: 85%;
   left: 50%;
   transform: translate(-50%);
   padding: 20px;
-  background: transparent;
+  background: white;
   color: black;
   font-size: 20px;
   cursor: pointer;
