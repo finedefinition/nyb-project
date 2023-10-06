@@ -51,8 +51,3 @@ To get started with the Norway Yacht Brokers Web Application, follow these steps
 - Maps Integration: Google Maps API
 - Payment Gateway: Stripe
 
-[//]: # ()
-[//]: # (## Contact)
-
-[//]: # ()
-[//]: # (For questions, suggestions, or support, please contact us at [Email Address].)
