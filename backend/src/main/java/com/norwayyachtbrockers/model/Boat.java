@@ -34,17 +34,22 @@ public class Boat {
     @Column(name = "image_key")
     private String imageKey;
 
+    @Column(name = "place")
+    private String boatPlace;
+
     public Boat() {
     }
 
     public Boat(String boatName, BigDecimal boatPrice, String boatBrand,
-                int boatYear, LocalDateTime createdAt, String imageKey) {
+                int boatYear, LocalDateTime createdAt,
+                String imageKey, String boatPlace) {
         this.boatName = boatName;
         this.boatPrice = boatPrice;
         this.boatBrand = boatBrand;
         this.boatYear = boatYear;
         this.createdAt = createdAt;
         this.imageKey = imageKey;
+        this.boatPlace = boatPlace;
     }
 
     public Long getId() {
@@ -101,5 +106,13 @@ public class Boat {
 
     public void setImageKey(String imageKey) {
         this.imageKey = imageKey;
+    }
+
+    public String getBoatPlace() {
+        return boatPlace;
+    }
+
+    public void setBoatPlace(String boatPlace) {
+        this.boatPlace = boatPlace;
     }
 }
