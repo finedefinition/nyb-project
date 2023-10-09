@@ -39,6 +39,7 @@ target/
 .DS_Store
 
 ### Custom ###
+.env
 backend/.env
 /backend/src/main/resources/liquibase.properties
 
