@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Storage } from 'aws-amplify';
+import { Storage, Amplify } from 'aws-amplify'; // Import Amplify along with Storage
+import awsconfig from './aws-exports'; // Import your Amplify configuration
+
 import { GoodList } from '../GoodList';
 import './SectionCard.css';
+
+Amplify.configure(awsconfig); // Configure Amplify with your AWS configuration
 
 export const SectionCard = () => {
   const [featuredBoats, setFeaturedBoats] = useState([]);
 
   useEffect(() => {
+    // Log AWS credentials here
+    console.log('AWS Credentials:', Amplify.config.credentials);
+
     fetch('https://nyb-project-production.up.railway.app/boats/featured')
         .then((response) => {
           if (!response.ok) {
