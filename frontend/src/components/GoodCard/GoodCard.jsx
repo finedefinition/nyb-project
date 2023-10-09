@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import AWS from 'aws-sdk';
 import './GoodCard.css';
 
+
 export const GoodCard = ({ good }) => {
+
     const [imageUrl, setImageUrl] = useState(null);
 
     useEffect(() => {
         // Configure AWS SDK with your credentials and S3 bucket information
+
+
         AWS.config.update({
             accessKeyId: 'AKIAUXLH7DAVIEHB5FF2',
             secretAccessKey: 'N7ARg0AZ02niNCLZznIUA3VUs0fC2we761Mz4Cwn',
@@ -14,8 +18,8 @@ export const GoodCard = ({ good }) => {
         });
 
         const s3 = new AWS.S3();
-        const bucketName = 'nyb-basket';
 
+        const bucketName = 'nyb-basket';
         // Fetch the image from Amazon S3 based on the imageUrl from the good prop
         async function fetchImageFromS3() {
             try {
