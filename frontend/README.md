@@ -89,7 +89,10 @@ here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](
 ### Deployment
 
 This section has moved
+<<<<<<< HEAD
 here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+=======
+>>>>>>> gh-pages
 
 ### `npm run build` fails to minify
 

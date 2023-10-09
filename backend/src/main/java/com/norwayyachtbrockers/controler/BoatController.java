@@ -1,11 +1,14 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.mapper.BoatShortMapper;
+import com.norwayyachtbrockers.dto.response.BoatShortResponseDto;
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.service.BoatService;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -25,8 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class BoatController {
     private final BoatService boatService;
 
-    public BoatController(BoatService boatService) {
+    private final BoatShortMapper boatShortMapper;
+
+    public BoatController(BoatService boatService, BoatShortMapper boatShortMapper) {
         this.boatService = boatService;
+        this.boatShortMapper = boatShortMapper;
     }
 
     @GetMapping("/{boatId}")
@@ -65,6 +70,7 @@ public class BoatController {
             @RequestParam("boatPrice") BigDecimal boatPrice,
             @RequestParam("boatBrand") String boatBrand,
             @RequestParam("boatYear") int boatYear,
+            @RequestParam("boatPlace") String boatPlace,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
         // Create a new Boat object and set its properties
@@ -73,6 +79,7 @@ public class BoatController {
         newBoat.setBoatPrice(boatPrice);
         newBoat.setBoatBrand(boatBrand);
         newBoat.setBoatYear(boatYear);
+        newBoat.setBoatPlace(boatPlace);
 
         // Save the Boat object with image
         Boat createdBoat = boatService.save(newBoat, imageFile);
@@ -106,5 +113,16 @@ public class BoatController {
     public ResponseEntity<Void> deleteBoat(@PathVariable Long boatId) {
         boatService.deleteById(boatId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/featured")
+    public ResponseEntity<List<BoatShortResponseDto>> findAllShortsBoat() {
+        List<Boat> boats = boatService.findAll(); // Replace with your service method to fetch boats
+
+        List<BoatShortResponseDto> boatShortResponseDtos = boats.stream()
+                .map(boatShortMapper::toBoatShortResponseDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(boatShortResponseDtos);
     }
 }

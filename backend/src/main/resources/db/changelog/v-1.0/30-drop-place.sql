@@ -1,0 +1,3 @@
+ALTER TABLE boats
+DROP COLUMN place
+GO

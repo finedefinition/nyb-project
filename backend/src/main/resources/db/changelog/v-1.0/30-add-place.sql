@@ -1,0 +1,3 @@
+ALTER TABLE boats
+ADD COLUMN place VARCHAR(255)
+GO

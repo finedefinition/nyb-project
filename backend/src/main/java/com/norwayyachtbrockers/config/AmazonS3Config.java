@@ -7,7 +7,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 public class AmazonS3Config {
@@ -19,10 +18,6 @@ public class AmazonS3Config {
 
     @Value("${s3.region.name}")
     private String s3RegionName;
-
-    @Value("${s3.bucket.name}")
-    private String s3BucketName;
-
 
     @Bean
     public AmazonS3 getAmazonS3Client() {
