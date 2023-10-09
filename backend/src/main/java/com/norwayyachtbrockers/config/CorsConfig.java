@@ -14,7 +14,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // !WARNING! Allow requests from all origins
-        config.addAllowedOrigin("http://localhost:3000/");
+        config.addAllowedOrigin("*");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
 
