@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories
-@PropertySource("file:${user.dir}/.env")
+//@PropertySource("file:${user.dir}/.env")
 public class Application {
 
     public static void main(String[] args) {
