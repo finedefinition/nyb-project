@@ -1,0 +1,19 @@
+.section {
+  margin: 20px;
+}
+
+.section__up {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section__btn {
+  margin: 20px;
+  background-color: inherit;
+  padding: 10px;
+  font-size: inherit;
+  border: 1px solid rgb(5, 10, 40);
+  border-radius: 50px;
+  color: rgb(34, 34, 57);
+}

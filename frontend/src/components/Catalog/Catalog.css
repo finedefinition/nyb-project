@@ -1,0 +1,11 @@
+.catalog {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 40px;
+}
+
+.card {
+  padding: 10px;
+}
