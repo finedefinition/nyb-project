@@ -1,4 +1,5 @@
 [
+
   { "id": 1, "name": "Beneteau First 44", "price": "85,990", "place": "Norway", "year": "2015", "imageUrl": "./images/SectionCard/Beneteau_First_44.jpeg" },
   { "id": 2, "name": "Hanse 630", "price": "85,990", "place": "Norway", "year": "2018", "imageUrl": "./images/SectionCard/Hanse_630.jpeg" },
   { "id": 3, "name": "Jeanneau_53", "price": "85,990", "place": "Norway", "year": "2020", "imageUrl": "./images/SectionCard/Jeanneau_53.jpeg" },
@@ -11,4 +12,5 @@
   { "id": 10, "name": "Lagoon 51", "price": "85,990", "place": "Norway", "year": "2019", "imageUrl": "./images/SectionCard/Lagoon_51.jpeg" },
   { "id": 11, "name": "Lagoon 51", "price": "85,990", "place": "Norway", "year": "2019", "imageUrl": "./images/SectionCard/Lagoon_51.jpeg" },
   { "id": 11, "name": "Lagoon 51", "price": "85,990", "place": "Norway", "year": "2019", "imageUrl": "./images/SectionCard/Lagoon_51.jpeg" }
+
 ]

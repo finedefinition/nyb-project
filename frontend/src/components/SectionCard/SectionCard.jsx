@@ -2,7 +2,6 @@ import { GoodList } from '../GoodList';
 import './SectionCard.css';
 import goods from './goods.json';
 
-
 export const SectionCard = () => {
   return (
     <section className="section">
