@@ -1,0 +1,11 @@
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 5px; /* Adjust the gap as needed */
+}
+
+.GoodCard {
+    width: calc(20% - 5px); /* 25% width for each card with a gap of 20px */
+    /* Add any other styling for the card as needed */
+}
