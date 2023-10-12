@@ -29,9 +29,7 @@ public class BoatServiceImpl implements BoatService {
 
     @Override
     public Boat save(Boat boat, MultipartFile imageFile) {
-        // Set other properties of the boat as before
         boat.setCreatedAt(LocalDateTime.now());
-
         // Generate a unique key for the image in S3 (e.g., using UUID)
         String imageKey = UUID.randomUUID().toString();
 
@@ -77,11 +75,6 @@ public class BoatServiceImpl implements BoatService {
     @Override
     public List<Boat> findAll() {
         return boatRepository.findAll();
-    }
-
-    @Override
-    public List<Boat> findByName(String boatName) {
-        return boatRepository.findByBoatName(boatName);
     }
 
     @Override

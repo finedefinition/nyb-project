@@ -14,7 +14,5 @@ public interface BoatService {
 
     List<Boat> findAll();
 
-    List<Boat> findByName(String boatName);
-
     void deleteById(Long theId);
 }
