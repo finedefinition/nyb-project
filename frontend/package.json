@@ -47,7 +47,6 @@
   },
   "devDependencies": {
     "dotenv": "^16.3.1",
-    "env-cmd": "^10.1.0",
-    "gh-pages": "^6.0.0"
+    "env-cmd": "^10.1.0"
   }
 }
