@@ -13,7 +13,7 @@ export const Header = () => {
           <Link to="/yachts" className="header__nav__link">Yachts</Link>
         </li>
         <li className="header__nav__list">
-          <a href="https://finedefinition.github.io/nyb-project/" className="header__nav__link">How it works?</a>
+         <Link to="/page" className="header__nav__link">Page</Link>
         </li>
         <li className="header__nav__list">
         <a href="https://finedefinition.github.io/nyb-project/" className="header__nav__link">Services</a>
