@@ -5,9 +5,7 @@ import com.norwayyachtbrockers.dto.response.BoatShortResponseDto;
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.service.BoatService;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,23 +43,13 @@ public class BoatController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> findAll() {
+    public ResponseEntity<List<Boat>> getAllBoats() {
         List<Boat> boats = boatService.findAll();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", boats);
-        response.put("page", createPaginationInfo(20, 0, boats.size())); // Customize this as needed
-
-        return ResponseEntity.ok(response);
-    }
-
-    private Map<String, Integer> createPaginationInfo(int size, int number, int totalElements) {
-        Map<String, Integer> paginationInfo = new HashMap<>();
-        paginationInfo.put("size", size);
-        paginationInfo.put("number", number);
-        paginationInfo.put("totalElements", totalElements);
-        paginationInfo.put("totalPages", (int) Math.ceil((double) totalElements / size));
-        return paginationInfo;
+        if (boats.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        return ResponseEntity.ok(boats);
     }
 
     @PostMapping

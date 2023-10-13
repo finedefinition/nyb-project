@@ -1,26 +1,28 @@
 import React, {useState} from 'react';
-import axios from 'axios';
 import './VesselForm.css';
-
 export const VesselForm = () => {
     const [formData, setFormData] = useState({
-        featuredVessel: false, // Default to false or an appropriate default value
         vesselMake: '',
         vesselModel: '',
-        vesselPrice: 0, // Default to 0 or an appropriate default value
-        vesselYear: 0, // Default to 0 or an appropriate default value
+        vesselPrice: 0,
+        vesselYear: 0,
         vesselLocationCountry: '',
         vesselLocationState: '',
-        vesselLengthOverall: 0, // Default to 0 or an appropriate default value
-        vesselBeam: 0, // Default to 0 or an appropriate default value
-        vesselDraft: 0, // Default to 0 or an appropriate default value
-        vesselCabin: 0, // Default to 0 or an appropriate default value
-        vesselBerth: 0, // Default to 0 or an appropriate default value
+        vesselLengthOverall: 0,
+        vesselBeam: 0,
+        vesselDraft: 0,
+        vesselCabin: 0,
+        vesselBerth: 0,
         vesselKeelType: '',
         vesselFuelType: '',
-        engineQuantity: 0, // Default to 0 or an appropriate default value
+        engineQuantity: 0,
         vesselDescription: '',
         imageFile: null,
+    });
+
+    const [submitStatus, setSubmitStatus] = useState({
+        status: null, // Can be 'success', 'error', or null (initial state)
+        message: '', // Display message
     });
 
     const handleChange = (e) => {
@@ -43,54 +45,56 @@ export const VesselForm = () => {
         e.preventDefault();
         console.log(formData);
 
-        try {
-            const response = await axios.post('https://nyb-project-production.up.railway.app/vessels', {
-                featuredVessel: formData.featuredVessel === 'true', // should be a boolean
-                vesselMake: formData.vesselMake,
-                vesselModel: formData.vesselModel,
-                vesselPrice: parseFloat(formData.vesselPrice), // convert to a number
-                vesselYear: parseInt(formData.vesselYear), // convert to an integer
-                vesselLocationCountry: formData.vesselLocationCountry,
-                vesselLocationState: formData.vesselLocationState,
-                vesselLengthOverall: parseFloat(formData.vesselLengthOverall), // convert to a number
-                vesselBeam: parseFloat(formData.vesselBeam), // convert to a number
-                vesselDraft: parseFloat(formData.vesselDraft), // convert to a number
-                vesselCabin: parseInt(formData.vesselCabin), // convert to an integer
-                vesselBerth: parseInt(formData.vesselBerth), // convert to an integer
-                vesselKeelType: formData.vesselKeelType,
-                vesselFuelType: formData.vesselFuelType,
-                engineQuantity: parseInt(formData.engineQuantity), // convert to an integer
-                vesselDescription: formData.vesselDescription,
-                imageFile: formData.imageFile,
+        const formDataToSend = new FormData();
+        for (const key in formData) {
+            formDataToSend.append(key, formData[key]);
+        }
 
-                });
+        try {
+            const response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
+                method: 'POST',
+                body: formDataToSend,
+            });
+
             if (response.status === 201) {
-                // Handle success, e.g., show a success message or redirect to the newly created vessel page
+                setSubmitStatus({
+                    status: 'success',
+                    message: 'Boat is saved successfully!',
+                });
+            } else {
+                setSubmitStatus({
+                    status: 'error',
+                    message: 'There was an error saving the boat.',
+                });
             }
         } catch (error) {
-            // Handle error, e.g., display an error message
+            setSubmitStatus({
+                status: 'error',
+                message: 'There was an error saving the boat.',
+            });
             console.error('Error:', error);
         }
     };
 
+
     return (
         <form onSubmit={handleSubmit} className="vessel-form">
-            <div className="form-row">
-                <label>
-                    Featured Vessel:
-                </label>
-                <div className="custom-toggle">
-                    <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>
-                        <input
-                            type="checkbox"
-                            name="featuredVessel"
-                            checked={formData.featuredVessel}
-                            onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}
-                        />
-                        <span className="slider"></span>
-                    </label>
-                </div>
-            </div>
+            {/*<div className="form-row">*/}
+            {/*    <label>*/}
+            {/*        Featured Vessel:*/}
+            {/*    </label>*/}
+            {/*    <div className="custom-toggle">*/}
+            {/*        <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>*/}
+            {/*            <input*/}
+            {/*                type="checkbox"*/}
+            {/*                name="featuredVessel"*/}
+            {/*                checked={formData.featuredVessel}*/}
+            {/*                onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}*/}
+            {/*            />*/}
+            {/*            <span className="slider"></span>*/}
+            {/*        </label>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             <div className="form-row">
                 <label>
                     Vessel Make:
@@ -268,7 +272,11 @@ export const VesselForm = () => {
             <div className="form-row">
                 <button type="submit">Create Vessel</button>
             </div>
+            {submitStatus.status && (
+                <div className={`submit-message ${submitStatus.status}`}>
+                    {submitStatus.message}
+                </div>
+            )}
         </form>
     );
 };
-

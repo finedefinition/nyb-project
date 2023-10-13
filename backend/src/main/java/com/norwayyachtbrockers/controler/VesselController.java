@@ -1,5 +1,4 @@
 package com.norwayyachtbrockers.controler;
-import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.http.HttpStatus;
@@ -11,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/vessels")
@@ -25,7 +24,7 @@ public class VesselController {
     }
 
     @GetMapping("/{vesselId}")
-    public ResponseEntity<Vessel> getBoatById(@PathVariable Long vesselId) {
+    public ResponseEntity<Vessel> geVesselById(@PathVariable Long vesselId) {
         Vessel vessel = vesselService.findById(vesselId);
 
         if (vessel == null) {
@@ -33,6 +32,17 @@ public class VesselController {
         }
         return ResponseEntity.ok(vessel);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Vessel>> getAllVessels() {
+        List<Vessel> vessels = vesselService.findAll();
+
+        if (vessels.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        return ResponseEntity.ok(vessels);
+    }
+
 
     @PostMapping
     public ResponseEntity<Vessel> createVessel(
