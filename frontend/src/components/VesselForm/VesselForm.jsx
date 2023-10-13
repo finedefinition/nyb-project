@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './VesselForm.css';
 export const VesselForm = () => {
     const [formData, setFormData] = useState({
+        featuredVessel: false,
         vesselMake: '',
         vesselModel: '',
         vesselPrice: 0,
@@ -79,22 +80,22 @@ export const VesselForm = () => {
 
     return (
         <form onSubmit={handleSubmit} className="vessel-form">
-            {/*<div className="form-row">*/}
-            {/*    <label>*/}
-            {/*        Featured Vessel:*/}
-            {/*    </label>*/}
-            {/*    <div className="custom-toggle">*/}
-            {/*        <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>*/}
-            {/*            <input*/}
-            {/*                type="checkbox"*/}
-            {/*                name="featuredVessel"*/}
-            {/*                checked={formData.featuredVessel}*/}
-            {/*                onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}*/}
-            {/*            />*/}
-            {/*            <span className="slider"></span>*/}
-            {/*        </label>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+            <div className="form-row">
+                <label>
+                    Featured Vessel:
+                </label>
+                <div className="custom-toggle">
+                    <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>
+                        <input
+                            type="checkbox"
+                            name="featuredVessel"
+                            checked={formData.featuredVessel}
+                            onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}
+                        />
+                        <span className="slider"></span>
+                    </label>
+                </div>
+            </div>
             <div className="form-row">
                 <label>
                     Vessel Make:

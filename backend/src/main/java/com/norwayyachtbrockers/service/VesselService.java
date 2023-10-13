@@ -1,9 +1,7 @@
 package com.norwayyachtbrockers.service;
 
-import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.model.Vessel;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 public interface VesselService {

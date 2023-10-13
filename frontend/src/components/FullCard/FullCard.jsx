@@ -12,7 +12,7 @@ export const FullCard = () => {
         async function fetchData() {
             try {
                 // Fetch boat data from the API endpoint
-                const response = await fetch('https://nyb-project-production.up.railway.app/vessels/111'); // Replace with your API endpoint
+                const response = await fetch('https://nyb-project-production.up.railway.app/vessels/106'); // Replace with your API endpoint
                 if (!response.ok) {
                     throw new Error('Failed to fetch boat data');
                 }

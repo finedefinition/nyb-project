@@ -12,4 +12,5 @@
     <include file="40-changeset-vessels-table.xml" relativeToChangelogFile="true" />
     <include file="50-changeset-drop-featured.xml" relativeToChangelogFile="true" />
 
+
 </databaseChangeLog>

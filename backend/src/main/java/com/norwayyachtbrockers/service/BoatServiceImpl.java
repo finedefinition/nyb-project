@@ -80,6 +80,5 @@ public class BoatServiceImpl implements BoatService {
     @Override
     public void deleteById(Long theId) {
         boatRepository.deleteById(theId);
-
     }
 }

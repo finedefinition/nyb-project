@@ -17,8 +17,8 @@ public class Vessel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(name = "featured", nullable = false)
-//    private boolean featuredVessel;
+    @Column(name = "featured", nullable = false)
+    private boolean featuredVessel;
 
     @Column(name = "make", nullable = false)
     private String vesselMake;
@@ -74,13 +74,14 @@ public class Vessel {
     public Vessel() {
     }
 
-    public Vessel(String vesselMake, String vesselModel,
+    public Vessel(boolean featuredVessel, String vesselMake, String vesselModel,
                   BigDecimal vesselPrice, int vesselYear, String vesselLocationCountry,
-                  String vesselLocationState, BigDecimal vesselLengthOverall, BigDecimal vesselBeam,
-                  BigDecimal vesselDraft, int vesselCabin, int vesselBerth, String vesselKeelType,
-                  String vesselFuelType, int engineQuantity, String vesselDescription,
+                  String vesselLocationState, BigDecimal vesselLengthOverall,
+                  BigDecimal vesselBeam, BigDecimal vesselDraft, int vesselCabin,
+                  int vesselBerth, String vesselKeelType, String vesselFuelType,
+                  int engineQuantity, String vesselDescription,
                   LocalDateTime createdAt, String imageKey) {
-
+        this.featuredVessel = featuredVessel;
         this.vesselMake = vesselMake;
         this.vesselModel = vesselModel;
         this.vesselPrice = vesselPrice;
@@ -106,6 +107,14 @@ public class Vessel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isFeaturedVessel() {
+        return featuredVessel;
+    }
+
+    public void setFeaturedVessel(boolean featuredVessel) {
+        this.featuredVessel = featuredVessel;
     }
 
     public String getVesselMake() {
