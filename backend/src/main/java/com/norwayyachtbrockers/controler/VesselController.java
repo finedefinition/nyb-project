@@ -36,7 +36,7 @@ public class VesselController {
 
     @PostMapping
     public ResponseEntity<Vessel> createVessel(
-            @RequestParam("featuredVessel") boolean featuredVessel,
+//            @RequestParam("featuredVessel") boolean featuredVessel,
             @RequestParam("vesselMake") String vesselMake,
             @RequestParam("vesselModel") String vesselModel,
             @RequestParam("vesselPrice") BigDecimal vesselPrice,
@@ -56,7 +56,7 @@ public class VesselController {
     ) {
         // Log the received data to help with debugging
         System.out.println("Received Data:");
-        System.out.println("featuredVessel: " + featuredVessel);
+//        System.out.println("featuredVessel: " + featuredVessel);
         System.out.println("vesselMake: " + vesselMake);
         System.out.println("vesselModel: " + vesselModel);
         System.out.println("vesselPrice: " + vesselPrice);
@@ -75,7 +75,7 @@ public class VesselController {
         System.out.println("imageFile: " + imageFile.getOriginalFilename()); // Log the filename of the uploaded file
         // Create a new Vessel object and set its properties
         Vessel newVessel = new Vessel();
-        newVessel.setFeaturedVessel(featuredVessel);
+//        newVessel.setFeaturedVessel(featuredVessel);
         newVessel.setVesselMake(vesselMake);
         newVessel.setVesselModel(vesselModel);
         newVessel.setVesselPrice(vesselPrice);

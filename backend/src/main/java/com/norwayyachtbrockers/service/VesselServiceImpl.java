@@ -55,7 +55,7 @@ public class VesselServiceImpl implements VesselService {
         Vessel existingVessel = vesselRepository.findById(vesselId)
                 .orElseThrow(() -> new EntityNotFoundException("Vessel not found with ID: " + vesselId));
 
-        existingVessel.setFeaturedVessel(vessel.isFeaturedVessel());
+//        existingVessel.setFeaturedVessel(vessel.isFeaturedVessel());
         existingVessel.setVesselMake(vessel.getVesselMake());
         existingVessel.setVesselModel(vessel.getVesselModel());
         existingVessel.setVesselPrice(vessel.getVesselPrice());

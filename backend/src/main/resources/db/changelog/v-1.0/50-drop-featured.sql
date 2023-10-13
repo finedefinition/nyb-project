@@ -1,0 +1,3 @@
+ALTER TABLE vessels
+DROP COLUMN featured
+GO

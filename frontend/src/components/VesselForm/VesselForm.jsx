@@ -44,25 +44,24 @@ export const VesselForm = () => {
         console.log(formData);
 
         try {
-            const response = await axios.post('https://nyb-project-production.up.railway.app/vessels',
-                {
-                    featuredVessel: formData.featuredVessel,
-                    vesselMake: formData.vesselMake,
-                    vesselModel: formData.vesselModel,
-                    vesselPrice: formData.vesselPrice,
-                    vesselYear: formData.vesselYear,
-                    vesselLocationCountry: formData.vesselLocationCountry,
-                    vesselLocationState: formData.vesselLocationState,
-                    vesselLengthOverall: formData.vesselLengthOverall,
-                    vesselBeam: formData.vesselBeam,
-                    vesselDraft: formData.vesselDraft,
-                    vesselCabin: formData.vesselCabin,
-                    vesselBerth: formData.vesselBerth,
-                    vesselKeelType: formData.vesselKeelType,
-                    vesselFuelType: formData.vesselFuelType,
-                    engineQuantity: formData.engineQuantity,
-                    vesselDescription: formData.vesselDescription,
-                    imageFile: formData.imageFile,
+            const response = await axios.post('https://nyb-project-production.up.railway.app/vessels', {
+                featuredVessel: formData.featuredVessel === 'true', // should be a boolean
+                vesselMake: formData.vesselMake,
+                vesselModel: formData.vesselModel,
+                vesselPrice: parseFloat(formData.vesselPrice), // convert to a number
+                vesselYear: parseInt(formData.vesselYear), // convert to an integer
+                vesselLocationCountry: formData.vesselLocationCountry,
+                vesselLocationState: formData.vesselLocationState,
+                vesselLengthOverall: parseFloat(formData.vesselLengthOverall), // convert to a number
+                vesselBeam: parseFloat(formData.vesselBeam), // convert to a number
+                vesselDraft: parseFloat(formData.vesselDraft), // convert to a number
+                vesselCabin: parseInt(formData.vesselCabin), // convert to an integer
+                vesselBerth: parseInt(formData.vesselBerth), // convert to an integer
+                vesselKeelType: formData.vesselKeelType,
+                vesselFuelType: formData.vesselFuelType,
+                engineQuantity: parseInt(formData.engineQuantity), // convert to an integer
+                vesselDescription: formData.vesselDescription,
+                imageFile: formData.imageFile,
 
                 });
             if (response.status === 201) {
