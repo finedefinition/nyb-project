@@ -1,4 +1,7 @@
 package com.norwayyachtbrockers.controler;
+
+import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
+import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.http.HttpStatus;
@@ -13,14 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/vessels")
 public class VesselController {
     private final VesselService vesselService;
+    private final VesselShortMapper vesselShortMapper;
 
-    public VesselController(VesselService vesselService) {
+    public VesselController(VesselService vesselService, VesselShortMapper vesselShortMapper) {
         this.vesselService = vesselService;
+        this.vesselShortMapper = vesselShortMapper;
     }
 
     @GetMapping("/{vesselId}")
@@ -83,9 +89,20 @@ public class VesselController {
         newVessel.setEngineQuantity(engineQuantity);
         newVessel.setVesselDescription(vesselDescription);
         newVessel.setCreatedAt(LocalDateTime.now());
-        
+
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVessel);
+    }
+
+    @GetMapping("/cards")
+    public ResponseEntity<List<VesselShortResponseDto>> findAllShortVesselCards() {
+        List<Vessel> vessels = vesselService.findAll();
+
+        List<VesselShortResponseDto> vesselShortResponseDtoList = vessels.stream()
+                .map(vesselShortMapper::toVesselShortResponseDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(vesselShortResponseDtoList);
     }
 }

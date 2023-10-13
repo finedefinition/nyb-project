@@ -96,7 +96,7 @@ public class BoatController {
         Boat updated = boatService.update(boatId, updatedBoat, imageFile);
         return ResponseEntity.ok(updated);
     }
-//Add ResponceEntity
+
     @DeleteMapping("/{boatId}")
     public ResponseEntity<Void> deleteBoat(@PathVariable Long boatId) {
         boatService.deleteById(boatId);
