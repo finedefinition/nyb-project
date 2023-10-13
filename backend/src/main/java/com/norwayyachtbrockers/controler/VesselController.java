@@ -54,6 +54,25 @@ public class VesselController {
             @RequestParam("vesselDescription") String vesselDescription,
             @RequestParam("imageFile") MultipartFile imageFile
     ) {
+        // Log the received data to help with debugging
+        System.out.println("Received Data:");
+        System.out.println("featuredVessel: " + featuredVessel);
+        System.out.println("vesselMake: " + vesselMake);
+        System.out.println("vesselModel: " + vesselModel);
+        System.out.println("vesselPrice: " + vesselPrice);
+        System.out.println("vesselYear: " + vesselYear);
+        System.out.println("vesselLocationCountry: " + vesselLocationCountry);
+        System.out.println("vesselLocationState: " + vesselLocationState);
+        System.out.println("vesselLengthOverall: " + vesselLengthOverall);
+        System.out.println("vesselBeam: " + vesselBeam);
+        System.out.println("vesselDraft: " + vesselDraft);
+        System.out.println("vesselCabin: " + vesselCabin);
+        System.out.println("vesselBerth: " + vesselBerth);
+        System.out.println("vesselKeelType: " + vesselKeelType);
+        System.out.println("vesselFuelType: " + vesselFuelType);
+        System.out.println("engineQuantity: " + engineQuantity);
+        System.out.println("vesselDescription: " + vesselDescription);
+        System.out.println("imageFile: " + imageFile.getOriginalFilename()); // Log the filename of the uploaded file
         // Create a new Vessel object and set its properties
         Vessel newVessel = new Vessel();
         newVessel.setFeaturedVessel(featuredVessel);

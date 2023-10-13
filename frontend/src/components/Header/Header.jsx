@@ -16,7 +16,7 @@ export const Header = () => {
          <Link to="/page" className="header__nav__link">Page</Link>
         </li>
         <li className="header__nav__list">
-        <a href="https://finedefinition.github.io/nyb-project/" className="header__nav__link">Services</a>
+          <Link to="/form" className="header__nav__link">Form</Link>
         </li>
         <li className="header__nav__list">
           <a href="https://finedefinition.github.io/nyb-project/" className="header__nav__link">About us</a>

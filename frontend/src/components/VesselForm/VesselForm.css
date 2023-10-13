@@ -1,0 +1,110 @@
+/* VesselForm.css */
+
+/* Style the form container */
+.vessel-form {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style form rows (each input and label pair) */
+.form-row {
+    margin-bottom: 15px;
+}
+
+/* Style labels */
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Style text inputs */
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row input[type="file"],
+.form-row textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Style the checkbox input */
+.form-row input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Style the Create Vessel button */
+.create-button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.create-button:hover {
+    background-color: #0056b3;
+}
+/*Checkmark*/
+.custom-toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-label {
+    display: block;
+    width: 60px;
+    height: 34px;
+    border-radius: 17px;
+    background-color: #ccc;
+    position: absolute;
+    cursor: pointer;
+}
+
+.toggle-label.active {
+    background-color: #2196F3;
+}
+
+.toggle-label input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #ccc;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+.toggle-label input:checked + .slider {
+    background-color: #2196F3;
+}
+
+.toggle-label input:checked + .slider:before {
+    transform: translateX(26px);
+}

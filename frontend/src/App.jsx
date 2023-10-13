@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Im
 import { Header } from './components/Header';
 import { Main } from './components/Main';
 import { YachtPage } from './components/YachtPage';
-import {FullCard} from "./components/FullCard";
+import { FullCard } from "./components/FullCard";
+import { VesselForm } from "./components/VesselForm/VesselForm";
 
 
 export const App = () => {
@@ -15,6 +16,7 @@ export const App = () => {
           <Route path="/" element={<Main />} />
           <Route path="/yachts" element={<YachtPage />} />
           <Route path="/page" element={<FullCard />} />
+          <Route path="/form" element={<VesselForm />} />
         </Routes>
       </>
     </Router>
