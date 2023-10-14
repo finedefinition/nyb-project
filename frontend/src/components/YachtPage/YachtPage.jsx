@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AWS from 'aws-sdk';
 import './YachtPage.css';
+import {Link} from "react-router-dom";
 
 export const YachtPage = () => {
     const [goods, setGoods] = useState([]);
@@ -60,12 +61,14 @@ export const YachtPage = () => {
                         ) : (
                             <p>Loading image...</p>
                         )}
-                        <h3 className="GoodCard__name">{good.make} {good.model}</h3>
-                        <div className="GoodCard__place">
-                            {good.country},{good.state} | {good.year}
+                        <Link to={`/full-card/${good.id}`} className="GoodCard__name"> <h2>
+                            {good.make} {good.model} </h2>
+                        </Link>
+                        <div className="GoodCard__place"><h3>
+                            {good.country}, {good.state} | {good.year} </h3>
                         </div>
-                        <div className="GoodCard__price">
-                            <b>€{good.price}</b>
+                        <div className="GoodCard__price"><h3>
+                            <b>€{good.price}</b></h3>
                         </div>
                     </div>
                 ))}

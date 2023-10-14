@@ -72,7 +72,6 @@ public class VesselServiceImpl implements VesselService {
         existingVessel.setEngineQuantity(vessel.getEngineQuantity());
         existingVessel.setVesselDescription(vessel.getVesselDescription());
         existingVessel.setCreatedAt(vessel.getCreatedAt());
-        existingVessel.setImageKey(vessel.getImageKey());
 
         // Save the updated boat entity
         return vesselRepository.save(existingVessel);

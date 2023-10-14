@@ -45,15 +45,15 @@ export const GoodCard = ({ good }) => {
             ) : (
                 <p>Loading image...</p>
             )}
-            <h3 className="GoodCard__name">{good.make} {good.model}</h3>
-            <div className="GoodCard__place">
-                {good.country}, {good.state} | {good.year}
+            <Link to={`/full-card/${good.id}`} className="GoodCard__name"> <h2>
+                {good.make} {good.model} </h2>
+            </Link>
+            <div className="GoodCard__place"><h3>
+                {good.country}, {good.state} | {good.year} </h3>
             </div>
-            <div className="GoodCard__price">
-                <b>€{good.price}</b>
+            <div className="GoodCard__price"><h3>
+                <b>€{good.price}</b></h3>
             </div>
-            {/* Add a Link to FullCard using the ID */}
-            <Link to={`/full-card/${good.id}`}>Open Full Card</Link>
         </div>
     );
 };

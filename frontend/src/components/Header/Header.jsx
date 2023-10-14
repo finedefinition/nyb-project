@@ -13,13 +13,13 @@ export const Header = () => {
           <Link to="/yachts" className="header__nav__link">Yachts</Link>
         </li>
         <li className="header__nav__list">
-         <Link to="/page" className="header__nav__link">Page</Link>
+         <Link to="/" className="header__nav__link">How it works?</Link>
         </li>
         <li className="header__nav__list">
           <Link to="/form" className="header__nav__link">Form</Link>
         </li>
         <li className="header__nav__list">
-          <a href="https://finedefinition.github.io/nyb-project/" className="header__nav__link">About us</a>
+          <Link to="/" className="header__nav__link">About us</Link>
         </li>
       </ul>
     </nav>
