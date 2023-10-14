@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AWS from 'aws-sdk';
 import './GoodCard.css';
+import {Link} from "react-router-dom";
 
 export const GoodCard = ({ good }) => {
     const [imageUrl, setImageUrl] = useState(null);
@@ -44,13 +45,15 @@ export const GoodCard = ({ good }) => {
             ) : (
                 <p>Loading image...</p>
             )}
-            <h3 className="GoodCard__name">{good.name}</h3>
+            <h3 className="GoodCard__name">{good.make} {good.model}</h3>
             <div className="GoodCard__place">
-                {good.place} | {good.year}
+                {good.country}, {good.state} | {good.year}
             </div>
             <div className="GoodCard__price">
                 <b>€{good.price}</b>
             </div>
+            {/* Add a Link to FullCard using the ID */}
+            <Link to={`/full-card/${good.id}`}>Open Full Card</Link>
         </div>
     );
 };
