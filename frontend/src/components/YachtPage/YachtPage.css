@@ -9,3 +9,18 @@
     width: calc(20% - 5px); /* 25% width for each card with a gap of 20px */
     /* Add any other styling for the card as needed */
 }
+
+.update-button {
+    background-color: #007BFF; /* Set the background color to a shade of blue */
+    color: #fff; /* Set the text color to white */
+    padding: 10px 20px; /* Add padding for better spacing */
+    border: none; /* Remove the button border */
+    border-radius: 5px; /* Add a border radius for rounded corners */
+    cursor: pointer; /* Change cursor to a hand pointer on hover */
+    transition: background-color 0.3s; /* Add a smooth transition effect for background color */
+
+    /* Define styles for button hover state */
+    &:hover {
+        background-color: #0056b3; /* Darken the background color on hover */
+    }
+}

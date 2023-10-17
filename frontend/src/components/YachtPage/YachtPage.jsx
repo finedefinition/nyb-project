@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import AWS from 'aws-sdk';
 import './YachtPage.css';
-import {Link} from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 
 export const YachtPage = () => {
     const [goods, setGoods] = useState([]);
     const [imageUrls, setImageUrls] = useState([]);
+    const navigate = useNavigate(); // Define useNavigate here
+
+    const handleUpdateClick = (id) => {
+        const dataToPass = goods.find((good) => good.id === id);
+        navigate(`/update/${id}`, { state: dataToPass });
+    };
 
     useEffect(() => {
         // Fetch data from the database and set it in the state
@@ -70,6 +76,9 @@ export const YachtPage = () => {
                         <div className="GoodCard__price"><h3>
                             <b>€{good.price}</b></h3>
                         </div>
+                        <button onClick={() => handleUpdateClick(good.id)} className="update-button">
+                            Update
+                        </button>
                     </div>
                 ))}
             </div>

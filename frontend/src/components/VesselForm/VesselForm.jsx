@@ -1,7 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom'; // Import useParams
 import './VesselForm.css';
-export const VesselForm = () => {
-    const [formData, setFormData] = useState({
+
+export const VesselForm = ({ initialData }) => {
+    const { id } = useParams(); // Extract 'id' from URL params
+
+    const [formData, setFormData] = useState(initialData || {
         featuredVessel: false,
         vesselMake: '',
         vesselModel: '',
@@ -22,12 +26,41 @@ export const VesselForm = () => {
     });
 
     const [submitStatus, setSubmitStatus] = useState({
-        status: null, // Can be 'success', 'error', or null (initial state)
-        message: '', // Display message
+        status: null,
+        message: '',
     });
 
+    useEffect(() => {
+        if (initialData) {
+            // Set the form data when initialData is provided (e.g., when editing an existing vessel)
+            setFormData(initialData);
+        } else {
+            // If initialData is not provided, fetch data from the server
+            async function fetchData() {
+                try {
+                    const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${id}`, {
+                        method: 'GET',
+                    });
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch data: ${response.status}`);
+                    }
+                    const data = await response.json();
+
+                    // Update the formData state with the retrieved data
+                    setFormData(data);
+                    console.log('Data fetched successfully:', data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+
+            fetchData();
+        }
+    }, [initialData, id]);
+
+
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormData({
             ...formData,
             [name]: value,
@@ -52,12 +85,22 @@ export const VesselForm = () => {
         }
 
         try {
-            const response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
-                method: 'POST',
-                body: formDataToSend,
-            });
+            let response;
+            if (initialData) {
+                // If initialData is provided, this is an update operation
+                response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${initialData.id}`, {
+                    method: 'PUT',
+                    body: formDataToSend,
+                });
+            } else {
+                // Otherwise, this is a create operation
+                response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
+                    method: 'POST',
+                    body: formDataToSend,
+                });
+            }
 
-            if (response.status === 201) {
+            if (response.status === 201 || response.status === 204) {
                 setSubmitStatus({
                     status: 'success',
                     message: 'Boat is saved successfully!',
@@ -271,8 +314,9 @@ export const VesselForm = () => {
                 </label>
             </div>
             <div className="form-row">
-                <button type="submit">Create Vessel</button>
+                <button type="submit">{initialData ? 'Update Vessel' : 'Create Vessel'}</button>
             </div>
+
             {submitStatus.status && (
                 <div className={`submit-message ${submitStatus.status}`}>
                     {submitStatus.message}

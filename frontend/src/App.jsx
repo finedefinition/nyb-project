@@ -6,6 +6,7 @@ import { YachtPage } from './components/YachtPage';
 import { FullCard } from "./components/FullCard";
 import { VesselForm } from "./components/VesselForm";
 import { NotFound } from "./components/NotFound";
+import { UpdatePage } from "./components/UpdatePage";
 
 
 export const App = () => {
@@ -18,7 +19,7 @@ export const App = () => {
           <Route path="/yachts" element={<YachtPage />} />
           <Route path="/full-card/:id" element={<FullCard />} />
           <Route path="/form" element={<VesselForm />} />
-          {/* Add a catch-all route for unmatched routes */}
+          <Route path="/update/:id" element={<VesselForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </>
