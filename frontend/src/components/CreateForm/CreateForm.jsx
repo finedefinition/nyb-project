@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams
-import './VesselForm.css';
+import React, { useState } from 'react';
+import './CreateForm.css';
 
-export const VesselForm = ({ initialData }) => {
-    const { id } = useParams(); // Extract 'id' from URL params
-
-    const [formData, setFormData] = useState(initialData || {
+export const CreateForm = () => {
+    const [formData, setFormData] = useState({
         featuredVessel: false,
-        vesselMake: '',
-        vesselModel: '',
-        vesselPrice: 0,
-        vesselYear: 0,
-        vesselLocationCountry: '',
-        vesselLocationState: '',
-        vesselLengthOverall: 0,
-        vesselBeam: 0,
-        vesselDraft: 0,
-        vesselCabin: 0,
-        vesselBerth: 0,
-        vesselKeelType: '',
-        vesselFuelType: '',
-        engineQuantity: 0,
-        vesselDescription: '',
+        vesselMake: 'Hanse',
+        vesselModel: '60',
+        vesselPrice: 12000,
+        vesselYear: 2016,
+        vesselLocationCountry: 'Ukraine',
+        vesselLocationState: 'Odessa',
+        vesselLengthOverall: 15,
+        vesselBeam: 3,
+        vesselDraft: 3,
+        vesselCabin: 2,
+        vesselBerth: 4,
+        vesselKeelType: 'Fin',
+        vesselFuelType: 'Diesel',
+        engineQuantity: 1,
+        vesselDescription: 'The best yacht ever',
         imageFile: null,
     });
 
@@ -30,36 +27,8 @@ export const VesselForm = ({ initialData }) => {
         message: '',
     });
 
-    useEffect(() => {
-        if (initialData) {
-            // Set the form data when initialData is provided (e.g., when editing an existing vessel)
-            setFormData(initialData);
-        } else {
-            // If initialData is not provided, fetch data from the server
-            async function fetchData() {
-                try {
-                    const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${id}`, {
-                        method: 'GET',
-                    });
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch data: ${response.status}`);
-                    }
-                    const data = await response.json();
-
-                    // Update the formData state with the retrieved data
-                    setFormData(data);
-                    console.log('Data fetched successfully:', data);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-
-            fetchData();
-        }
-    }, [initialData, id]);
-
-
     const handleChange = (e) => {
+        // Handle changes in form inputs
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -68,6 +37,7 @@ export const VesselForm = ({ initialData }) => {
     };
 
     const handleFileChange = (e) => {
+        // Handle file input changes
         const file = e.target.files[0];
         setFormData({
             ...formData,
@@ -79,39 +49,43 @@ export const VesselForm = ({ initialData }) => {
         e.preventDefault();
         console.log(formData);
 
+        if (!formData.imageFile) {
+            // Handle the case where 'imageFile' is not present
+            setSubmitStatus({
+                status: 'error',
+                message: 'Please select an image file.',
+            });
+            return;
+        }
+
+        // Prepare the form data to be sent to the server
         const formDataToSend = new FormData();
         for (const key in formData) {
             formDataToSend.append(key, formData[key]);
         }
 
         try {
-            let response;
-            if (initialData) {
-                // If initialData is provided, this is an update operation
-                response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${initialData.id}`, {
-                    method: 'PUT',
-                    body: formDataToSend,
-                });
-            } else {
-                // Otherwise, this is a create operation
-                response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
-                    method: 'POST',
-                    body: formDataToSend,
-                });
-            }
+            // This is a create operation
+            const response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
+                method: 'POST',
+                body: formDataToSend,
+            });
 
             if (response.status === 201 || response.status === 204) {
+                // Handle success
                 setSubmitStatus({
                     status: 'success',
                     message: 'Boat is saved successfully!',
                 });
             } else {
+                // Handle error
                 setSubmitStatus({
                     status: 'error',
                     message: 'There was an error saving the boat.',
                 });
             }
         } catch (error) {
+            // Handle error
             setSubmitStatus({
                 status: 'error',
                 message: 'There was an error saving the boat.',
@@ -119,7 +93,6 @@ export const VesselForm = ({ initialData }) => {
             console.error('Error:', error);
         }
     };
-
 
     return (
         <form onSubmit={handleSubmit} className="vessel-form">
@@ -133,11 +106,28 @@ export const VesselForm = ({ initialData }) => {
                             type="checkbox"
                             name="featuredVessel"
                             checked={formData.featuredVessel}
-                            onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}
+                            onChange={(e) => setFormData({ ...formData, featuredVessel: e.target.checked })}
                         />
                         <span className="slider"></span>
                     </label>
                 </div>
+            </div>
+            <div className="form-row">
+                <label>
+                    Upload Image:
+                    <input
+                        type="file"
+                        name="imageFile"
+                        onChange={handleFileChange}
+                    />
+                </label>
+                {formData.imageFile && (
+                    <img
+                        src={URL.createObjectURL(formData.imageFile)}
+                        alt="Image Preview"
+                        className="image-preview"
+                    />
+                )}
             </div>
             <div className="form-row">
                 <label>
@@ -304,17 +294,7 @@ export const VesselForm = ({ initialData }) => {
                 </label>
             </div>
             <div className="form-row">
-                <label>
-                    Upload Image:
-                    <input
-                        type="file"
-                        name="imageFile"
-                        onChange={handleFileChange}
-                    />
-                </label>
-            </div>
-            <div className="form-row">
-                <button type="submit">{initialData ? 'Update Vessel' : 'Create Vessel'}</button>
+                <button type="submit" className="create-button">Create Vessel</button>
             </div>
 
             {submitStatus.status && (

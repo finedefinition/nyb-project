@@ -12,10 +12,10 @@
 .main__btn {
   z-index: 1;
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%);
-  padding: 20px;
+  padding: 30px;
   background: white;
   color: black;
   font-size: 20px;

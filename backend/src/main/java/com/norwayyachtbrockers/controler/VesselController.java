@@ -83,7 +83,7 @@ public class VesselController {
     }
 
     @PutMapping("/{vesselId}")
-    public ResponseEntity<Vessel> update(
+    public ResponseEntity<Vessel> updateVessel(
             @PathVariable Long vesselId,
             @RequestParam("featuredVessel") boolean featuredVessel,
             @RequestParam("vesselMake") String vesselMake,
@@ -103,15 +103,15 @@ public class VesselController {
             @RequestParam("vesselDescription") String vesselDescription,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        Vessel newVessel = mapVesselFromRequestParams(
-                featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear, vesselLocationCountry,
-                vesselLocationState, vesselLengthOverall, vesselBeam, vesselDraft, vesselCabin, vesselBerth,
-                vesselKeelType, vesselFuelType, engineQuantity, vesselDescription
+        Vessel updated = vesselService.updateVessel(
+                vesselId, featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,
+                vesselLocationCountry, vesselLocationState, vesselLengthOverall, vesselBeam,
+                vesselDraft, vesselCabin, vesselBerth, vesselKeelType, vesselFuelType,
+                engineQuantity, vesselDescription, imageFile
         );
-        newVessel.setCreatedAt(LocalDateTime.now());
-        Vessel updated = vesselService.update(vesselId,newVessel, imageFile);
-        return  ResponseEntity.ok(updated);
+        return ResponseEntity.ok(updated);
     }
+
 
     @GetMapping("/cards")
     public ResponseEntity<List<VesselShortResponseDto>> findAllShortVesselCards() {

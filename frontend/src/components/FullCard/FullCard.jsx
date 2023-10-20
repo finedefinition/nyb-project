@@ -31,7 +31,7 @@ export const FullCard = () => {
                 if (boatData && boatData.imageKey) {
                     const response = await fetch('/config.json');
                     if (!response.ok) {
-                        throw new Error('Failed to fetch configuration');
+                        throw  Error('Failed to fetch configuration');
                     }
                     const config = await response.json();
 
@@ -72,34 +72,29 @@ export const FullCard = () => {
     }
 
     return (
-                <div className="FullCard">
-                    {loading && <p className="loading-text">Loading boat data...</p>}
-                    {error && <p className="error-text">Error: {error.message}</p>}
-                    {!loading && !error && boatData && imageUrl && (
-                        <div className="card-content">
-                            <img src={imageUrl} alt="Boat" className="card-image"/>
-                            <div className="card-details">
-                                <h3 className="card-title">
-                                    {boatData.vesselMake} {boatData.vesselModel}
-                                </h3>
-                                <div className="card-info">
-                                    <p>Price: €{boatData.vesselPrice}</p>
-                                    <p>Year: {boatData.vesselYear}</p>
-                                    <p>Country: {boatData.vesselLocationCountry}</p>
-                                    <p>State: {boatData.vesselLocationState}</p>
-                                    <p>Length Overall: {boatData.vesselLengthOverall} feet</p>
-                                    <p>Beam: {boatData.vesselBeam} feet</p>
-                                    <p>Draft: {boatData.vesselDraft} feet</p>
-                                    <p>Cabin: {boatData.vesselCabin}</p>
-                                    <p>Berth: {boatData.vesselBerth}</p>
-                                    <p>Keel Type: {boatData.vesselKeelType}</p>
-                                    <p>Fuel Type: {boatData.vesselFuelType}</p>
-                                    <p>Engine Quantity: {boatData.engineQuantity}</p>
-                                    <p className="description">{boatData.vesselDescription}</p>
-                                    <p>Created At: {new Date(boatData.createdAt).toLocaleString()}</p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+        <div className="FullCard">
+            <img src={imageUrl} alt="Boat" className="card-image" />
+            <div className="card-details">
+                <h3 className="card-title">
+                    {boatData.vesselMake} {boatData.vesselModel}
+                </h3>
+                <div className="card-info">
+                    <p className="card-info-item">Price: €{boatData.vesselPrice}</p>
+                    <p className="card-info-item">Year: {boatData.vesselYear}</p>
+                    <p className="card-info-item">Country: {boatData.vesselLocationCountry}</p>
+                    <p className="card-info-item">State: {boatData.vesselLocationState}</p>
+                    <p className="card-info-item">Length Overall: {boatData.vesselLengthOverall} feet</p>
+                    <p className="card-info-item">Beam: {boatData.vesselBeam} feet</p>
+                    <p className="card-info-item">Draft: {boatData.vesselDraft} feet</p>
+                    <p className="card-info-item">Cabin: {boatData.vesselCabin}</p>
+                    <p className="card-info-item">Berth: {boatData.vesselBerth}</p>
+                    <p className="card-info-item">Keel Type: {boatData.vesselKeelType}</p>
+                    <p className="card-info-item">Fuel Type: {boatData.vesselFuelType}</p>
+                    <p className="card-info-item">Engine Quantity: {boatData.engineQuantity}</p>
+                    <p className="description">{boatData.vesselDescription}</p>
+                    <p className="card-info-item">Created At: {new Date(boatData.createdAt).toLocaleString()}</p>
                 </div>
-            );}
+            </div>
+        </div>
+    );
+};

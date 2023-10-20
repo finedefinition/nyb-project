@@ -1,5 +1,5 @@
 import './Main.css';
-import {SectionCard} from "../SectionCard";
+import {SectionCard} from "../../components/SectionCard";
 
 
 export const Main = () => {

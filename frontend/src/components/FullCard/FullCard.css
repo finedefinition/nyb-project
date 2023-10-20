@@ -1,51 +1,56 @@
 /* FullCard Component Styling */
 .FullCard {
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px;
     margin: 20px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .loading-text {
     text-align: center;
     font-size: 18px;
     color: #666;
+    margin-top: 20px;
 }
 
 .error-text {
     text-align: center;
     font-size: 18px;
     color: #ff0000;
-}
-
-.card-content {
-    display: flex;
+    margin-top: 20px;
 }
 
 .card-image {
-    max-width: 300px;
-    margin-right: 20px;
     border-radius: 8px;
+    margin-bottom: 20px;
+    width: auto;
+}
+
+.card-details {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.card-info {
-    flex-grow: 1;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .card-info p {
-    font-size: 16px;
-    margin: 6px 0;
+    font-size: 18px;
+    margin: 10px 0;
+    color: #555;
 }
 
 .description {
     font-style: italic;
-    margin-top: 12px;
-    font-size: 18px;
-    color: #333;
+    margin-top: 20px;
+    font-size: 20px;
+    color: #444;
 }
