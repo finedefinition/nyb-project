@@ -101,7 +101,7 @@ public class VesselController {
             @RequestParam("vesselFuelType") String vesselFuelType,
             @RequestParam("engineQuantity") int engineQuantity,
             @RequestParam("vesselDescription") String vesselDescription,
-            @RequestPart("imageFile") MultipartFile imageFile
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
     ) {
         Vessel updated = vesselService.updateVessel(
                 vesselId, featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,

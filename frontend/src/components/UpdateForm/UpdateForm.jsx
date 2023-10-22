@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useMemo } from 'react'; // Import useMemo
 import {useParams} from 'react-router-dom';
 import AWS from 'aws-sdk';
 import './UpdateForm.css';
@@ -26,7 +26,7 @@ export const UpdateForm = () => {
         imageKey: '', // Add a field to store the image key
     });
 // Define 's3' and 'bucketName' variables
-    const s3 = new AWS.S3();
+    const s3 = useMemo(() => new AWS.S3(), []);
     const bucketName = 'nyb-basket';
 
     const [submitStatus, setSubmitStatus] = useState({
@@ -59,17 +59,6 @@ export const UpdateForm = () => {
         initAWSConfig();
     }, []);
 
-    const fetchImage = async (imageKey) => {
-        try {
-            // Fetch the image using the imageKey
-            const s3Object = await s3.getObject({ Bucket: bucketName, Key: imageKey }).promise();
-            const imageUrl = URL.createObjectURL(new Blob([s3Object.Body]));
-            setImageUrl(imageUrl);
-        } catch (error) {
-            console.error('Error fetching image:', error);
-        }
-    }
-
     // Fetch existing image data and set it in the state
     useEffect(() => {
         async function fetchData() {
@@ -83,7 +72,14 @@ export const UpdateForm = () => {
 
                 // If an imageKey exists, fetch and display the image
                 if (data.imageKey) {
-                    fetchImage(data.imageKey);
+                    try {
+                        // Fetch the image using the imageKey
+                        const s3Object = await s3.getObject({ Bucket: bucketName, Key: data.imageKey }).promise();
+                        const imageUrl = URL.createObjectURL(new Blob([s3Object.Body]));
+                        setImageUrl(imageUrl);
+                    } catch (error) {
+                        console.error('Error fetching image:', error);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -91,7 +87,8 @@ export const UpdateForm = () => {
         }
 
         fetchData();
-    }, [id]);
+    }, [id, s3, bucketName]);
+
 
     const handleUpdate = async () => {
         try {
@@ -106,7 +103,7 @@ export const UpdateForm = () => {
             // Append other form fields
             for (const key in formData) {
                 // Skip the 'imageFile' property if it's already included
-                if (key !== "imageFile") {
+                if (key !== "imageFile" && formData[key] !== null) {
                     formDataToSend.append(key, formData[key]);
                 }
             }
@@ -150,7 +147,8 @@ export const UpdateForm = () => {
             ...formData,
             imageFile: file, // Update the 'imageFile' property in the state
         });
-    };
+    console.log(formData); // Log to check
+};
 
 
     return (
