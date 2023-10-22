@@ -4,6 +4,8 @@ import AWS from 'aws-sdk';
 import './UpdateForm.css';
 
 export const UpdateForm = () => {
+    const fileInputRef = React.useRef(null);
+
     const {id} = useParams() || {id: 'defaultId'};
 
     const [formData, setFormData] = useState({
@@ -143,23 +145,46 @@ export const UpdateForm = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onloadend = () => {
+                setImageUrl(reader.result);  // set the preview image
+            };
+
+            reader.readAsDataURL(file);  // read the file to data URL format
+
+            setFormData({
+                ...formData,
+                imageFile: file, // Update the 'imageFile' property in the state
+            });
+        }
+        console.log(formData); // Log to check
+    };
+
+    const handleFileClear = () => {
+        fileInputRef.current.value = '';  // Clear the input field
         setFormData({
             ...formData,
-            imageFile: file, // Update the 'imageFile' property in the state
+            imageFile: null  // Reset the 'imageFile' property in the state
         });
-    console.log(formData); // Log to check
-};
+        setImageUrl('');  // Clear the image preview
+    };
+
 
 
     return (
-        <div>
+        <div className="container">
             <form onSubmit={handleUpdate} className="vessel-form">
                 {imageUrl && (
-                    <div className="form-row">
+                    <div className="form-row image-row">
                         <label>Image:</label>
                         <img src={imageUrl} alt="Vessel" className="vessel-image"/>
                     </div>
                 )}
+                <div className="form-columns"> {/* Wrapper for the two columns */}
+                    <div className="form-column"> {/* First column */}
                 <div className="form-row">
                     <label>
                         Featured Vessel:
@@ -242,6 +267,9 @@ export const UpdateForm = () => {
                         />
                     </label>
                 </div>
+                    </div>
+                    <div className="form-column"> {/* Second column */}
+                        {/* Place the other half of your form rows here */}
                 <div className="form-row">
                     <label>
                         Vessel Length Overall:
@@ -340,14 +368,19 @@ export const UpdateForm = () => {
                         />
                     </label>
                 </div>
-                <div className="form-row">
+                    </div>
+                </div>
+                    <div className="form-row file-upload-row">
                     <label>
                         Upload Image:
-                        <input type="file" name="imageFile" onChange={handleFileChange}/>
+                        <input type="file" name="imageFile" onChange={handleFileChange} ref={fileInputRef}/>
                     </label>
+                    {formData.imageFile && (
+                        <button type="button" onClick={handleFileClear} className="clear-file-btn">×</button>
+                    )}
                 </div>
 
-                <button type="button" onClick={handleUpdate}>
+                <button type="button" onClick={handleUpdate} className="update-button">
                     Update
                 </button>
 

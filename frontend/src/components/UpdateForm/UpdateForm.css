@@ -1,37 +1,77 @@
-/* UpdateForm.css */
-
-/* Style the form container */
-.vessel-form {
-    width: 300px;
-    margin: 0;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f5f5f5;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Style form rows (each input and label pair) */
+/*.vessel-form {*/
+/*    background-color: #fff; !* Changed to white background *!*/
+/*    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); !* Added shadow for elevated look *!*/
+/*    border-radius: 8px; !* Rounded corners *!*/
+/*    padding: 20px; !* Padding inside the form *!*/
+/*    max-width: 600px; !* Made the form wider *!*/
+/*    margin: 20px auto; !* Centering the form with auto margins *!*/
+/*}*/
+
+.vessel-form {
+    width: 80%;  /* Or whatever width you prefer */
+}
+
+.image-row {
+    text-align: center;
+}
+
+.form-columns {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;  /* Wrap onto the next line if space is tight */
+}
+
+.form-column {
+    flex: 1;
+    padding: 0 15px;
+}
+
 .form-row {
     margin-bottom: 15px;
 }
 
-/* Style labels */
 .form-row label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #555; /* Changed font color to match card details */
 }
 
-/* Style text inputs */
 .form-row input[type="text"],
 .form-row input[type="number"],
-.form-row input[type="file"],
 .form-row textarea {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    color: #555; /* Changed font color to match card details */
+}
+
+.vessel-image {
+    border-radius: 8px; /* Rounded corners for image */
+    max-width: 100%; /* Image will take the full width but not more */
+    margin-bottom: 20px;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* If screen size is too small, make form take full width */
+@media (max-width: 768px) {
+    .form-columns {
+        flex-direction: column;
+    }
+    .form-column {
+        padding: 0;
+        margin-bottom: 15px;
+    }
 }
 
 /* Style the checkbox input */
@@ -52,6 +92,7 @@
 .create-button:hover {
     background-color: #0056b3;
 }
+
 /*Checkmark*/
 .custom-toggle {
     position: relative;
@@ -108,3 +149,56 @@
 .toggle-label input:checked + .slider:before {
     transform: translateX(26px);
 }
+
+/* Update button styling specific to the update-button class */
+.update-button {
+    width: 100%; /* Make the button take the full width like the inputs */
+    padding: 8px; /* Adjusted padding to match input form */
+    background: linear-gradient(to right, #007BFF, #2196F3); /* Gradient background */
+    color: #fff; /* White font color */
+    border: none;
+    border-radius: 3px; /* Adjusted border radius to match input form */
+    cursor: pointer;
+    font-size: 16px; /* Bigger font size */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+    margin-top: 10px; /* Provide some spacing between the last input and the button */
+}
+
+/* Hover effect for update-button */
+.update-button:hover {
+    background: linear-gradient(to right, #0056b3, #007BFF); /* Darker gradient on hover */
+    transform: translateY(-2px); /* Raise the button a bit */
+}
+
+/* Active effect for update-button */
+.update-button:active {
+    transform: translateY(0); /* Reset the button position */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+}
+
+.file-upload-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.clear-file-btn {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #333;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
+    transition: background-color 0.3s;
+}
+
+.clear-file-btn:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+}
+

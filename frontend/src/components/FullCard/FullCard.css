@@ -1,32 +1,38 @@
-/* FullCard Component Styling */
 .FullCard {
     background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
     padding: 20px;
     margin: 20px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.loading-text, .error-text {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 20px;
 }
 
 .loading-text {
-    text-align: center;
-    font-size: 18px;
     color: #666;
-    margin-top: 20px;
 }
 
 .error-text {
-    text-align: center;
-    font-size: 18px;
     color: #ff0000;
-    margin-top: 20px;
 }
 
 .card-image {
     border-radius: 8px;
     margin-bottom: 20px;
-    width: auto;
+    max-width: 40%;  /* Ensure image doesn't overflow */
+    height: auto;
 }
 
 .card-details {
@@ -34,18 +40,27 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between; /* Distributes the space between title and card info */
 }
 
 .card-title {
-    font-size: 28px;
-    margin-bottom: 20px;
+    font-size: 32px;
+    margin-bottom: 24px;
     color: #333;
+    font-weight: bold;
+}
+
+.card-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
 }
 
 .card-info p {
     font-size: 18px;
     margin: 10px 0;
     color: #555;
+    font-weight: 500;
 }
 
 .description {
@@ -53,4 +68,5 @@
     margin-top: 20px;
     font-size: 20px;
     color: #444;
+    grid-column: span 2; /* Makes the description span 2 columns in the grid */
 }
