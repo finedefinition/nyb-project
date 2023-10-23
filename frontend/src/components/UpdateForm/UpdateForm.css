@@ -1,3 +1,4 @@
+/*Update form*/
 .container {
     display: flex;
     flex-direction: column;
@@ -184,7 +185,7 @@
 
 /* Update button styling specific to the update-button class */
 .update-button {
-    width: 100%; /* Make the button take the full width like the inputs */
+    width: 48%; /* Make the button take the full width like the inputs */
     padding: 8px; /* Adjusted padding to match input form */
     background: linear-gradient(to right, #007BFF, #2196F3); /* Gradient background */
     color: #fff; /* White font color */
@@ -234,3 +235,33 @@
     background-color: rgba(255, 0, 0, 0.7);
 }
 
+.button-container {
+    display: flex;
+    justify-content: space-between; /* This will spread the buttons apart */
+    width: 200px; /* This can be adjusted based on preference */
+    margin: 20px auto; /* Centers the button container */
+}
+
+.delete-button {
+    width: 48%; /* Make it match the Update button's width */
+    padding: 8px;
+    background: #f44336; /* Red color */
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 10px;
+}
+
+.delete-button:hover {
+    background: #d32f2f; /* Darken red color on hover */
+    transform: translateY(-2px);
+}
+
+.delete-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

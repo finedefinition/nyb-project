@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react'; // Import useMemo
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import AWS from 'aws-sdk';
 import './UpdateForm.css';
 
@@ -30,6 +30,7 @@ export const UpdateForm = () => {
 // Define 's3' and 'bucketName' variables
     const s3 = useMemo(() => new AWS.S3(), []);
     const bucketName = 'nyb-basket';
+    const navigate = useNavigate();
 
     const [submitStatus, setSubmitStatus] = useState({
         status: '',
@@ -120,6 +121,8 @@ export const UpdateForm = () => {
                     status: 'success',
                     message: 'Vessel is updated successfully!',
                 });
+                navigate(`/full-card/${vesselId}`);
+
             } else {
                 setSubmitStatus({
                     status: 'error',
@@ -170,6 +173,34 @@ export const UpdateForm = () => {
             imageFile: null  // Reset the 'imageFile' property in the state
         });
         setImageUrl('');  // Clear the image preview
+    };
+
+    const handleDelete = async () => {
+        try {
+            const vesselId = id;
+            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vesselId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.status === 204) { // Check for 204 status now
+                setSubmitStatus({
+                    status: 'success',
+                    message: 'Vessel is deleted successfully!',
+                });
+                navigate(`/yachts`);
+            } else {
+                setSubmitStatus({
+                    status: 'error',
+                    message: 'Failed to delete the vessel.',
+                });
+            }
+        } catch (error) {
+            setSubmitStatus({
+                status: 'error',
+                message: 'An error occurred while deleting the vessel.',
+            });
+            console.error('Error:', error);
+        }
     };
 
 
@@ -397,9 +428,14 @@ export const UpdateForm = () => {
                         </div>
                     </div>
                 </div>
-                <button type="button" onClick={handleUpdate} className="update-button">
-                    Update
-                </button>
+                <div className="button-container">
+                    <button type="button" onClick={handleUpdate} className="update-button">
+                        Update
+                    </button>
+                    <button type="button" onClick={handleDelete} className="delete-button">
+                        Delete
+                    </button>
+                </div>
 
                 {submitStatus.status && (
                     <div className={`submit-message ${submitStatus.status}`}>
