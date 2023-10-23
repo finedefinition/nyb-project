@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'; // Import useMemo
+import React, {useState, useEffect, useMemo} from 'react'; // Import useMemo
 import {useParams} from 'react-router-dom';
 import AWS from 'aws-sdk';
 import './UpdateForm.css';
@@ -76,7 +76,7 @@ export const UpdateForm = () => {
                 if (data.imageKey) {
                     try {
                         // Fetch the image using the imageKey
-                        const s3Object = await s3.getObject({ Bucket: bucketName, Key: data.imageKey }).promise();
+                        const s3Object = await s3.getObject({Bucket: bucketName, Key: data.imageKey}).promise();
                         const imageUrl = URL.createObjectURL(new Blob([s3Object.Body]));
                         setImageUrl(imageUrl);
                     } catch (error) {
@@ -173,213 +173,230 @@ export const UpdateForm = () => {
     };
 
 
-
     return (
         <div className="container">
             <form onSubmit={handleUpdate} className="vessel-form">
-                {imageUrl && (
-                    <div className="form-row image-row">
-                        <label>Image:</label>
-                        <img src={imageUrl} alt="Vessel" className="vessel-image"/>
+                <div className="top-section"> {/* Top section containing image, upload, and description */}
+                    <div className="left-side"> {/* Image and upload section */}
+                        {imageUrl && (
+                            <div className="image-container">
+                                <img src={imageUrl} alt="Vessel" className="vessel-image"/>
+                            </div>
+                        )}
+                        <div className="upload-section">
+                            <label>
+                                Upload Image:
+                                <input type="file" name="imageFile" onChange={handleFileChange} ref={fileInputRef}/>
+                            </label>
+                            {formData.imageFile && (
+                                <button type="button" onClick={handleFileClear} className="clear-file-btn">×</button>
+                            )}
+                        </div>
                     </div>
-                )}
-                <div className="form-columns"> {/* Wrapper for the two columns */}
-                    <div className="form-column"> {/* First column */}
-                <div className="form-row">
-                    <label>
-                        Featured Vessel:
-                        <div className="custom-toggle">
-                            <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>
-                                <input
-                                    type="checkbox"
-                                    name="featuredVessel"
-                                    checked={formData.featuredVessel}
-                                    onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}
-                                />
-                                <span className="slider"></span>
+
+                    <div className="right-side"> {/* Featured and description section */}
+                        <div className="feature-section">
+                            <label>
+                                Featured
+                                <div className="custom-toggle">
+                                    <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>
+                                        <input
+                                            type="checkbox"
+                                            name="featuredVessel"
+                                            checked={formData.featuredVessel}
+                                            onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}
+                                        />
+                                        <span className="slider"></span>
+                                    </label>
+                                </div>
                             </label>
                         </div>
-                    </label>
+
+                        <div className="form-row description-row">
+                            <label>
+                                Description
+                                <textarea
+                                    name="vesselDescription"
+                                    value={formData.vesselDescription}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Make:
-                        <input
-                            type="text"
-                            name="vesselMake"
-                            value={formData.vesselMake}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Model:
-                        <input
-                            type="text"
-                            name="vesselModel"
-                            value={formData.vesselModel}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Price:
-                        <input
-                            type="number"
-                            name="vesselPrice"
-                            value={formData.vesselPrice}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Year:
-                        <input
-                            type="number"
-                            name="vesselYear"
-                            value={formData.vesselYear}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Location Country:
-                        <input
-                            type="text"
-                            name="vesselLocationCountry"
-                            value={formData.vesselLocationCountry}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Location State:
-                        <input
-                            type="text"
-                            name="vesselLocationState"
-                            value={formData.vesselLocationState}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
+                <div className="form-columns"> {/* Wrapper for the columns */}
+                    <div className="form-column"> {/* First column */}
+
+                        <div className="form-row">
+                            <label>
+                                Vessel Make
+                                <input
+                                    type="text"
+                                    name="vesselMake"
+                                    value={formData.vesselMake}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Length Overall
+                                <input
+                                    type="number"
+                                    name="vesselLengthOverall"
+                                    value={formData.vesselLengthOverall}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Cabin
+                                <input
+                                    type="number"
+                                    name="vesselCabin"
+                                    value={formData.vesselCabin}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
                     </div>
                     <div className="form-column"> {/* Second column */}
-                        {/* Place the other half of your form rows here */}
-                <div className="form-row">
-                    <label>
-                        Vessel Length Overall:
-                        <input
-                            type="number"
-                            name="vesselLengthOverall"
-                            value={formData.vesselLengthOverall}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Beam:
-                        <input
-                            type="number"
-                            name="vesselBeam"
-                            value={formData.vesselBeam}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Draft:
-                        <input
-                            type="number"
-                            name="vesselDraft"
-                            value={formData.vesselDraft}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Cabin:
-                        <input
-                            type="number"
-                            name="vesselCabin"
-                            value={formData.vesselCabin}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Berth:
-                        <input
-                            type="number"
-                            name="vesselBerth"
-                            value={formData.vesselBerth}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Keel Type:
-                        <input
-                            type="text"
-                            name="vesselKeelType"
-                            value={formData.vesselKeelType}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Fuel Type:
-                        <input
-                            type="text"
-                            name="vesselFuelType"
-                            value={formData.vesselFuelType}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Engine Quantity:
-                        <input
-                            type="number"
-                            name="engineQuantity"
-                            value={formData.engineQuantity}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <div className="form-row">
-                    <label>
-                        Vessel Description:
-                        <textarea
-                            name="vesselDescription"
-                            value={formData.vesselDescription}
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
+                        <div className="form-row">
+                            <label>
+                                Model
+                                <input
+                                    type="text"
+                                    name="vesselModel"
+                                    value={formData.vesselModel}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Beam
+                                <input
+                                    type="number"
+                                    name="vesselBeam"
+                                    value={formData.vesselBeam}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Berth
+                                <input
+                                    type="number"
+                                    name="vesselBerth"
+                                    value={formData.vesselBerth}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    {/* Third column */}
+                    <div className="form-column">
+                        <div className="form-row">
+                            <label>
+                                Price
+                                <input
+                                    type="number"
+                                    name="vesselPrice"
+                                    value={formData.vesselPrice}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Draft
+                                <input
+                                    type="number"
+                                    name="vesselDraft"
+                                    value={formData.vesselDraft}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    {/* Fourth column */}
+                    <div className="form-column">
+                        <div className="form-row">
+                            <label>
+                                Year
+                                <input
+                                    type="number"
+                                    name="vesselYear"
+                                    value={formData.vesselYear}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Keel Type
+                                <input
+                                    type="text"
+                                    name="vesselKeelType"
+                                    value={formData.vesselKeelType}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    {/* Fifth column */}
+                    <div className="form-column">
+                        <div className="form-row">
+                            <label>
+                                Location Country
+                                <input
+                                    type="text"
+                                    name="vesselLocationCountry"
+                                    value={formData.vesselLocationCountry}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Fuel Type
+                                <input
+                                    type="text"
+                                    name="vesselFuelType"
+                                    value={formData.vesselFuelType}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    {/* Sixth column */}
+                    <div className="form-column">
+                        <div className="form-row">
+                            <label>
+                                Location State
+                                <input
+                                    type="text"
+                                    name="vesselLocationState"
+                                    value={formData.vesselLocationState}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
+                        <div className="form-row">
+                            <label>
+                                Engine Quantity
+                                <input
+                                    type="number"
+                                    name="engineQuantity"
+                                    value={formData.engineQuantity}
+                                    onChange={handleChange}
+                                />
+                            </label>
+                        </div>
                     </div>
                 </div>
-                    <div className="form-row file-upload-row">
-                    <label>
-                        Upload Image:
-                        <input type="file" name="imageFile" onChange={handleFileChange} ref={fileInputRef}/>
-                    </label>
-                    {formData.imageFile && (
-                        <button type="button" onClick={handleFileClear} className="clear-file-btn">×</button>
-                    )}
-                </div>
-
                 <button type="button" onClick={handleUpdate} className="update-button">
                     Update
                 </button>

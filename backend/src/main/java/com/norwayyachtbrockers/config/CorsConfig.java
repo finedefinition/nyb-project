@@ -17,6 +17,8 @@ public class CorsConfig {
         config.addAllowedOrigin("*");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
+        config.addExposedHeader("Vessel-Delete-Status");
+
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);

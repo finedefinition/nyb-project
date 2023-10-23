@@ -73,12 +73,17 @@ export const FullCard = () => {
 
     return (
         <div className="FullCard">
+            <div className="card-title">
+               <h2>{boatData.vesselMake} {boatData.vesselModel}</h2><h3><i>{boatData.vesselLocationCountry},{boatData.vesselLocationState} €{boatData.vesselPrice}</i></h3>
+            </div>
             <img src={imageUrl} alt="Boat" className="card-image" />
             <div className="card-details">
-                <h3 className="card-title">
-                    {boatData.vesselMake} {boatData.vesselModel}
-                </h3>
+
                 <div className="card-info">
+                    <div className="form-columns">
+                        <div className="form-column">
+
+                        </div>
                     <p className="card-info-item">Price: €{boatData.vesselPrice}</p>
                     <p className="card-info-item">Year: {boatData.vesselYear}</p>
                     <p className="card-info-item">Country: {boatData.vesselLocationCountry}</p>
@@ -93,6 +98,7 @@ export const FullCard = () => {
                     <p className="card-info-item">Engine Quantity: {boatData.engineQuantity}</p>
                     <p className="description">{boatData.vesselDescription}</p>
                     <p className="card-info-item">Created At: {new Date(boatData.createdAt).toLocaleString()}</p>
+                    </div>
                 </div>
             </div>
         </div>

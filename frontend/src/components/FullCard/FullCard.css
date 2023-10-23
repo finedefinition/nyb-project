@@ -1,7 +1,7 @@
 .FullCard {
     background-color: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
+    /*border-radius: 12px;*/
     padding: 20px;
     margin: 20px;
     display: flex;
@@ -44,8 +44,8 @@
 }
 
 .card-title {
-    font-size: 32px;
-    margin-bottom: 24px;
+    font-size: 18px;
+    /*margin-bottom: 24px;*/
     color: #333;
     font-weight: bold;
 }
@@ -70,3 +70,15 @@
     color: #444;
     grid-column: span 2; /* Makes the description span 2 columns in the grid */
 }
+
+.form-columns {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;  /* Wrap onto the next line if space is tight */
+}
+
+.form-column {
+    flex: 1;
+    padding: 0 15px;
+}
+

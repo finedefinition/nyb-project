@@ -4,19 +4,51 @@
     align-items: center;
 }
 
-/*.vessel-form {*/
-/*    background-color: #fff; !* Changed to white background *!*/
-/*    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); !* Added shadow for elevated look *!*/
-/*    border-radius: 8px; !* Rounded corners *!*/
-/*    padding: 20px; !* Padding inside the form *!*/
-/*    max-width: 600px; !* Made the form wider *!*/
-/*    margin: 20px auto; !* Centering the form with auto margins *!*/
-/*}*/
-
 .vessel-form {
-    width: 80%;  /* Or whatever width you prefer */
+    width: 90%;
 }
 
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.left-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.right-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.image-container {
+    margin-bottom: 10px;
+}
+
+.upload-section {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 0 0 8px 8px;
+}
+
+.feature-section {
+    margin-bottom: 20px;
+}
+
+.vessel-image {
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+}
+/**/
 .image-row {
     text-align: center;
 }
@@ -53,15 +85,15 @@
     color: #555; /* Changed font color to match card details */
 }
 
-.vessel-image {
-    border-radius: 8px; /* Rounded corners for image */
-    max-width: 100%; /* Image will take the full width but not more */
-    margin-bottom: 20px;
-    height: auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
+/*.vessel-image {*/
+/*    border-radius: 8px; !* Rounded corners for image *!*/
+/*    max-width: 100%; !* Image will take the full width but not more *!*/
+/*    margin-bottom: 20px;*/
+/*    height: auto;*/
+/*    display: block;*/
+/*    margin-left: auto;*/
+/*    margin-right: auto;*/
+/*}*/
 
 /* If screen size is too small, make form take full width */
 @media (max-width: 768px) {
