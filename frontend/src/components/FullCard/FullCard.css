@@ -1,84 +1,72 @@
-.FullCard {
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    /*border-radius: 12px;*/
-    padding: 20px;
-    margin: 20px;
+/*Full card*/
+.container {
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
+    width: 100%;  /* New: set the width to 100% of its parent */
+    max-width: 1440px;
+    margin: 0 auto;  /* New: centers the container if the viewport width is greater than the max-width */
 }
 
-.loading-text, .error-text {
-    text-align: center;
-    font-size: 20px;
-    margin-top: 20px;
-}
-
-.loading-text {
-    color: #666;
-}
-
-.error-text {
-    color: #ff0000;
-}
-
-.card-image {
-    border-radius: 8px;
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 20px;
-    max-width: 40%;  /* Ensure image doesn't overflow */
+    width: 100%; /* Add this line */
+}
+
+.left-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+
+.right-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 50%;
+}
+
+.image-container {
+    margin-bottom: 10px;
+}
+
+.vessel-image {
+    border-radius: 8px;
+    max-width: 100%;
     height: auto;
 }
 
-.card-details {
-    flex-grow: 1;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Distributes the space between title and card info */
+.upload-section {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 0 0 8px 8px;
 }
 
-.card-title {
-    font-size: 18px;
-    /*margin-bottom: 24px;*/
-    color: #333;
+.form-row {
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
     font-weight: bold;
-}
-
-.card-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.card-info p {
-    font-size: 18px;
-    margin: 10px 0;
-    color: #555;
-    font-weight: 500;
-}
-
-.description {
-    font-style: italic;
-    margin-top: 20px;
-    font-size: 20px;
-    color: #444;
-    grid-column: span 2; /* Makes the description span 2 columns in the grid */
+    color: #555; /* Changed font color to match card details */
 }
 
 .form-columns {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;  /* Wrap onto the next line if space is tight */
+    flex-wrap: wrap;
+    width: 100%; /* Add this line */
 }
 
 .form-column {
     flex: 1;
     padding: 0 15px;
+    box-sizing: border-box; /* This ensures padding is included in the width */
 }
-
