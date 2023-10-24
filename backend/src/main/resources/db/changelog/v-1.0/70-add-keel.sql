@@ -1,0 +1,3 @@
+ALTER TABLE vessels
+ADD keel VARCHAR(255) NULL
+GO

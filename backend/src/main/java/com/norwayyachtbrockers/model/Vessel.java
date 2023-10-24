@@ -1,12 +1,15 @@
 package com.norwayyachtbrockers.model;
 
+import com.norwayyachtbrockers.model.enums.FuelType;
+import com.norwayyachtbrockers.model.enums.KeelType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -59,6 +62,14 @@ public class Vessel {
     @Column(name = "fuel_type", nullable = false)
     private String vesselFuelType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "fuel", nullable = true)
+    private FuelType fuelType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "keel", nullable = true)
+    private KeelType keelType;
+
     @Column(name = "engines", nullable = false)
     private int engineQuantity;
 
@@ -74,13 +85,11 @@ public class Vessel {
     public Vessel() {
     }
 
-    public Vessel(boolean featuredVessel, String vesselMake, String vesselModel,
-                  BigDecimal vesselPrice, int vesselYear, String vesselLocationCountry,
-                  String vesselLocationState, BigDecimal vesselLengthOverall,
-                  BigDecimal vesselBeam, BigDecimal vesselDraft, int vesselCabin,
-                  int vesselBerth, String vesselKeelType, String vesselFuelType,
-                  int engineQuantity, String vesselDescription,
-                  LocalDateTime createdAt, String imageKey) {
+    public Vessel(boolean featuredVessel, String vesselMake, String vesselModel, BigDecimal vesselPrice,
+                  int vesselYear, String vesselLocationCountry, String vesselLocationState,
+                  BigDecimal vesselLengthOverall, BigDecimal vesselBeam, BigDecimal vesselDraft, int vesselCabin,
+                  int vesselBerth, String vesselKeelType, String vesselFuelType, FuelType fuelType, KeelType keelType,
+                  int engineQuantity, String vesselDescription, LocalDateTime createdAt, String imageKey) {
         this.featuredVessel = featuredVessel;
         this.vesselMake = vesselMake;
         this.vesselModel = vesselModel;
@@ -95,6 +104,8 @@ public class Vessel {
         this.vesselBerth = vesselBerth;
         this.vesselKeelType = vesselKeelType;
         this.vesselFuelType = vesselFuelType;
+        this.fuelType = fuelType;
+        this.keelType = keelType;
         this.engineQuantity = engineQuantity;
         this.vesselDescription = vesselDescription;
         this.createdAt = createdAt;
@@ -219,6 +230,22 @@ public class Vessel {
 
     public void setVesselFuelType(String vesselFuelType) {
         this.vesselFuelType = vesselFuelType;
+    }
+
+    public FuelType getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(FuelType fuelType) {
+        this.fuelType = fuelType;
+    }
+
+    public KeelType getKeelType() {
+        return keelType;
+    }
+
+    public void setKeelType(KeelType keelType) {
+        this.keelType = keelType;
     }
 
     public int getEngineQuantity() {

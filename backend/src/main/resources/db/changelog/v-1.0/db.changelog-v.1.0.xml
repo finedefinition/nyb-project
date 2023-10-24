@@ -11,6 +11,8 @@
     <include file="30-changeset-add-place.xml" relativeToChangelogFile="true" />
     <include file="40-changeset-vessels-table.xml" relativeToChangelogFile="true" />
     <include file="50-changeset-drop-featured.xml" relativeToChangelogFile="true" />
+    <include file="60-changeset-add-fuel.xml" relativeToChangelogFile="true" />
+    <include file="70-changeset-add-keel.xml" relativeToChangelogFile="true" />
 
 
 </databaseChangeLog>
