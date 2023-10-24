@@ -1,21 +1,21 @@
 package com.norwayyachtbrockers.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum KeelType {
     ALL_KEEL_TYPES,
     BILGE_KEEL,
-    BRUCE_FOIL,
     BULB_KEEL,
     CANTING_KEEL,
     CENTREBOARD,
-    FALSE_KEEL,
     FIN_KEEL,
     FULL_KEEL,
     LIFTING_KEEL,
     LONG_KEEL,
     SHOAL_KEEL,
-    SWING_KEEL,
     WINGED_KEEL;
 
+    @JsonValue
     @Override
     public String toString() {
         return switch (this) {
