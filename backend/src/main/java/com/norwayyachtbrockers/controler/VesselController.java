@@ -3,6 +3,8 @@ package com.norwayyachtbrockers.controler;
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
 import com.norwayyachtbrockers.model.Vessel;
+import com.norwayyachtbrockers.model.enums.FuelType;
+import com.norwayyachtbrockers.model.enums.KeelType;
 import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +70,8 @@ public class VesselController {
             @RequestParam("vesselBerth") int vesselBerth,
             @RequestParam("vesselKeelType") String vesselKeelType,
             @RequestParam("vesselFuelType") String vesselFuelType,
+            @RequestParam("keelType") KeelType keelType,
+            @RequestParam("fuelType") FuelType fuelType,
             @RequestParam("engineQuantity") int engineQuantity,
             @RequestParam("vesselDescription") String vesselDescription,
             @RequestPart("imageFile") MultipartFile imageFile
@@ -75,7 +79,7 @@ public class VesselController {
         Vessel newVessel = mapVesselFromRequestParams(
                 featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear, vesselLocationCountry,
                 vesselLocationState, vesselLengthOverall, vesselBeam, vesselDraft, vesselCabin, vesselBerth,
-                vesselKeelType, vesselFuelType, engineQuantity, vesselDescription
+                vesselKeelType, vesselFuelType, keelType, fuelType, engineQuantity, vesselDescription
         );
         newVessel.setCreatedAt(LocalDateTime.now());
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
@@ -99,6 +103,8 @@ public class VesselController {
             @RequestParam("vesselBerth") int vesselBerth,
             @RequestParam("vesselKeelType") String vesselKeelType,
             @RequestParam("vesselFuelType") String vesselFuelType,
+            @RequestParam("keelType") KeelType keelType,
+            @RequestParam("fuelType") FuelType fuelType,
             @RequestParam("engineQuantity") int engineQuantity,
             @RequestParam("vesselDescription") String vesselDescription,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
@@ -106,8 +112,8 @@ public class VesselController {
         Vessel updated = vesselService.updateVessel(
                 vesselId, featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,
                 vesselLocationCountry, vesselLocationState, vesselLengthOverall, vesselBeam,
-                vesselDraft, vesselCabin, vesselBerth, vesselKeelType, vesselFuelType,
-                engineQuantity, vesselDescription, imageFile
+                vesselDraft, vesselCabin, vesselBerth, vesselKeelType, vesselFuelType, keelType,
+                fuelType, engineQuantity, vesselDescription, imageFile
         );
         return ResponseEntity.ok(updated);
     }
@@ -136,8 +142,8 @@ public class VesselController {
             boolean featuredVessel, String vesselMake, String vesselModel, BigDecimal vesselPrice,
             int vesselYear, String vesselLocationCountry, String vesselLocationState,
             BigDecimal vesselLengthOverall, BigDecimal vesselBeam, BigDecimal vesselDraft,
-            int vesselCabin, int vesselBerth, String vesselKeelType, String vesselFuelType,
-            int engineQuantity, String vesselDescription
+            int vesselCabin, int vesselBerth, String vesselKeelType, String vesselFuelType, KeelType keelType,
+            FuelType fuelType, int engineQuantity, String vesselDescription
     ) {
         Vessel newVessel = new Vessel();
         newVessel.setFeaturedVessel(featuredVessel);
@@ -154,6 +160,8 @@ public class VesselController {
         newVessel.setVesselBerth(vesselBerth);
         newVessel.setVesselKeelType(vesselKeelType);
         newVessel.setVesselFuelType(vesselFuelType);
+        newVessel.setKeelType(keelType);
+        newVessel.setFuelType(fuelType);
         newVessel.setEngineQuantity(engineQuantity);
         newVessel.setVesselDescription(vesselDescription);
 

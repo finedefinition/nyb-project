@@ -3,6 +3,8 @@ package com.norwayyachtbrockers.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.norwayyachtbrockers.model.Vessel;
+import com.norwayyachtbrockers.model.enums.FuelType;
+import com.norwayyachtbrockers.model.enums.KeelType;
 import com.norwayyachtbrockers.repository.VesselRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +46,8 @@ public class VesselServiceImpl implements VesselService {
                                BigDecimal vesselPrice, int vesselYear, String vesselLocationCountry,
                                String vesselLocationState, BigDecimal vesselLengthOverall, BigDecimal vesselBeam,
                                BigDecimal vesselDraft, int vesselCabin, int vesselBerth, String vesselKeelType,
-                               String vesselFuelType, int engineQuantity, String vesselDescription, MultipartFile imageFile) {
+                               String vesselFuelType, KeelType keelType, FuelType fuelType, int engineQuantity,
+                               String vesselDescription, MultipartFile imageFile) {
         Vessel existingVessel = vesselRepository.findById(vesselId)
                 .orElseThrow(() -> new EntityNotFoundException("Vessel not found with ID: " + vesselId));
 
@@ -67,6 +70,8 @@ public class VesselServiceImpl implements VesselService {
         existingVessel.setVesselCabin(vesselCabin);
         existingVessel.setVesselBerth(vesselBerth);
         existingVessel.setVesselKeelType(vesselKeelType);
+        existingVessel.setFuelType(fuelType);
+        existingVessel.setKeelType(keelType);
         existingVessel.setVesselFuelType(vesselFuelType);
         existingVessel.setEngineQuantity(engineQuantity);
         existingVessel.setVesselDescription(vesselDescription);
