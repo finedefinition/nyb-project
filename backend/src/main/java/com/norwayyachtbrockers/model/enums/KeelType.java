@@ -20,7 +20,7 @@ public enum KeelType {
     public String toString() {
         return switch (this) {
             case ALL_KEEL_TYPES -> "All keel types";
-            case BILGE_KEEL -> "Bilge/Twin Keel";
+            case BILGE_KEEL -> "Bilge & Twin Keel";
             case BULB_KEEL -> "Bulb Keel";
             case CANTING_KEEL -> "Canting Keel";
             case CENTREBOARD -> "Centreboard & Daggerboard";

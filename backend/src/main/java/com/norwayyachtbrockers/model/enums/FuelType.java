@@ -17,8 +17,8 @@ public enum FuelType {
             case ALL_FUEL_TYPES -> "All fuel types";
             case DIESEL -> "Diesel";
             case ELECTRIC -> "Electric";
-            case GAS_LPG -> "Gas/LPG";
-            case PETROL_GASOLINE -> "Petrol/Gasoline";
+            case GAS_LPG -> "Gas or LPG";
+            case PETROL_GASOLINE -> "Petrol or Gasoline";
             case HYBRID -> "Hybrid";
             default -> throw new IllegalArgumentException("This fuel type is not supported");
         };
