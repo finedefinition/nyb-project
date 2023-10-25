@@ -66,7 +66,7 @@ export const UpdateForm = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${id}`);
+                const response = await fetch(`https://nyb-project-production.up.railway.app/api/vessels/${id}`);
                 if (!response.ok) {
                     throw Error(`Failed to fetch data: ${response.status}`);
                 }
@@ -111,7 +111,7 @@ export const UpdateForm = () => {
                 }
             }
 
-            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vesselId}`, {
+            const response = await fetch(`https://nyb-project-production.up.railway.app/api/vessels/${vesselId}`, {
                 method: 'PUT',
                 body: formDataToSend,
             });

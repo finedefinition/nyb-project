@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './CreateForm.css';
-import {FuelType} from "../../enums/FuelType";
-import {KeelType} from "../../enums/KeelType";
+
 
 export const CreateForm = () => {
     const fileInputRef = React.useRef(null);
@@ -19,8 +18,8 @@ export const CreateForm = () => {
         vesselDraft: 3,
         vesselCabin: 2,
         vesselBerth: 4,
-        vesselKeelType: 'ALL_KEEL_TYPES',
-        vesselFuelType: 'ALL_FUEL_TYPES',
+        vesselKeelType: 'Vessel Keel',
+        vesselFuelType: 'Fuel Type',
         keelType: 'ALL_KEEL_TYPES',
         fuelType: 'ALL_FUEL_TYPES',
         engineQuantity: 1,
@@ -32,15 +31,26 @@ export const CreateForm = () => {
         status: null,
         message: '',
     });
-    // Add select input for FuelType
-    const fuelTypeOptions = Object.values(FuelType).map(fuelType => (
-        <option key={fuelType} value={fuelType}>{fuelType}</option>
-    ));
 
-    // Add select input for KeelType
-    const keelTypeOptions = Object.values(KeelType).map(keelType => (
-        <option key={keelType} value={keelType}>{keelType}</option>
-    ));
+    const [keelTypes, setKeelTypes] = useState([]);
+    const [fuelTypes, setFuelTypes] = useState([]);
+
+
+    useEffect(() => {
+        fetch('https://nyb-project-production.up.railway.app/api/keelTypes')
+            .then(response => response.json())
+            .then(data => {
+                setKeelTypes(data);
+            });
+    }, []);
+
+    useEffect(() => {
+        fetch('https://nyb-project-production.up.railway.app/api/fuelTypes')
+            .then(response => response.json())
+            .then(data => {
+                setFuelTypes(data);
+            });
+    }, []);
 
     const handleChange = (e) => {
         // Handle changes in form inputs
@@ -294,12 +304,12 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Keel Type
-                                <select
-                                    name="keelType"
-                                    value={formData.keelType}
-                                    onChange={handleChange}
-                                >
-                                    {keelTypeOptions}
+                                <select>
+                                    {keelTypes.map((keelType, index) => (
+                                        <option key={index} value={keelType}>
+                                            {keelType}
+                                        </option>
+                                    ))}
                                 </select>
                             </label>
                         </div>
@@ -320,12 +330,12 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Fuel Type
-                                <select
-                                    name="fuelType"
-                                    value={formData.fuelType}
-                                    onChange={handleChange}
-                                >
-                                    {fuelTypeOptions}
+                                <select>
+                                    {fuelTypes.map((fuelType, index) => (
+                                        <option key={index} value={fuelType}>
+                                            {fuelType}
+                                        </option>
+                                    ))}
                                 </select>
                             </label>
                         </div>
