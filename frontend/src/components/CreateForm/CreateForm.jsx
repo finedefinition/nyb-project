@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import './CreateForm.css';
+import {FuelType} from "../../enums/FuelType";
+import {KeelType} from "../../enums/KeelType";
 
 export const CreateForm = () => {
     const fileInputRef = React.useRef(null);
@@ -17,8 +19,10 @@ export const CreateForm = () => {
         vesselDraft: 3,
         vesselCabin: 2,
         vesselBerth: 4,
-        vesselKeelType: 'Fin',
-        vesselFuelType: 'Diesel',
+        vesselKeelType: 'ALL_KEEL_TYPES',
+        vesselFuelType: 'ALL_FUEL_TYPES',
+        keelType: 'ALL_KEEL_TYPES',
+        fuelType: 'ALL_FUEL_TYPES',
         engineQuantity: 1,
         vesselDescription: 'The best yacht ever',
         imageFile: null,
@@ -28,6 +32,15 @@ export const CreateForm = () => {
         status: null,
         message: '',
     });
+    // Add select input for FuelType
+    const fuelTypeOptions = Object.values(FuelType).map(fuelType => (
+        <option key={fuelType} value={fuelType}>{fuelType}</option>
+    ));
+
+    // Add select input for KeelType
+    const keelTypeOptions = Object.values(KeelType).map(keelType => (
+        <option key={keelType} value={keelType}>{keelType}</option>
+    ));
 
     const handleChange = (e) => {
         // Handle changes in form inputs
@@ -68,7 +81,7 @@ export const CreateForm = () => {
 
         try {
             // This is a create operation
-            const response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
+            const response = await fetch('https://nyb-project-production.up.railway.app/api/vessels', {
                 method: 'POST',
                 body: formDataToSend,
             });
@@ -281,12 +294,13 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Keel Type
-                                <input
-                                    type="text"
-                                    name="vesselKeelType"
-                                    value={formData.vesselKeelType}
+                                <select
+                                    name="keelType"
+                                    value={formData.keelType}
                                     onChange={handleChange}
-                                />
+                                >
+                                    {keelTypeOptions}
+                                </select>
                             </label>
                         </div>
                     </div>
@@ -306,12 +320,13 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Fuel Type
-                                <input
-                                    type="text"
-                                    name="vesselFuelType"
-                                    value={formData.vesselFuelType}
+                                <select
+                                    name="fuelType"
+                                    value={formData.fuelType}
                                     onChange={handleChange}
-                                />
+                                >
+                                    {fuelTypeOptions}
+                                </select>
                             </label>
                         </div>
                     </div>

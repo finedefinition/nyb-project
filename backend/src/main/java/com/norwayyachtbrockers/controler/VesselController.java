@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/vessels")
+@RequestMapping("/api/vessels")
 public class VesselController {
     private final VesselService vesselService;
     private final VesselShortMapper vesselShortMapper;

@@ -178,7 +178,7 @@ export const UpdateForm = () => {
     const handleDelete = async () => {
         try {
             const vesselId = id;
-            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vesselId}`, {
+            const response = await fetch(`https://nyb-project-production.up.railway.app/api/vessels/${vesselId}`, {
                 method: 'DELETE'
             });
 
