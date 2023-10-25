@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import AWS from 'aws-sdk';
 import './FullCard.css';
-import {KeelTypeDisplay} from "../../enums/KeelTypeDisplay";
-import {FuelTypeDisplay} from "../../enums/FuelTypeDisplay";
+
 
 export const FullCard = () => {
     const [boatData, setBoatData] = useState(null);
@@ -134,7 +133,7 @@ export const FullCard = () => {
                     </div>
                     <div className="form-row">
                         <label>KEEL TYPE</label>
-                        {KeelTypeDisplay.getDisplayName(boatData.keelType)}
+                        {boatData.keelType}
                     </div>
                 </div>
                 <div className="form-column">
@@ -143,8 +142,10 @@ export const FullCard = () => {
                         {boatData.vesselLocationCountry}
                     </div>
                     <div className="form-row">
-                        <label>FUEL TYPE</label>
-                        {FuelTypeDisplay.getDisplayName(boatData.fuelType)}
+                        <div className="form-row">
+                            <label>FUEL TYPE</label>
+                            {boatData.fuelType}
+                        </div>
                     </div>
                 </div>
                 <div className="form-column">

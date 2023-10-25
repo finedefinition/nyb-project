@@ -304,10 +304,10 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Keel Type
-                                <select>
+                                <select name="keelType" value={formData.keelType} onChange={handleChange}>
                                     {keelTypes.map((keelType, index) => (
-                                        <option key={index} value={keelType}>
-                                            {keelType}
+                                        <option key={index} value={keelType.name}>
+                                            {keelType.value}
                                         </option>
                                     ))}
                                 </select>
@@ -330,10 +330,10 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Fuel Type
-                                <select>
+                                <select name="fuelType" value={formData.fuelType} onChange={handleChange}>
                                     {fuelTypes.map((fuelType, index) => (
-                                        <option key={index} value={fuelType}>
-                                            {fuelType}
+                                        <option key={index} value={fuelType.name}>
+                                            {fuelType.value}
                                         </option>
                                     ))}
                                 </select>
