@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
+import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.model.enums.FuelType;
@@ -9,6 +10,7 @@ import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

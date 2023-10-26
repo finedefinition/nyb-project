@@ -2,15 +2,14 @@ package com.norwayyachtbrockers.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
 import com.norwayyachtbrockers.repository.VesselRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -49,7 +48,9 @@ public class VesselServiceImpl implements VesselService {
                                FuelType fuelType, int engineQuantity, String vesselDescription,
                                MultipartFile imageFile) {
         Vessel existingVessel = vesselRepository.findById(vesselId)
-                .orElseThrow(() -> new EntityNotFoundException("Vessel not found with ID: " + vesselId));
+                .orElseThrow(() ->
+                        new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", vesselId)));
+
 
         if (imageFile != null && !imageFile.isEmpty()) {
             String newImageKey = uploadImageToS3(imageFile);
@@ -80,7 +81,7 @@ public class VesselServiceImpl implements VesselService {
     @Override
     public Vessel findById(Long theId) {
         return vesselRepository.findById(theId).orElseThrow(
-                () -> new RuntimeException("Can't get vessel by id " + theId));
+                () -> new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", theId)));
     }
 
     @Override
@@ -90,6 +91,8 @@ public class VesselServiceImpl implements VesselService {
 
     @Override
     public void deleteById(Long theId) {
+        vesselRepository.findById(theId).orElseThrow(
+                () -> new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", theId)));
         vesselRepository.deleteById(theId);
     }
 

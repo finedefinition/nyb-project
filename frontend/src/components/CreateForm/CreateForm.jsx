@@ -23,7 +23,7 @@ export const CreateForm = () => {
         keelType: 'ALL_KEEL_TYPES',
         fuelType: 'ALL_FUEL_TYPES',
         engineQuantity: 1,
-        vesselDescription: 'The best yacht ever',
+        vesselDescription: 'The best yacht ever. Create on webpage',
         imageFile: null,
     });
 
