@@ -13,6 +13,8 @@
     <include file="50-changeset-drop-featured.xml" relativeToChangelogFile="true" />
     <include file="60-changeset-add-fuel.xml" relativeToChangelogFile="true" />
     <include file="70-changeset-add-keel.xml" relativeToChangelogFile="true" />
+    <include file="80-changeset-drop-vesselkeel.xml" relativeToChangelogFile="true" />
+    <include file="90-changeset-drop-vesselfuel.xml" relativeToChangelogFile="true" />
 
 
 </databaseChangeLog>

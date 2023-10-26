@@ -4,7 +4,9 @@ import './CreateForm.css';
 
 export const CreateForm = () => {
     const fileInputRef = React.useRef(null);
+
     const [imageUrl, setImageUrl] = useState('');
+
     const [formData, setFormData] = useState({
         featuredVessel: false,
         vesselMake: 'Hanse',
@@ -18,8 +20,6 @@ export const CreateForm = () => {
         vesselDraft: 3,
         vesselCabin: 2,
         vesselBerth: 4,
-        vesselKeelType: 'Vessel Keel',
-        vesselFuelType: 'Fuel Type',
         keelType: 'ALL_KEEL_TYPES',
         fuelType: 'ALL_FUEL_TYPES',
         engineQuantity: 1,

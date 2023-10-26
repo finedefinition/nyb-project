@@ -45,9 +45,9 @@ public class VesselServiceImpl implements VesselService {
     public Vessel updateVessel(Long vesselId, boolean featuredVessel, String vesselMake, String vesselModel,
                                BigDecimal vesselPrice, int vesselYear, String vesselLocationCountry,
                                String vesselLocationState, BigDecimal vesselLengthOverall, BigDecimal vesselBeam,
-                               BigDecimal vesselDraft, int vesselCabin, int vesselBerth, String vesselKeelType,
-                               String vesselFuelType, KeelType keelType, FuelType fuelType, int engineQuantity,
-                               String vesselDescription, MultipartFile imageFile) {
+                               BigDecimal vesselDraft, int vesselCabin, int vesselBerth, KeelType keelType,
+                               FuelType fuelType, int engineQuantity, String vesselDescription,
+                               MultipartFile imageFile) {
         Vessel existingVessel = vesselRepository.findById(vesselId)
                 .orElseThrow(() -> new EntityNotFoundException("Vessel not found with ID: " + vesselId));
 
@@ -69,10 +69,8 @@ public class VesselServiceImpl implements VesselService {
         existingVessel.setVesselDraft(vesselDraft);
         existingVessel.setVesselCabin(vesselCabin);
         existingVessel.setVesselBerth(vesselBerth);
-        existingVessel.setVesselKeelType(vesselKeelType);
         existingVessel.setFuelType(fuelType);
         existingVessel.setKeelType(keelType);
-        existingVessel.setVesselFuelType(vesselFuelType);
         existingVessel.setEngineQuantity(engineQuantity);
         existingVessel.setVesselDescription(vesselDescription);
 

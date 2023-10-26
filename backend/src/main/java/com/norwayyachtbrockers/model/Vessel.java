@@ -56,12 +56,6 @@ public class Vessel {
     @Column(name = "berth", nullable = false)
     private int vesselBerth;
 
-    @Column(name = "keel_type", nullable = false)
-    private String vesselKeelType;
-
-    @Column(name = "fuel_type", nullable = false)
-    private String vesselFuelType;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "fuel", nullable = true)
     private FuelType fuelType;
@@ -88,7 +82,7 @@ public class Vessel {
     public Vessel(boolean featuredVessel, String vesselMake, String vesselModel, BigDecimal vesselPrice,
                   int vesselYear, String vesselLocationCountry, String vesselLocationState,
                   BigDecimal vesselLengthOverall, BigDecimal vesselBeam, BigDecimal vesselDraft, int vesselCabin,
-                  int vesselBerth, String vesselKeelType, String vesselFuelType, FuelType fuelType, KeelType keelType,
+                  int vesselBerth, KeelType keelType, FuelType fuelType,
                   int engineQuantity, String vesselDescription, LocalDateTime createdAt, String imageKey) {
         this.featuredVessel = featuredVessel;
         this.vesselMake = vesselMake;
@@ -102,8 +96,6 @@ public class Vessel {
         this.vesselDraft = vesselDraft;
         this.vesselCabin = vesselCabin;
         this.vesselBerth = vesselBerth;
-        this.vesselKeelType = vesselKeelType;
-        this.vesselFuelType = vesselFuelType;
         this.fuelType = fuelType;
         this.keelType = keelType;
         this.engineQuantity = engineQuantity;
@@ -214,22 +206,6 @@ public class Vessel {
 
     public void setVesselBerth(int vesselBerth) {
         this.vesselBerth = vesselBerth;
-    }
-
-    public String getVesselKeelType() {
-        return vesselKeelType;
-    }
-
-    public void setVesselKeelType(String vesselKeelType) {
-        this.vesselKeelType = vesselKeelType;
-    }
-
-    public String getVesselFuelType() {
-        return vesselFuelType;
-    }
-
-    public void setVesselFuelType(String vesselFuelType) {
-        this.vesselFuelType = vesselFuelType;
     }
 
     public FuelType getFuelType() {

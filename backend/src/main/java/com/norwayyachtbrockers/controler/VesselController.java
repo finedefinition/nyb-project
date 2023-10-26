@@ -68,8 +68,6 @@ public class VesselController {
             @RequestParam("vesselDraft") BigDecimal vesselDraft,
             @RequestParam("vesselCabin") int vesselCabin,
             @RequestParam("vesselBerth") int vesselBerth,
-            @RequestParam("vesselKeelType") String vesselKeelType,
-            @RequestParam("vesselFuelType") String vesselFuelType,
             @RequestParam("keelType") KeelType keelType,
             @RequestParam("fuelType") FuelType fuelType,
             @RequestParam("engineQuantity") int engineQuantity,
@@ -79,7 +77,7 @@ public class VesselController {
         Vessel newVessel = mapVesselFromRequestParams(
                 featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear, vesselLocationCountry,
                 vesselLocationState, vesselLengthOverall, vesselBeam, vesselDraft, vesselCabin, vesselBerth,
-                vesselKeelType, vesselFuelType, keelType, fuelType, engineQuantity, vesselDescription
+                keelType, fuelType, engineQuantity, vesselDescription
         );
         newVessel.setCreatedAt(LocalDateTime.now());
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
@@ -101,8 +99,6 @@ public class VesselController {
             @RequestParam("vesselDraft") BigDecimal vesselDraft,
             @RequestParam("vesselCabin") int vesselCabin,
             @RequestParam("vesselBerth") int vesselBerth,
-            @RequestParam("vesselKeelType") String vesselKeelType,
-            @RequestParam("vesselFuelType") String vesselFuelType,
             @RequestParam("keelType") KeelType keelType,
             @RequestParam("fuelType") FuelType fuelType,
             @RequestParam("engineQuantity") int engineQuantity,
@@ -112,7 +108,7 @@ public class VesselController {
         Vessel updated = vesselService.updateVessel(
                 vesselId, featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,
                 vesselLocationCountry, vesselLocationState, vesselLengthOverall, vesselBeam,
-                vesselDraft, vesselCabin, vesselBerth, vesselKeelType, vesselFuelType, keelType,
+                vesselDraft, vesselCabin, vesselBerth, keelType,
                 fuelType, engineQuantity, vesselDescription, imageFile
         );
         return ResponseEntity.ok(updated);
@@ -142,8 +138,8 @@ public class VesselController {
             boolean featuredVessel, String vesselMake, String vesselModel, BigDecimal vesselPrice,
             int vesselYear, String vesselLocationCountry, String vesselLocationState,
             BigDecimal vesselLengthOverall, BigDecimal vesselBeam, BigDecimal vesselDraft,
-            int vesselCabin, int vesselBerth, String vesselKeelType, String vesselFuelType, KeelType keelType,
-            FuelType fuelType, int engineQuantity, String vesselDescription
+            int vesselCabin, int vesselBerth, KeelType keelType, FuelType fuelType,
+            int engineQuantity, String vesselDescription
     ) {
         Vessel newVessel = new Vessel();
         newVessel.setFeaturedVessel(featuredVessel);
@@ -158,8 +154,6 @@ public class VesselController {
         newVessel.setVesselDraft(vesselDraft);
         newVessel.setVesselCabin(vesselCabin);
         newVessel.setVesselBerth(vesselBerth);
-        newVessel.setVesselKeelType(vesselKeelType);
-        newVessel.setVesselFuelType(vesselFuelType);
         newVessel.setKeelType(keelType);
         newVessel.setFuelType(fuelType);
         newVessel.setEngineQuantity(engineQuantity);

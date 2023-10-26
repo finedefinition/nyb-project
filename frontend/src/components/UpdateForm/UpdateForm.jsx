@@ -8,7 +8,8 @@ export const UpdateForm = () => {
 
     const {id} = useParams() || {id: 'defaultId'};
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(
+        {
         featuredVessel: false,
         vesselMake: '',
         vesselModel: '',
@@ -21,23 +22,29 @@ export const UpdateForm = () => {
         vesselDraft: 0,
         vesselCabin: 0,
         vesselBerth: 0,
-        vesselKeelType: '',
-        vesselFuelType: '',
+        keelType: 'ALL_KEEL_TYPES',
+        fuelType: 'ALL_FUEL_TYPES',
         engineQuantity: 0,
         vesselDescription: '',
         imageKey: '', // Add a field to store the image key
-    });
-// Define 's3' and 'bucketName' variables
-    const s3 = useMemo(() => new AWS.S3(), []);
-    const bucketName = 'nyb-basket';
-    const navigate = useNavigate();
+    }
+    );
 
     const [submitStatus, setSubmitStatus] = useState({
         status: '',
         message: '',
     });
 
+
+// Define 's3' and 'bucketName' variables
+    const s3 = useMemo(() => new AWS.S3(), []);
+    const bucketName = 'nyb-basket';
+    const navigate = useNavigate();
     const [imageUrl, setImageUrl] = useState('');
+    const [keelTypes, setKeelTypes] = useState([]);
+    const [fuelTypes, setFuelTypes] = useState([]);
+
+
 
     // Initialize AWS configuration
     useEffect(() => {
@@ -60,6 +67,22 @@ export const UpdateForm = () => {
         }
 
         initAWSConfig();
+    }, []);
+
+    useEffect(() => {
+        fetch('https://nyb-project-production.up.railway.app/api/keelTypes')
+            .then(response => response.json())
+            .then(data => {
+                setKeelTypes(data);
+            });
+    }, []);
+
+    useEffect(() => {
+        fetch('https://nyb-project-production.up.railway.app/api/fuelTypes')
+            .then(response => response.json())
+            .then(data => {
+                setFuelTypes(data);
+            });
     }, []);
 
     // Fetch existing image data and set it in the state
@@ -368,12 +391,19 @@ export const UpdateForm = () => {
                         <div className="form-row">
                             <label>
                                 Keel Type
-                                <input
-                                    type="text"
-                                    name="vesselKeelType"
-                                    value={formData.vesselKeelType}
-                                    onChange={handleChange}
-                                />
+                                <select name="keelType" value={formData.keelType} onChange={handleChange}>
+                                    {/* Default option displaying the current keelType from formData */}
+                                    <option value={formData.keelType}>
+                                        {formData.keelType}
+                                    </option>
+
+                                    {/* Populating the rest of the options from keelTypes array */}
+                                    {keelTypes.map((keelType, index) => (
+                                        <option key={index} value={keelType.name}>
+                                            {keelType.value}
+                                        </option>
+                                    ))}
+                                </select>
                             </label>
                         </div>
                     </div>
@@ -393,12 +423,19 @@ export const UpdateForm = () => {
                         <div className="form-row">
                             <label>
                                 Fuel Type
-                                <input
-                                    type="text"
-                                    name="vesselFuelType"
-                                    value={formData.vesselFuelType}
-                                    onChange={handleChange}
-                                />
+                                <select name="fuelType" value={formData.fuelType} onChange={handleChange}>
+                                    {/* Default option displaying the current keelType from formData */}
+                                    <option value={formData.fuelType}>
+                                        {formData.fuelType}
+                                    </option>
+
+                                    {/* Populating the rest of the options from keelTypes array */}
+                                    {fuelTypes.map((fuelType, index) => (
+                                        <option key={index} value={fuelType.name}>
+                                            {fuelType.value}
+                                        </option>
+                                    ))}
+                                </select>
                             </label>
                         </div>
                     </div>

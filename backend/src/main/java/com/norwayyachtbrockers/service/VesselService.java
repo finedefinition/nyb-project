@@ -4,7 +4,6 @@ import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -14,9 +13,9 @@ public interface VesselService {
     public Vessel updateVessel(Long vesselId, boolean featuredVessel, String vesselMake, String vesselModel,
                                BigDecimal vesselPrice, int vesselYear, String vesselLocationCountry,
                                String vesselLocationState, BigDecimal vesselLengthOverall, BigDecimal vesselBeam,
-                               BigDecimal vesselDraft, int vesselCabin, int vesselBerth, String vesselKeelType,
-                               String vesselFuelType, KeelType keelType,  FuelType fuelType, int engineQuantity,
-                               String vesselDescription, MultipartFile imageFile);
+                               BigDecimal vesselDraft, int vesselCabin, int vesselBerth, KeelType keelType,
+                               FuelType fuelType, int engineQuantity, String vesselDescription,
+                               MultipartFile imageFile);
 
     Vessel findById(Long theId);
 
