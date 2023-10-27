@@ -5,8 +5,6 @@ import com.norwayyachtbrockers.model.Vessel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
 @RequiredArgsConstructor
 public class VesselShortMapper {

@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/keelTypes")
+@RequestMapping("/keelTypes")
 public class KeelTypeController {
 
     @GetMapping

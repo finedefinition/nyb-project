@@ -9,7 +9,7 @@ export const GoodList = () => {
     useEffect(() => {
         // Function to retrieve and set featured cards from the database
         const fetchAndSetGoods = () => {
-            fetch('https://nyb-project-production.up.railway.app/api/vessels/cards')
+            fetch('https://nyb-project-production.up.railway.app/vessels/cards')
                 .then((response) => response.json())
                 .then((data) => {
                     setGoods(data);

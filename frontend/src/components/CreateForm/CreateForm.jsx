@@ -37,7 +37,7 @@ export const CreateForm = () => {
 
 
     useEffect(() => {
-        fetch('https://nyb-project-production.up.railway.app/api/keelTypes')
+        fetch('https://nyb-project-production.up.railway.app/keelTypes')
             .then(response => response.json())
             .then(data => {
                 setKeelTypes(data);
@@ -45,7 +45,7 @@ export const CreateForm = () => {
     }, []);
 
     useEffect(() => {
-        fetch('https://nyb-project-production.up.railway.app/api/fuelTypes')
+        fetch('https://nyb-project-production.up.railway.app/fuelTypes')
             .then(response => response.json())
             .then(data => {
                 setFuelTypes(data);
@@ -91,7 +91,7 @@ export const CreateForm = () => {
 
         try {
             // This is a create operation
-            const response = await fetch('https://nyb-project-production.up.railway.app/api/vessels', {
+            const response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
                 method: 'POST',
                 body: formDataToSend,
             });

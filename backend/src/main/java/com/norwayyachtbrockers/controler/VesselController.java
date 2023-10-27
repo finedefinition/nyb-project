@@ -1,8 +1,8 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
-import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
+import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
@@ -10,7 +10,6 @@ import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/vessels")
+@RequestMapping("/vessels")
 public class VesselController {
     private final VesselService vesselService;
     private final VesselShortMapper vesselShortMapper;
@@ -42,7 +41,10 @@ public class VesselController {
 
         if (vessel == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else {
+            new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", vesselId));
         }
+
         return ResponseEntity.ok(vessel);
     }
 

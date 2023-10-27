@@ -9,6 +9,7 @@ import com.norwayyachtbrockers.model.enums.KeelType;
 import com.norwayyachtbrockers.repository.VesselRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ public class VesselServiceImpl implements VesselService {
         this.s3BucketName = s3BucketName;
     }
 
+    @Transactional
     @Override
     public Vessel save(Vessel vessel, MultipartFile imageFile) {
         vessel.setCreatedAt(LocalDateTime.now());
@@ -40,6 +42,7 @@ public class VesselServiceImpl implements VesselService {
         return vesselRepository.save(vessel);
     }
 
+    @Transactional
     @Override
     public Vessel updateVessel(Long vesselId, boolean featuredVessel, String vesselMake, String vesselModel,
                                BigDecimal vesselPrice, int vesselYear, String vesselLocationCountry,
@@ -89,6 +92,7 @@ public class VesselServiceImpl implements VesselService {
         return vesselRepository.findAll();
     }
 
+    @Transactional
     @Override
     public void deleteById(Long theId) {
         vesselRepository.findById(theId).orElseThrow(

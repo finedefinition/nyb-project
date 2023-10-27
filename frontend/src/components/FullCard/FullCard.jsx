@@ -13,7 +13,7 @@ export const FullCard = () => {
 
     async function fetchData() {
         try {
-            const response = await fetch(`https://nyb-project-production.up.railway.app/api/vessels/${id}`);
+            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${id}`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch boat data: ${response.status}`);
             }

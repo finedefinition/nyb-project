@@ -15,7 +15,7 @@ export const YachtPage = () => {
 
     useEffect(() => {
         // Fetch data from the database and set it in the state
-        fetch('https://nyb-project-production.up.railway.app/api/vessels/cards')
+        fetch('https://nyb-project-production.up.railway.app/vessels/cards')
             .then((response) => response.json())
             .then((data) => {
                 setGoods(data);
