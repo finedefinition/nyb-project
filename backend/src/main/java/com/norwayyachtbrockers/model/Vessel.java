@@ -99,7 +99,6 @@ public class Vessel {
         @Column(name = "description", nullable = false)
         private String vesselDescription;
 
-        @NotNull(message="Creation date and time is required")
         @Column(name = "created_at", nullable = false)
         private LocalDateTime createdAt;
 
