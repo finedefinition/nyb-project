@@ -115,16 +115,18 @@ export const CreateForm = () => {
                     // Check if there's an array of validation errors from the server
                     if (Array.isArray(error.response.data)) {
                         error.response.data.forEach(err => {
-                            // Using the 'property' as the key and 'interpolatedMessage' as the value
-                            fieldErrors[err.property] = err.interpolatedMessage;
+                            // Using the 'property' as the key and 'interpolatedMessage' or 'messageTemplate' as the value
+                            fieldErrors[err.property] = err.interpolatedMessage || err.messageTemplate;
                         });
                     }
 
                     setFormErrors(fieldErrors);
 
+                    // Extracting only the desired message part from the error
+                    const errorMessage = extractErrorMessage(error.response.data.message);
                     setSubmitStatus({
                         status: 'error',
-                        message: error.response.data.message || 'There was an error saving the boat.',
+                        message: errorMessage || 'There was an error saving the boat.',
                     });
                 } else {
                     setSubmitStatus({
@@ -134,6 +136,17 @@ export const CreateForm = () => {
                     console.error('Error:', error);
                 }
             });
+
+// Helper function to extract the desired message from the error
+        function extractErrorMessage(fullMessage) {
+            const regex = /messageTemplate='(.*?)'/;
+            const match = regex.exec(fullMessage);
+            if (match && match[1]) {
+                return match[1];
+            }
+            return fullMessage;  // return the full message if extraction fails
+        }
+
     };
 
 
@@ -183,7 +196,7 @@ export const CreateForm = () => {
                     <div className="right-side">
                         <FeatureSection formData={formData}
                                         setFormData={setFormData}
-                                        featuredVessel={formData.featuredVessel} />
+                                        featuredVessel={formData.featuredVessel}/>
                         {/*<div className="feature-section">*/}
                         {/*    <label>*/}
                         {/*        Featured Vessel*/}
@@ -219,15 +232,14 @@ export const CreateForm = () => {
                     {/*First column*/}
                     <div className="form-column">
                         <div className="form-row">
-                            <label>
-                                Make
-                                <input type="text"
-                                       name="vesselMake"
-                                       onChange={handleChange}
-                                       value={formData.vesselMake} />
-                            </label>
-                            {formErrors.vesselMake &&
-                                <span className="error">{formErrors.vesselMake}</span>}
+                            <label>Make</label>
+                            <input
+                                type="text"
+                                name="vesselMake"
+                                onChange={handleChange}
+                                value={formData.vesselMake}
+                            />
+                            {formErrors.vesselMake && <span className="error">{formErrors.vesselMake}</span>}
                         </div>
                         <div className="form-row">
                             <label>
