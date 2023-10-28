@@ -103,8 +103,6 @@ public class Vessel {
         @Column(name = "created_at", nullable = false)
         private LocalDateTime createdAt;
 
-        @NotNull(message="Image key is required")
-        @Size(min=1, message="Image key cannot be empty")
         @Column(name = "image_key", nullable = false)
         private String imageKey;
 
