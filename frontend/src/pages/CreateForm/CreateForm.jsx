@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import './CreateForm.css';
 import {ImageSection} from "../../components/CreateForm/ImageSection";
@@ -6,9 +7,8 @@ import {FeatureSection} from "../../components/CreateForm/FeatureSection";
 
 export const CreateForm = () => {
     const fileInputRef = React.useRef(null);
-
+    const [formErrors, setFormErrors] = useState({});
     const [imageUrl, setImageUrl] = useState('');
-
     const [formData, setFormData] = useState({
         featuredVessel: false,
         vesselMake: 'Hanse',
@@ -91,36 +91,51 @@ export const CreateForm = () => {
             formDataToSend.append(key, formData[key]);
         }
 
-        try {
-            // This is a create operation
-            const response = await fetch('https://nyb-project-production.up.railway.app/vessels', {
-                method: 'POST',
-                body: formDataToSend,
-            });
+        axios.post('https://nyb-project-production.up.railway.app/vessels', formDataToSend)
+            .then(response => {
+                if (response.status === 201 || response.status === 204) {
+                    // Handle success
+                    setSubmitStatus({
+                        status: 'success',
+                        message: 'Boat is saved successfully!',
+                    });
+                } else {
+                    // Handle unexpected status code
+                    setSubmitStatus({
+                        status: 'error',
+                        message: 'There was an error saving the boat.',
+                    });
+                }
+            })
+            .catch(error => {
+                // Handle error from server
+                if (error.response && error.response.data) {
+                    const fieldErrors = {}; // Object to store individual field errors
 
-            if (response.status === 201 || response.status === 204) {
-                // Handle success
-                setSubmitStatus({
-                    status: 'success',
-                    message: 'Boat is saved successfully!',
-                });
+                    // Check if there's an array of validation errors from the server
+                    if (Array.isArray(error.response.data)) {
+                        error.response.data.forEach(err => {
+                            // Using the 'property' as the key and 'interpolatedMessage' as the value
+                            fieldErrors[err.property] = err.interpolatedMessage;
+                        });
+                    }
 
-            } else {
-                // Handle error
-                setSubmitStatus({
-                    status: 'error',
-                    message: 'There was an error saving the boat.',
-                });
-            }
-        } catch (error) {
-            // Handle error
-            setSubmitStatus({
-                status: 'error',
-                message: 'There was an error saving the boat.',
+                    setFormErrors(fieldErrors);
+
+                    setSubmitStatus({
+                        status: 'error',
+                        message: error.response.data.message || 'There was an error saving the boat.',
+                    });
+                } else {
+                    setSubmitStatus({
+                        status: 'error',
+                        message: 'There was an error saving the boat.',
+                    });
+                    console.error('Error:', error);
+                }
             });
-            console.error('Error:', error);
-        }
     };
+
 
     const handleFileClear = () => {
         fileInputRef.current.value = '';  // Clear the input field
@@ -206,13 +221,13 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Make
-                                <input
-                                    type="text"
-                                    name="vesselMake"
-                                    value={formData.vesselMake}
-                                    onChange={handleChange}
-                                />
+                                <input type="text"
+                                       name="vesselMake"
+                                       onChange={handleChange}
+                                       value={formData.vesselMake} />
                             </label>
+                            {formErrors.vesselMake &&
+                                <span className="error">{formErrors.vesselMake}</span>}
                         </div>
                         <div className="form-row">
                             <label>
@@ -249,6 +264,8 @@ export const CreateForm = () => {
                                     onChange={handleChange}
                                 />
                             </label>
+                            {formErrors.vesselModel &&
+                                <span className="error">{formErrors.vesselModel}</span>}
                         </div>
                         <div className="form-row">
                             <label>
@@ -309,6 +326,7 @@ export const CreateForm = () => {
                                     value={formData.vesselYear}
                                     onChange={handleChange}
                                 />
+                                {formErrors.vesselYear && <span className="error">{formErrors.vesselYear}</span>}
                             </label>
                         </div>
                         <div className="form-row">
