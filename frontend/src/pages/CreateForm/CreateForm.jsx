@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './CreateForm.css';
+import {ImageSection} from "../../components/CreateForm/ImageSection";
+import {FeatureSection} from "../../components/CreateForm/FeatureSection";
 
 
 export const CreateForm = () => {
@@ -133,51 +135,59 @@ export const CreateForm = () => {
         <div className="container">
             <form onSubmit={handleSubmit} className="vessel-form">
                 <div className="top-section">
-                    <div className="left-side">
-                        {formData.imageFile && (
-                            <div className="image-container">
-                                <img
-                                    src={URL.createObjectURL(formData.imageFile)}
-                                    alt="Vessel"
-                                    className="vessel-image"
-                                />
-                            </div>
-                        )}
-                        <div className="upload-section">
-                            <label>
-                                Upload Image:
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    name="imageFile"
-                                    onChange={handleFileChange}
-                                />
-                            </label>
-                            {formData.imageFile && (
-                                <button type="button" onClick={handleFileClear} className="clear-file-btn">×</button>
-                            )}
-                        </div>
-                    </div>
+                    <ImageSection formData={formData}
+                                  handleFileChange={handleFileChange}
+                                  handleFileClear={handleFileClear}
+                                  fileInputRef={fileInputRef}/>
+                    {/*Image section block*/}
+                    {/*<div className="left-side">*/}
+                    {/*    {formData.imageFile && (*/}
+                    {/*        <div className="image-container">*/}
+                    {/*            <img*/}
+                    {/*                src={URL.createObjectURL(formData.imageFile)}*/}
+                    {/*                alt="Vessel"*/}
+                    {/*                className="vessel-image"*/}
+                    {/*            />*/}
+                    {/*        </div>*/}
+                    {/*    )}*/}
+                    {/*    <div className="upload-section">*/}
+                    {/*        <label>*/}
+                    {/*            Upload Image:*/}
+                    {/*            <input*/}
+                    {/*                ref={fileInputRef}*/}
+                    {/*                type="file"*/}
+                    {/*                name="imageFile"*/}
+                    {/*                onChange={handleFileChange}*/}
+                    {/*            />*/}
+                    {/*        </label>*/}
+                    {/*        {formData.imageFile && (*/}
+                    {/*            <button type="button" onClick={handleFileClear} className="clear-file-btn">×</button>*/}
+                    {/*        )}*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                     <div className="right-side">
-                        <div className="feature-section">
-                            <label>
-                                Featured Vessel
-                                <div className="custom-toggle">
-                                    <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>
-                                        <input
-                                            type="checkbox"
-                                            name="featuredVessel"
-                                            checked={formData.featuredVessel}
-                                            onChange={(e) => setFormData({
-                                                ...formData,
-                                                featuredVessel: e.target.checked
-                                            })}
-                                        />
-                                        <span className="slider"></span>
-                                    </label>
-                                </div>
-                            </label>
-                        </div>
+                        <FeatureSection formData={formData}
+                                        setFormData={setFormData}
+                                        featuredVessel={formData.featuredVessel} />
+                        {/*<div className="feature-section">*/}
+                        {/*    <label>*/}
+                        {/*        Featured Vessel*/}
+                        {/*        <div className="custom-toggle">*/}
+                        {/*            <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>*/}
+                        {/*                <input*/}
+                        {/*                    type="checkbox"*/}
+                        {/*                    name="featuredVessel"*/}
+                        {/*                    checked={formData.featuredVessel}*/}
+                        {/*                    onChange={(e) => setFormData({*/}
+                        {/*                        ...formData,*/}
+                        {/*                        featuredVessel: e.target.checked*/}
+                        {/*                    })}*/}
+                        {/*                />*/}
+                        {/*                <span className="slider"></span>*/}
+                        {/*            </label>*/}
+                        {/*        </div>*/}
+                        {/*    </label>*/}
+                        {/*</div>*/}
                         <div className="form-row description-row">
                             <label>
                                 Description
@@ -371,7 +381,7 @@ export const CreateForm = () => {
                 </div>
                 {submitStatus.status && (
                     <div className={`submit-message ${submitStatus.status}`}>
-                       <h4>{submitStatus.message}</h4>
+                        <h4>{submitStatus.message}</h4>
                     </div>
                 )}
             </form>

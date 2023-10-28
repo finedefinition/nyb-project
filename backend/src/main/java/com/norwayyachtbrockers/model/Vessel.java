@@ -10,71 +10,103 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "vessels")
 public class Vessel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(name = "featured", nullable = false)
-    private boolean featuredVessel;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @Column(name = "make", nullable = false)
-    private String vesselMake;
+        @Column(name = "featured", nullable = false)
+        private boolean featuredVessel;
 
-    @Column(name = "model", nullable = false)
-    private String vesselModel;
+        @NotNull(message="Make is required")
+        @Size(min=3, message="Make must be at least 3 characters long")
+        @Column(name = "make", nullable = false)
+        private String vesselMake;
 
-    @Column(name = "price", nullable = false)
-    private BigDecimal vesselPrice;
+        @NotNull(message="Model is required")
+        @Size(min=1, message="Model cannot be empty")
+        @Column(name = "model", nullable = false)
+        private String vesselModel;
 
-    @Column(name = "year", nullable = false)
-    private int vesselYear;
+        @NotNull(message="Price is required")
+        @DecimalMin(value="0.0", inclusive=false, message="Price must be greater than 0")
+        @Column(name = "price", nullable = false)
+        private BigDecimal vesselPrice;
 
-    @Column(name = "location_country", nullable = false)
-    private String vesselLocationCountry;
+        @Min(value=1900, message="Year must be later than 1900")
+        @Max(value=2100, message="Year must be earlier than 2100")
+        @Column(name = "year", nullable = false)
+        private int vesselYear;
 
-    @Column(name = "location_state", nullable = false)
-    private String vesselLocationState;
+        @NotNull(message="Location country is required")
+        @Size(min=1, message="Location country cannot be empty")
+        @Column(name = "location_country", nullable = false)
+        private String vesselLocationCountry;
 
-    @Column(name = "loa", precision = 6, scale = 2, nullable = false)
-    private BigDecimal vesselLengthOverall;
+        @NotNull(message="Location state is required")
+        @Size(min=1, message="Location state cannot be empty")
+        @Column(name = "location_state", nullable = false)
+        private String vesselLocationState;
 
-    @Column(name = "beam", precision = 6, scale = 2, nullable = false)
-    private BigDecimal vesselBeam;
+        @NotNull(message="Length overall is required")
+        @DecimalMin(value="0.0", inclusive=false, message="Length overall must be greater than 0")
+        @Column(name = "loa", precision = 6, scale = 2, nullable = false)
+        private BigDecimal vesselLengthOverall;
 
-    @Column(name = "draft", precision = 6, scale = 2, nullable = false)
-    private BigDecimal vesselDraft;
+        @NotNull(message="Beam is required")
+        @DecimalMin(value="0.0", inclusive=false, message="Beam must be greater than 0")
+        @Column(name = "beam", precision = 6, scale = 2, nullable = false)
+        private BigDecimal vesselBeam;
 
-    @Column(name = "cabin", nullable = false)
-    private int vesselCabin;
+        @NotNull(message="Draft is required")
+        @DecimalMin(value="0.0", inclusive=false, message="Draft must be greater than 0")
+        @Column(name = "draft", precision = 6, scale = 2, nullable = false)
+        private BigDecimal vesselDraft;
 
-    @Column(name = "berth", nullable = false)
-    private int vesselBerth;
+        @Min(value=0, message="Number of cabins must be non-negative")
+        @Column(name = "cabin", nullable = false)
+        private int vesselCabin;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "fuel", nullable = true)
-    private FuelType fuelType;
+        @Min(value=0, message="Number of berths must be non-negative")
+        @Column(name = "berth", nullable = false)
+        private int vesselBerth;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "keel", nullable = true)
-    private KeelType keelType;
+        @Column(name = "fuel", nullable = true)
+        @Enumerated(EnumType.STRING)
+        private FuelType fuelType;
 
-    @Column(name = "engines", nullable = false)
-    private int engineQuantity;
+        @Column(name = "keel", nullable = true)
+        @Enumerated(EnumType.STRING)
+        private KeelType keelType;
 
-    @Column(name = "description", nullable = false)
-    private String vesselDescription;
+        @Min(value=0, message="Number of engines must be non-negative")
+        @Column(name = "engines", nullable = false)
+        private int engineQuantity;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+        @NotNull(message="Description is required")
+        @Size(min=1, message="Description cannot be empty")
+        @Column(name = "description", nullable = false)
+        private String vesselDescription;
 
-    @Column(name = "image_key", nullable = false)
-    private String imageKey;
+        @NotNull(message="Creation date and time is required")
+        @Column(name = "created_at", nullable = false)
+        private LocalDateTime createdAt;
+
+        @NotNull(message="Image key is required")
+        @Size(min=1, message="Image key cannot be empty")
+        @Column(name = "image_key", nullable = false)
+        private String imageKey;
 
     public Vessel() {
     }

@@ -4,7 +4,7 @@ import { Header } from './components/Header';
 import { Main } from './pages/Main';
 import { YachtPage } from './components/YachtPage';
 import { FullCard } from "./components/FullCard";
-import { CreateForm } from "./components/CreateForm";
+import { CreateForm } from "./pages/CreateForm";
 import { UpdateForm } from "./components/UpdateForm";
 import { NotFound } from "./components/NotFound";
 
