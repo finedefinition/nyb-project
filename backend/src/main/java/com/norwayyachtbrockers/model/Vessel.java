@@ -14,6 +14,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,6 +32,8 @@ public class Vessel {
 
         @NotNull(message="Make is required")
         @Size(min=3, message="Make must be at least 3 characters long")
+        @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Make must start with a capital "
+                + "letter and can consist of letters, spaces, and hyphens")
         @Column(name = "make", nullable = false)
         private String vesselMake;
 
@@ -51,11 +54,15 @@ public class Vessel {
 
         @NotNull(message="Location country is required")
         @Size(min=1, message="Location country cannot be empty")
+        @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location country start with a capital"
+                + " letter and consist of only letters")
         @Column(name = "location_country", nullable = false)
         private String vesselLocationCountry;
 
         @NotNull(message="Location state is required")
         @Size(min=1, message="Location state cannot be empty")
+        @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location state must start with a capital"
+                + " letter and consist of only letters")
         @Column(name = "location_state", nullable = false)
         private String vesselLocationState;
 
