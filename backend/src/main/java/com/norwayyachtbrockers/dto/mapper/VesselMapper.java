@@ -59,4 +59,23 @@ public class VesselMapper {
         vessel.setVesselDescription(vesselRequestDto.getVesselDescription());
         return vessel;
     }
+    public void updateVesselFromDto(Vessel existingVessel, VesselRequestDto vesselRequestDto) {
+        existingVessel.setFeaturedVessel(vesselRequestDto.isFeaturedVessel());
+        existingVessel.setVesselMake(vesselRequestDto.getVesselMake());
+        existingVessel.setVesselModel(vesselRequestDto.getVesselModel());
+        existingVessel.setVesselPrice(vesselRequestDto.getVesselPrice());
+        existingVessel.setVesselYear(vesselRequestDto.getVesselYear());
+        existingVessel.setVesselLocationCountry(vesselRequestDto.getVesselLocationCountry());
+        existingVessel.setVesselLocationState(vesselRequestDto.getVesselLocationState());
+        existingVessel.setVesselLengthOverall(vesselRequestDto.getVesselLengthOverall());
+        existingVessel.setVesselBeam(vesselRequestDto.getVesselBeam());
+        existingVessel.setVesselDraft(vesselRequestDto.getVesselDraft());
+        existingVessel.setVesselCabin(vesselRequestDto.getVesselCabin());
+        existingVessel.setVesselBerth(vesselRequestDto.getVesselBerth());
+        existingVessel.setFuelType(vesselRequestDto.getFuelType());
+        existingVessel.setKeelType(vesselRequestDto.getKeelType());
+        existingVessel.setEngineQuantity(vesselRequestDto.getEngineQuantity());
+        existingVessel.setVesselDescription(vesselRequestDto.getVesselDescription());
+    }
+
 }

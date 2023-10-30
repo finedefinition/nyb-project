@@ -4,7 +4,6 @@ import com.norwayyachtbrockers.dto.mapper.VesselMapper;
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
 import com.norwayyachtbrockers.dto.request.VesselRequestDto;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,48 +61,35 @@ public class VesselController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Vessel> createVessel(
-        @RequestPart("vesselData") VesselRequestDto vesselData,
+            @RequestPart("vesselData") VesselRequestDto vesselData,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        VesselMapper vesselMapper = new VesselMapper();
         Vessel newVessel = vesselMapper.toVessel(vesselData);
-
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVessel);
     }
-    @PutMapping("/{vesselId}")
+
+    @PutMapping(value = "/{vesselId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Vessel> updateVessel(
             @PathVariable Long vesselId,
-            @RequestParam("featuredVessel") boolean featuredVessel,
-            @RequestParam("vesselMake") String vesselMake,
-            @RequestParam("vesselModel") String vesselModel,
-            @RequestParam("vesselPrice") BigDecimal vesselPrice,
-            @RequestParam("vesselYear") int vesselYear,
-            @RequestParam("vesselLocationCountry") String vesselLocationCountry,
-            @RequestParam("vesselLocationState") String vesselLocationState,
-            @RequestParam("vesselLengthOverall") BigDecimal vesselLengthOverall,
-            @RequestParam("vesselBeam") BigDecimal vesselBeam,
-            @RequestParam("vesselDraft") BigDecimal vesselDraft,
-            @RequestParam("vesselCabin") int vesselCabin,
-            @RequestParam("vesselBerth") int vesselBerth,
-            @RequestParam("keelType") KeelType keelType,
-            @RequestParam("fuelType") FuelType fuelType,
-            @RequestParam("engineQuantity") int engineQuantity,
-            @RequestParam("vesselDescription") String vesselDescription,
+            @RequestPart("vesselData") VesselRequestDto vesselData,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
     ) {
-        Vessel updated = vesselService.updateVessel(
-                vesselId, featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,
-                vesselLocationCountry, vesselLocationState, vesselLengthOverall, vesselBeam,
-                vesselDraft, vesselCabin, vesselBerth, keelType,
-                fuelType, engineQuantity, vesselDescription, imageFile
-        );
-        return ResponseEntity.ok(updated);
+        Vessel updatedVessel = vesselService.update(vesselId, vesselData, imageFile);
+        return ResponseEntity.ok(updatedVessel);
     }
 
     @DeleteMapping("/{vesselId}")
     public ResponseEntity<Void> deleteById(@PathVariable Long vesselId) {
         vesselService.deleteById(vesselId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Vessel-Delete-Status", "Success delete")
+                .build();
+    }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAll() {
+        vesselService.deleteAll();
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .header("Vessel-Delete-Status", "Success delete")
                 .build();
