@@ -1,6 +1,8 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.mapper.VesselMapper;
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
+import com.norwayyachtbrockers.dto.request.VesselRequestDto;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
@@ -33,21 +35,18 @@ public class VesselController {
     private final VesselService vesselService;
     private final VesselShortMapper vesselShortMapper;
 
-    public VesselController(VesselService vesselService, VesselShortMapper vesselShortMapper) {
+    private final VesselMapper vesselMapper;
+
+    public VesselController(VesselService vesselService,
+                            VesselShortMapper vesselShortMapper, VesselMapper vesselMapper) {
         this.vesselService = vesselService;
         this.vesselShortMapper = vesselShortMapper;
+        this.vesselMapper = vesselMapper;
     }
 
     @GetMapping("/{vesselId}")
-    public ResponseEntity<Vessel> geVesselById(@PathVariable Long vesselId) {
+    public ResponseEntity<Vessel> getVesselById(@PathVariable Long vesselId) {
         Vessel vessel = vesselService.findById(vesselId);
-
-        if (vessel == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } else {
-            new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", vesselId));
-        }
-
         return ResponseEntity.ok(vessel);
     }
 
@@ -81,11 +80,12 @@ public class VesselController {
             @RequestParam("vesselDescription") String vesselDescription,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        Vessel newVessel = mapVesselFromRequestParams(
-                featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear, vesselLocationCountry,
-                vesselLocationState, vesselLengthOverall, vesselBeam, vesselDraft, vesselCabin, vesselBerth,
-                keelType, fuelType, engineQuantity, vesselDescription
-        );
+        VesselMapper vesselMapper = new VesselMapper();
+
+        Vessel newVessel = vesselMapper.toVessel(vesselMapper.toVesselRequestDto(featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,
+                vesselLocationCountry, vesselLocationState, vesselLengthOverall, vesselBeam, vesselDraft,
+                vesselCabin, vesselBerth, keelType, fuelType, engineQuantity, vesselDescription));
+
         newVessel.setCreatedAt(LocalDateTime.now());
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVessel);
@@ -145,33 +145,5 @@ public class VesselController {
     public void initBinder(WebDataBinder binder) {
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
         binder.registerCustomEditor(String.class, stringTrimmerEditor);
-    }
-
-    private Vessel mapVesselFromRequestParams(
-            boolean featuredVessel, String vesselMake, String vesselModel, BigDecimal vesselPrice,
-            int vesselYear, String vesselLocationCountry, String vesselLocationState,
-            BigDecimal vesselLengthOverall, BigDecimal vesselBeam, BigDecimal vesselDraft,
-            int vesselCabin, int vesselBerth, KeelType keelType, FuelType fuelType,
-            int engineQuantity, String vesselDescription
-    ) {
-        Vessel newVessel = new Vessel();
-        newVessel.setFeaturedVessel(featuredVessel);
-        newVessel.setVesselMake(vesselMake);
-        newVessel.setVesselModel(vesselModel);
-        newVessel.setVesselPrice(vesselPrice);
-        newVessel.setVesselYear(vesselYear);
-        newVessel.setVesselLocationCountry(vesselLocationCountry);
-        newVessel.setVesselLocationState(vesselLocationState);
-        newVessel.setVesselLengthOverall(vesselLengthOverall);
-        newVessel.setVesselBeam(vesselBeam);
-        newVessel.setVesselDraft(vesselDraft);
-        newVessel.setVesselCabin(vesselCabin);
-        newVessel.setVesselBerth(vesselBerth);
-        newVessel.setKeelType(keelType);
-        newVessel.setFuelType(fuelType);
-        newVessel.setEngineQuantity(engineQuantity);
-        newVessel.setVesselDescription(vesselDescription);
-
-        return newVessel;
     }
 }

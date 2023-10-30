@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.norwayyachtbrockers.dto.mapper.VesselMapper;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.model.enums.FuelType;
@@ -21,17 +22,27 @@ import java.util.UUID;
 public class VesselServiceImpl implements VesselService {
 
     private final VesselRepository vesselRepository;
+
+    private final VesselMapper vesselMapper;
     private final AmazonS3 amazonS3;
     private final String s3BucketName;
 
-    public VesselServiceImpl(VesselRepository vesselRepository, AmazonS3 amazonS3,
-                             @Value("${s3.bucket.name}") String s3BucketName) {
+    public VesselServiceImpl(VesselRepository vesselRepository, VesselMapper vesselMapper,
+                             AmazonS3 amazonS3, @Value("${s3.bucket.name}") String s3BucketName) {
         this.vesselRepository = vesselRepository;
+        this.vesselMapper = vesselMapper;
         this.amazonS3 = amazonS3;
         this.s3BucketName = s3BucketName;
     }
 
     @Transactional
+    @Override
+    public Vessel findById(Long vesselId) {
+        return vesselRepository.findById(vesselId)
+                .orElseThrow(() -> new AppEntityNotFoundException(String
+                        .format("Cannot find the vessel with ID: %d", vesselId)));
+    }
+
     @Override
     public Vessel save(Vessel vessel, MultipartFile imageFile) {
         vessel.setCreatedAt(LocalDateTime.now());
@@ -52,7 +63,7 @@ public class VesselServiceImpl implements VesselService {
                                MultipartFile imageFile) {
         Vessel existingVessel = vesselRepository.findById(vesselId)
                 .orElseThrow(() ->
-                        new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", vesselId)));
+                        new AppEntityNotFoundException(String.format("Cannot update the vessel with ID: %d", vesselId)));
 
 
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -60,32 +71,16 @@ public class VesselServiceImpl implements VesselService {
             existingVessel.setImageKey(newImageKey);
         }
 
-        // Update the vessel attributes (You could also use BeanUtils.copyProperties() for simplicity)
-        existingVessel.setFeaturedVessel(featuredVessel);
-        existingVessel.setVesselMake(vesselMake);
-        existingVessel.setVesselModel(vesselModel);
-        existingVessel.setVesselPrice(vesselPrice);
-        existingVessel.setVesselYear(vesselYear);
-        existingVessel.setVesselLocationCountry(vesselLocationCountry);
-        existingVessel.setVesselLocationState(vesselLocationState);
-        existingVessel.setVesselLengthOverall(vesselLengthOverall);
-        existingVessel.setVesselBeam(vesselBeam);
-        existingVessel.setVesselDraft(vesselDraft);
-        existingVessel.setVesselCabin(vesselCabin);
-        existingVessel.setVesselBerth(vesselBerth);
-        existingVessel.setFuelType(fuelType);
-        existingVessel.setKeelType(keelType);
-        existingVessel.setEngineQuantity(engineQuantity);
-        existingVessel.setVesselDescription(vesselDescription);
+        VesselMapper vesselMapperDto = new VesselMapper();
 
-        return vesselRepository.save(existingVessel);
+        Vessel newVessel = vesselMapperDto.toVessel(vesselMapperDto.toVesselRequestDto(featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,
+                vesselLocationCountry, vesselLocationState, vesselLengthOverall, vesselBeam, vesselDraft,
+                vesselCabin, vesselBerth, keelType, fuelType, engineQuantity, vesselDescription));
+
+        return vesselRepository.save(newVessel);
     }
 
-    @Override
-    public Vessel findById(Long theId) {
-        return vesselRepository.findById(theId).orElseThrow(
-                () -> new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", theId)));
-    }
+
 
     @Override
     public List<Vessel> findAll() {
@@ -96,7 +91,7 @@ public class VesselServiceImpl implements VesselService {
     @Override
     public void deleteById(Long theId) {
         vesselRepository.findById(theId).orElseThrow(
-                () -> new AppEntityNotFoundException(String.format("Vessel not found with ID: %d", theId)));
+                () -> new AppEntityNotFoundException(String.format("Cannot delete the vessel with ID: %d", theId)));
         vesselRepository.deleteById(theId);
     }
 
