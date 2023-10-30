@@ -74,10 +74,8 @@ export const CreateForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         if (!formData.imageFile) {
-            // Handle the case where 'imageFile' is not present
             setSubmitStatus({
                 status: 'error',
                 message: 'Please select an image file.',
@@ -85,11 +83,16 @@ export const CreateForm = () => {
             return;
         }
 
+        // Extract the imageFile from formData
+        const imageFile = formData.imageFile;
+        delete formData.imageFile;  // Remove imageFile from formData to avoid appending it twice
+
         // Prepare the form data to be sent to the server
         const formDataToSend = new FormData();
-        for (const key in formData) {
-            formDataToSend.append(key, formData[key]);
-        }
+
+        // Append vesselData and imageFile separately
+        formDataToSend.append('vesselData', new Blob([JSON.stringify(formData)], { type: "application/json" }));
+        formDataToSend.append('imageFile', imageFile);
 
         axios.post('https://nyb-project-production.up.railway.app/vessels', formDataToSend)
             .then(response => {
@@ -346,7 +349,7 @@ export const CreateForm = () => {
                                 Keel Type
                                 <select name="keelType" value={formData.keelType} onChange={handleChange}>
                                     {keelTypes.map((keelType, index) => (
-                                        <option key={index} value={keelType.name}>
+                                        <option key={index} value={keelType.value}>
                                             {keelType.value}
                                         </option>
                                     ))}
@@ -372,7 +375,7 @@ export const CreateForm = () => {
                                 Fuel Type
                                 <select name="fuelType" value={formData.fuelType} onChange={handleChange}>
                                     {fuelTypes.map((fuelType, index) => (
-                                        <option key={index} value={fuelType.name}>
+                                        <option key={index} value={fuelType.value}>
                                             {fuelType.value}
                                         </option>
                                     ))}
