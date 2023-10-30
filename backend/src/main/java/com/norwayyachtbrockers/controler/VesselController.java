@@ -11,6 +11,7 @@ import com.norwayyachtbrockers.model.enums.KeelType;
 import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,37 +61,17 @@ public class VesselController {
         return ResponseEntity.ok(vessels);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Vessel> createVessel(
-            @RequestParam("featuredVessel") boolean featuredVessel,
-            @RequestParam("vesselMake") String vesselMake,
-            @RequestParam("vesselModel") String vesselModel,
-            @RequestParam("vesselPrice") BigDecimal vesselPrice,
-            @RequestParam("vesselYear") int vesselYear,
-            @RequestParam("vesselLocationCountry") String vesselLocationCountry,
-            @RequestParam("vesselLocationState") String vesselLocationState,
-            @RequestParam("vesselLengthOverall") BigDecimal vesselLengthOverall,
-            @RequestParam("vesselBeam") BigDecimal vesselBeam,
-            @RequestParam("vesselDraft") BigDecimal vesselDraft,
-            @RequestParam("vesselCabin") int vesselCabin,
-            @RequestParam("vesselBerth") int vesselBerth,
-            @RequestParam("keelType") KeelType keelType,
-            @RequestParam("fuelType") FuelType fuelType,
-            @RequestParam("engineQuantity") int engineQuantity,
-            @RequestParam("vesselDescription") String vesselDescription,
+        @RequestPart("vesselData") VesselRequestDto vesselData,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
         VesselMapper vesselMapper = new VesselMapper();
+        Vessel newVessel = vesselMapper.toVessel(vesselData);
 
-        Vessel newVessel = vesselMapper.toVessel(vesselMapper.toVesselRequestDto(featuredVessel, vesselMake, vesselModel, vesselPrice, vesselYear,
-                vesselLocationCountry, vesselLocationState, vesselLengthOverall, vesselBeam, vesselDraft,
-                vesselCabin, vesselBerth, keelType, fuelType, engineQuantity, vesselDescription));
-
-        newVessel.setCreatedAt(LocalDateTime.now());
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVessel);
     }
-
     @PutMapping("/{vesselId}")
     public ResponseEntity<Vessel> updateVessel(
             @PathVariable Long vesselId,

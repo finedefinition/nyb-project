@@ -44,6 +44,11 @@ public class VesselServiceImpl implements VesselService {
     }
 
     @Override
+    public List<Vessel> findAll() {
+        return vesselRepository.findAll();
+    }
+
+    @Override
     public Vessel save(Vessel vessel, MultipartFile imageFile) {
         vessel.setCreatedAt(LocalDateTime.now());
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -82,10 +87,7 @@ public class VesselServiceImpl implements VesselService {
 
 
 
-    @Override
-    public List<Vessel> findAll() {
-        return vesselRepository.findAll();
-    }
+
 
     @Transactional
     @Override
