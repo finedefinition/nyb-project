@@ -1,14 +1,10 @@
 package com.norwayyachtbrockers.controler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.norwayyachtbrockers.dto.mapper.VesselMapper;
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
 import com.norwayyachtbrockers.dto.request.VesselRequestDto;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
 import com.norwayyachtbrockers.model.Vessel;
-import com.norwayyachtbrockers.model.enums.FuelType;
-import com.norwayyachtbrockers.model.enums.KeelType;
 import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
@@ -22,11 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +59,8 @@ public class VesselController {
             @RequestPart("vesselData") VesselRequestDto vesselData,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        Vessel newVessel = vesselMapper.toVessel(vesselData);
+        Vessel newVessel = new Vessel();
+        vesselMapper.updateVesselFromDto(newVessel, vesselData);
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVessel);
     }
@@ -76,6 +71,7 @@ public class VesselController {
             @RequestPart("vesselData") VesselRequestDto vesselData,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
     ) {
+
         Vessel updatedVessel = vesselService.update(vesselId, vesselData, imageFile);
         return ResponseEntity.ok(updatedVessel);
     }

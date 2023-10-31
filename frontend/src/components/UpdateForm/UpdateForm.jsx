@@ -6,6 +6,7 @@ import './UpdateForm.css';
 
 export const UpdateForm = () => {
     const {id} = useParams() || {id: 'defaultId'};
+    console.log('Initial ID from useParams:', id);
     const fileInputRef = React.useRef(null);
     const [formErrors, setFormErrors] = useState({});
     const [imageUrl, setImageUrl] = useState('');
@@ -45,6 +46,7 @@ export const UpdateForm = () => {
         fetch('https://nyb-project-production.up.railway.app/keelTypes')
             .then(response => response.json())
             .then(data => {
+                console.log('Fetched keelTypes:', data);
                 setKeelTypes(data);
             });
     }, []);
@@ -59,6 +61,7 @@ export const UpdateForm = () => {
 
     const handleChange = (e) => {
         const {name, value} = e.target;
+        console.log(`Changed ${name} to ${value}`);
         setFormData({
             ...formData,
             [name]: value,
@@ -67,6 +70,7 @@ export const UpdateForm = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
+        console.log('Selected file:', file);
 
         if (file) {
             const reader = new FileReader();
@@ -149,12 +153,13 @@ export const UpdateForm = () => {
             formDataToSend.append("imageFile", formData.imageFile);
         }
 
-        const vesselData = { ...formData };
+        const vesselData = {...formData};
         delete vesselData.imageFile;
-        formDataToSend.append("vesselData", JSON.stringify(vesselData));
+        formDataToSend.append("vesselData", new Blob([JSON.stringify(formData)], { type: "application/json" }));
 
         axios.put(`https://nyb-project-production.up.railway.app/vessels/${vesselId}`, formDataToSend)
             .then(response => {
+                console.log('Server response:', response);
                 if (response.status === 200 && response.data) {
                     setSubmitStatus({
                         status: 'success',
@@ -162,20 +167,21 @@ export const UpdateForm = () => {
                     });
                     console.log("Send data to server");
                     console.log(vesselData);
+                    console.log('Attempting to update vessel with ID:', vesselId);
                     navigate(`/full-card/${vesselId}`);
                 } else {
                     setSubmitStatus({
                         status: 'error',
                         message: response.data.message || 'Failed to update the vessel data.',
                     });
-                    console.log("Erro data");
+                    console.log("Error data");
                     console.log(vesselData);
                 }
             })
             .catch(error => {
                 // Handle error from server
+                console.error('Error during axios PUT:', error);
                 const fieldErrors = {}; // Object to store individual field errors
-
                 if (error.response && error.response.data) {
                     // Check if there's an array of validation errors from the server
                     if (Array.isArray(error.response.data)) {
@@ -200,7 +206,7 @@ export const UpdateForm = () => {
                     console.error('Error:', error);
                 }
             });
-    };
+    }
 
     // Helper function to extract the desired message from the error
     function extractErrorMessage(fullMessage) {

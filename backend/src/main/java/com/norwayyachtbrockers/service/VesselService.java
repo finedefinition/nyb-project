@@ -15,7 +15,7 @@ public interface VesselService {
 
     Vessel save(Vessel vessel, MultipartFile imageFile);
 
-    public Vessel update(Long theId, VesselRequestDto vesselData, MultipartFile imageFile);
+    Vessel update(Long theId, VesselRequestDto vesselData, MultipartFile imageFile);
 
     void deleteById(Long theId);
 
