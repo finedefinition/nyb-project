@@ -1,5 +1,7 @@
 package com.norwayyachtbrockers.controler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.norwayyachtbrockers.dto.mapper.VesselMapper;
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
 import com.norwayyachtbrockers.dto.request.VesselRequestDto;
@@ -33,7 +35,6 @@ import java.util.stream.Collectors;
 public class VesselController {
     private final VesselService vesselService;
     private final VesselShortMapper vesselShortMapper;
-
     private final VesselMapper vesselMapper;
 
     public VesselController(VesselService vesselService,

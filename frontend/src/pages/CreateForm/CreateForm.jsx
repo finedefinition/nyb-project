@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import './CreateForm.css';
 import {ImageSection} from "../../components/CreateForm/ImageSection";
 import {FeatureSection} from "../../components/CreateForm/FeatureSection";
@@ -9,6 +10,9 @@ export const CreateForm = () => {
     const fileInputRef = React.useRef(null);
     const [formErrors, setFormErrors] = useState({});
     const [imageUrl, setImageUrl] = useState('');
+    const [keelTypes, setKeelTypes] = useState([]);
+    const [fuelTypes, setFuelTypes] = useState([]);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         featuredVessel: false,
         vesselMake: 'Hanse',
@@ -22,8 +26,8 @@ export const CreateForm = () => {
         vesselDraft: 3,
         vesselCabin: 2,
         vesselBerth: 4,
-        keelType: 'ALL_KEEL_TYPES',
-        fuelType: 'ALL_FUEL_TYPES',
+        keelType: 'All keel types',
+        fuelType: 'All fuel types',
         engineQuantity: 1,
         vesselDescription: 'The best yacht ever. Create on webpage',
         imageFile: null,
@@ -34,8 +38,7 @@ export const CreateForm = () => {
         message: '',
     });
 
-    const [keelTypes, setKeelTypes] = useState([]);
-    const [fuelTypes, setFuelTypes] = useState([]);
+
 
 
     useEffect(() => {
@@ -61,6 +64,8 @@ export const CreateForm = () => {
             ...formData,
             [name]: value,
         });
+        console.log("From handleChange");
+        console.log(formData);
     };
 
     const handleFileChange = (e) => {
@@ -70,6 +75,9 @@ export const CreateForm = () => {
             ...formData,
             imageFile: file,
         });
+        console.log("From handleFileChange");
+        console.log(formData);
+
     };
 
     const handleSubmit = async (e) => {
@@ -102,6 +110,8 @@ export const CreateForm = () => {
                         status: 'success',
                         message: 'Boat is saved successfully!',
                     });
+                    const vesselId = response.data.id; // Example: Extracting id from the response data.
+                    navigate(`/full-card/${vesselId}`);
                 } else {
                     // Handle unexpected status code
                     setSubmitStatus({
