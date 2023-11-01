@@ -1,13 +1,20 @@
+import axios from 'axios';
 import React, {useState, useEffect, useMemo} from 'react'; // Import useMemo
 import {useParams, useNavigate} from 'react-router-dom';
 import AWS from 'aws-sdk';
 import './UpdateForm.css';
 
 export const UpdateForm = () => {
-    const fileInputRef = React.useRef(null);
-
     const {id} = useParams() || {id: 'defaultId'};
-
+    console.log('Initial ID from useParams:', id);
+    const fileInputRef = React.useRef(null);
+    const [formErrors, setFormErrors] = useState({});
+    const [imageUrl, setImageUrl] = useState('');
+    const s3 = useMemo(() => new AWS.S3(), []);
+    const bucketName = 'nyb-basket';
+    const navigate = useNavigate();
+    const [keelTypes, setKeelTypes] = useState([]);
+    const [fuelTypes, setFuelTypes] = useState([]);
     const [formData, setFormData] = useState(
         {
         featuredVessel: false,
@@ -26,7 +33,7 @@ export const UpdateForm = () => {
         fuelType: 'ALL_FUEL_TYPES',
         engineQuantity: 0,
         vesselDescription: '',
-        imageKey: '', // Add a field to store the image key
+        imageKey: '',
     }
     );
 
@@ -35,16 +42,52 @@ export const UpdateForm = () => {
         message: '',
     });
 
+    useEffect(() => {
+        fetch('https://nyb-project-production.up.railway.app/keelTypes')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Fetched keelTypes:', data);
+                setKeelTypes(data);
+            });
+    }, []);
 
-// Define 's3' and 'bucketName' variables
-    const s3 = useMemo(() => new AWS.S3(), []);
-    const bucketName = 'nyb-basket';
-    const navigate = useNavigate();
-    const [imageUrl, setImageUrl] = useState('');
-    const [keelTypes, setKeelTypes] = useState([]);
-    const [fuelTypes, setFuelTypes] = useState([]);
+    useEffect(() => {
+        fetch('https://nyb-project-production.up.railway.app/fuelTypes')
+            .then(response => response.json())
+            .then(data => {
+                setFuelTypes(data);
+            });
+    }, []);
 
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        console.log(`Changed ${name} to ${value}`);
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        console.log('Selected file:', file);
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onloadend = () => {
+                setImageUrl(reader.result);  // set the preview image
+            };
+
+            reader.readAsDataURL(file);  // read the file to data URL format
+
+            setFormData({
+                ...formData,
+                imageFile: file, // Update the 'imageFile' property in the state
+            });
+        }
+        console.log(formData); // Log to check
+    };
 
     // Initialize AWS configuration
     useEffect(() => {
@@ -69,21 +112,7 @@ export const UpdateForm = () => {
         initAWSConfig();
     }, []);
 
-    useEffect(() => {
-        fetch('https://nyb-project-production.up.railway.app/keelTypes')
-            .then(response => response.json())
-            .then(data => {
-                setKeelTypes(data);
-            });
-    }, []);
 
-    useEffect(() => {
-        fetch('https://nyb-project-production.up.railway.app/fuelTypes')
-            .then(response => response.json())
-            .then(data => {
-                setFuelTypes(data);
-            });
-    }, []);
 
     // Fetch existing image data and set it in the state
     useEffect(() => {
@@ -117,77 +146,78 @@ export const UpdateForm = () => {
 
 
     const handleUpdate = async () => {
-        try {
-            const vesselId = id;
-            const formDataToSend = new FormData();
+        const vesselId = id;
+        const formDataToSend = new FormData();
 
-            // Check if a new image file is selected
-            if (formData.imageFile) {
-                formDataToSend.append("imageFile", formData.imageFile);
-            }
+        if (formData.imageFile) {
+            formDataToSend.append("imageFile", formData.imageFile);
+        }
 
-            // Append other form fields
-            for (const key in formData) {
-                // Skip the 'imageFile' property if it's already included
-                if (key !== "imageFile" && formData[key] !== null) {
-                    formDataToSend.append(key, formData[key]);
+        const vesselData = {...formData};
+        delete vesselData.imageFile;
+        formDataToSend.append("vesselData", new Blob([JSON.stringify(formData)], { type: "application/json" }));
+
+        axios.put(`https://nyb-project-production.up.railway.app/vessels/${vesselId}`, formDataToSend)
+            .then(response => {
+                console.log('Server response:', response);
+                if (response.status === 200 && response.data) {
+                    setSubmitStatus({
+                        status: 'success',
+                        message: 'Vessel is updated successfully!',
+                    });
+                    console.log("Send data to server");
+                    console.log(vesselData);
+                    console.log('Attempting to update vessel with ID:', vesselId);
+                    navigate(`/full-card/${vesselId}`);
+                } else {
+                    setSubmitStatus({
+                        status: 'error',
+                        message: response.data.message || 'Failed to update the vessel data.',
+                    });
+                    console.log("Error data");
+                    console.log(vesselData);
                 }
-            }
+            })
+            .catch(error => {
+                // Handle error from server
+                console.error('Error during axios PUT:', error);
+                const fieldErrors = {}; // Object to store individual field errors
+                if (error.response && error.response.data) {
+                    // Check if there's an array of validation errors from the server
+                    if (Array.isArray(error.response.data)) {
+                        error.response.data.forEach(err => {
+                            fieldErrors[err.property] = err.interpolatedMessage || err.messageTemplate;
+                        });
+                    }
 
-            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vesselId}`, {
-                method: 'PUT',
-                body: formDataToSend,
+                    setFormErrors(fieldErrors);
+
+                    // Extracting only the desired message part from the error
+                    const errorMessage = extractErrorMessage(error.response.data.message);
+                    setSubmitStatus({
+                        status: 'error',
+                        message: errorMessage || 'Failed to update the vessel data.',
+                    });
+                } else {
+                    setSubmitStatus({
+                        status: 'error',
+                        message: 'An error occurred while updating the vessel data.',
+                    });
+                    console.error('Error:', error);
+                }
             });
+    }
 
-            if (response.status === 200) {
-                setSubmitStatus({
-                    status: 'success',
-                    message: 'Vessel is updated successfully!',
-                });
-                navigate(`/full-card/${vesselId}`);
-
-            } else {
-                setSubmitStatus({
-                    status: 'error',
-                    message: 'Failed to update the vessel data.',
-                });
-            }
-        } catch (error) {
-            setSubmitStatus({
-                status: 'error',
-                message: 'An error occurred while updating the vessel data.',
-            });
-            console.error('Error:', error);
+    // Helper function to extract the desired message from the error
+    function extractErrorMessage(fullMessage) {
+        const regex = /messageTemplate='(.*?)'/;
+        const match = regex.exec(fullMessage);
+        if (match && match[1]) {
+            return match[1];
         }
-    };
+        return fullMessage;  // return the full message if extraction fails
+    }
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                setImageUrl(reader.result);  // set the preview image
-            };
-
-            reader.readAsDataURL(file);  // read the file to data URL format
-
-            setFormData({
-                ...formData,
-                imageFile: file, // Update the 'imageFile' property in the state
-            });
-        }
-        console.log(formData); // Log to check
-    };
 
     const handleFileClear = () => {
         fileInputRef.current.value = '';  // Clear the input field

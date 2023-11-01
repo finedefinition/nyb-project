@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import './CreateForm.css';
 import {ImageSection} from "../../components/CreateForm/ImageSection";
 import {FeatureSection} from "../../components/CreateForm/FeatureSection";
@@ -9,6 +10,9 @@ export const CreateForm = () => {
     const fileInputRef = React.useRef(null);
     const [formErrors, setFormErrors] = useState({});
     const [imageUrl, setImageUrl] = useState('');
+    const [keelTypes, setKeelTypes] = useState([]);
+    const [fuelTypes, setFuelTypes] = useState([]);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         featuredVessel: false,
         vesselMake: 'Hanse',
@@ -22,8 +26,8 @@ export const CreateForm = () => {
         vesselDraft: 3,
         vesselCabin: 2,
         vesselBerth: 4,
-        keelType: 'ALL_KEEL_TYPES',
-        fuelType: 'ALL_FUEL_TYPES',
+        keelType: 'All keel types',
+        fuelType: 'All fuel types',
         engineQuantity: 1,
         vesselDescription: 'The best yacht ever. Create on webpage',
         imageFile: null,
@@ -34,8 +38,7 @@ export const CreateForm = () => {
         message: '',
     });
 
-    const [keelTypes, setKeelTypes] = useState([]);
-    const [fuelTypes, setFuelTypes] = useState([]);
+
 
 
     useEffect(() => {
@@ -61,6 +64,8 @@ export const CreateForm = () => {
             ...formData,
             [name]: value,
         });
+        console.log("From handleChange");
+        console.log(formData);
     };
 
     const handleFileChange = (e) => {
@@ -70,14 +75,15 @@ export const CreateForm = () => {
             ...formData,
             imageFile: file,
         });
+        console.log("From handleFileChange");
+        console.log(formData);
+
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         if (!formData.imageFile) {
-            // Handle the case where 'imageFile' is not present
             setSubmitStatus({
                 status: 'error',
                 message: 'Please select an image file.',
@@ -85,11 +91,16 @@ export const CreateForm = () => {
             return;
         }
 
+        // Extract the imageFile from formData
+        const imageFile = formData.imageFile;
+        delete formData.imageFile;  // Remove imageFile from formData to avoid appending it twice
+
         // Prepare the form data to be sent to the server
         const formDataToSend = new FormData();
-        for (const key in formData) {
-            formDataToSend.append(key, formData[key]);
-        }
+
+        // Append vesselData and imageFile separately
+        formDataToSend.append('vesselData', new Blob([JSON.stringify(formData)], { type: "application/json" }));
+        formDataToSend.append('imageFile', imageFile);
 
         axios.post('https://nyb-project-production.up.railway.app/vessels', formDataToSend)
             .then(response => {
@@ -99,6 +110,8 @@ export const CreateForm = () => {
                         status: 'success',
                         message: 'Boat is saved successfully!',
                     });
+                    const vesselId = response.data.id; // Example: Extracting id from the response data.
+                    navigate(`/full-card/${vesselId}`);
                 } else {
                     // Handle unexpected status code
                     setSubmitStatus({
@@ -346,7 +359,7 @@ export const CreateForm = () => {
                                 Keel Type
                                 <select name="keelType" value={formData.keelType} onChange={handleChange}>
                                     {keelTypes.map((keelType, index) => (
-                                        <option key={index} value={keelType.name}>
+                                        <option key={index} value={keelType.value}>
                                             {keelType.value}
                                         </option>
                                     ))}
@@ -372,7 +385,7 @@ export const CreateForm = () => {
                                 Fuel Type
                                 <select name="fuelType" value={formData.fuelType} onChange={handleChange}>
                                     {fuelTypes.map((fuelType, index) => (
-                                        <option key={index} value={fuelType.name}>
+                                        <option key={index} value={fuelType.value}>
                                             {fuelType.value}
                                         </option>
                                     ))}
