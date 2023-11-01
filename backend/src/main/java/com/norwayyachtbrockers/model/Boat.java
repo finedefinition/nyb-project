@@ -1,10 +1,13 @@
 package com.norwayyachtbrockers.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,12 +40,15 @@ public class Boat {
     @Column(name = "place")
     private String boatPlace;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner_info_id", nullable = true)
+    private OwnerInfo ownerInfo;
+
     public Boat() {
     }
 
-    public Boat(String boatName, BigDecimal boatPrice, String boatBrand,
-                int boatYear, LocalDateTime createdAt, String imageKey,
-                String boatPlace) {
+    public Boat(String boatName, BigDecimal boatPrice, String boatBrand, int boatYear,
+                LocalDateTime createdAt, String imageKey, String boatPlace, OwnerInfo ownerInfo) {
         this.boatName = boatName;
         this.boatPrice = boatPrice;
         this.boatBrand = boatBrand;
@@ -50,6 +56,7 @@ public class Boat {
         this.createdAt = createdAt;
         this.imageKey = imageKey;
         this.boatPlace = boatPlace;
+        this.ownerInfo = ownerInfo;
     }
 
     public Long getId() {
@@ -114,5 +121,13 @@ public class Boat {
 
     public void setBoatPlace(String boatPlace) {
         this.boatPlace = boatPlace;
+    }
+
+    public OwnerInfo getOwnerInfo() {
+        return ownerInfo;
+    }
+
+    public void setOwnerInfo(OwnerInfo ownerInfo) {
+        this.ownerInfo = ownerInfo;
     }
 }

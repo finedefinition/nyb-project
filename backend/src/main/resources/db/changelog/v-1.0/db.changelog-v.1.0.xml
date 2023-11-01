@@ -15,6 +15,8 @@
     <include file="70-changeset-add-keel.xml" relativeToChangelogFile="true" />
     <include file="80-changeset-drop-vesselkeel.xml" relativeToChangelogFile="true" />
     <include file="90-changeset-drop-vesselfuel.xml" relativeToChangelogFile="true" />
+    <include file="100-changeset-create-owner_info-table.xml" relativeToChangelogFile="true" />
+    <include file="110-changeset-add-owner_info_id.xml" relativeToChangelogFile="true" />
 
 
 </databaseChangeLog>
