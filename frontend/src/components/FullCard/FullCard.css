@@ -1,12 +1,4 @@
 /*Full card*/
-.container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;  /* New: set the width to 100% of its parent */
-    max-width: 1440px;
-    margin: 0 auto;  /* New: centers the container if the viewport width is greater than the max-width */
-}
-
 .top-section {
     display: flex;
     justify-content: space-between;

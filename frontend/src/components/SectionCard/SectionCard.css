@@ -1,14 +1,17 @@
 .section {
-  margin: 20px;
+  margin-top: 100px;
 }
 
-.section__up {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+.section_title {
+  font-family: "Bai Jamjuree", sans-serif;
+  font-size: 40px;
+  font-weight: 600;
 }
 
-.section__btn {
+.section_up {
+}
+
+.section_btn {
   margin: 20px;
   background-color: inherit;
   padding: 10px;

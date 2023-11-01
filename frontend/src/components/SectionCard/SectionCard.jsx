@@ -6,11 +6,11 @@ import { GoodList } from '../GoodList'; // Assuming this is where your yacht ite
 export const SectionCard = () => {
     return (
         <section className="section">
-            <div className="section__up">
-                <h2 className='section__title'>Featured yachts</h2>
+            <div className="section_up">
+                <h2 className='section_title text-center'>Featured yachts</h2>
 
                 {/* Add a Link component to the "See all" button */}
-                <Link to="/yachts" className='section__btn'>
+                <Link to="/yachts" className='section_btn'>
                     See all
                 </Link>
             </div>

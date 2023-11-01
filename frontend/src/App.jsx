@@ -10,18 +10,20 @@ import { NotFound } from "./components/NotFound";
 
 export const App = () => {
   return (
-    <Router>
-      <>
-        <Header />
-        <Routes> {/* Use Routes instead of Switch */}
-          <Route path="/" element={<Main />} />
-          <Route path="/yachts" element={<YachtPage />} />
-          <Route path="/full-card/:id" element={<FullCard />} />
-          <Route path="/form" element={<CreateForm />} />
-          <Route path="/update/:id" element={<UpdateForm />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </>
-    </Router>
+      <div className="container-fluid">
+        <Router>
+          <>
+            <Header />
+            <Routes> {/* Use Routes instead of Switch */}
+              <Route path="/" element={<Main />} />
+              <Route path="/yachts" element={<YachtPage />} />
+              <Route path="/full-card/:id" element={<FullCard />} />
+              <Route path="/form" element={<CreateForm />} />
+              <Route path="/update/:id" element={<UpdateForm />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </>
+        </Router>
+      </div>
   );
 };

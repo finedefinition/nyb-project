@@ -1,27 +1,34 @@
-.main__img {
-  background-image: url('../../../public/Images/Main/yacht-mainpage.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
+main {
   width: 100%;
-  height: calc(100vh - 80px);
-  
 }
 
-.main__btn {
-  z-index: 1;
+.main_banner {
+  max-height: 878px;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.main_banner_container {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%);
-  padding: 30px;
-  background: white;
-  color: black;
-  font-size: 20px;
-  cursor: pointer;
-  border: 2px solid black ;
-  border-radius: 30px;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  min-width: 1110px;
+}
+
+.main_banner_h {
+  font-family: "Bai Jamjuree", sans-serif;
+  font-size: 110px;
+  font-weight: 700;
+  color: #4D6575;
+}
+
+.main_banner_h > p:nth-child(2) {
+  margin-left: 226px;
 }
 
 .main {

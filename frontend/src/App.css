@@ -1,7 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;700&family=Roboto:wght@400;500&display=swap');
+
 body {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   background-color: rgb(255, 255, 255);
   color: rgb(24, 24, 24);
   margin: 0;
   padding: 0;
+}
+
+.box_good_img > img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.container-fluid {
+  position: relative;
+  padding: 0 !important;
+  /*box-shadow: 0 0 0 2px red inset;*/
+}
+
+/*************** Buttons ***************/
+.btn_primary {
+  font-family: "Roboto", serif;
+  font-size: 18px;
+  color: #fff;
+  border-radius: 50px;
+  padding: 10px 39px;
+  border: none;
+}
+
+.btn_primary:hover {
+  color: #fff;
+}
+
+.btn_bg_yellow {
+  background-color: #E7801A;
+}
+
+.btn_bg_blue {
+ background-color: #022872;
+}
+.btn_bg_blue:hover,
+.btn_bg_blue:focus,
+:not(.btn-check) + .btn_bg_blue:active{
+  background-color: #20499A;
+  color: #fff;
+  border:none;
 }

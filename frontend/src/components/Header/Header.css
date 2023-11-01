@@ -1,46 +1,48 @@
-.header {
+header {
+  max-width: 1920px;
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  transform: translateX( -50%);
+  height: 50px;
+  top: 0;
+  z-index: 1;
+}
+
+.header_navbar {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;display: flex;
+  font-size: 18px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 40px;
+
+}
+
+.header_navbar > li {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  height: 80px;
-  background-color: rgb(255, 255, 255);
-  margin: 0;
-}
-.header__logo {
-  padding: 0;
+  justify-content: center;
 }
 
-.logo {
-  text-decoration: none;
-  font-size: 28px;
+.navbar-expand-lg .navbar-nav .nav-link {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.name_company {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.name_company > * {
+  font-family: 'Bai Jamjuree', sans-serif;
   font-weight: bold;
-  border: 1px solid rgb(0, 0, 0);
-  border-radius: 50%;
-  padding: 10px;
+  font-size: 29px;
+  color: #FFFFFF;
+  vertical-align: middle;
 }
-
-.header__nav__item {
-  display: flex;
-  list-style: none;
-}
-
-.header__nav__list {
-  margin: 0 20px;
-}
-
-.header__nav__link {
-  text-decoration: none;
-  font-size: 20px;
-  text-transform: uppercase;
-
-}
-
-.header__btn {
-  margin: 20px;
-  background-color: inherit;
-  padding: 10px;
-  font-size: inherit;
-  border: 1px solid rgb(24, 24, 24);
-  border-radius: 50px;
-  color: rgb(0, 0, 0);
+.name_company img {
+  max-height: 37px;
+  margin-right: 20px;
 }

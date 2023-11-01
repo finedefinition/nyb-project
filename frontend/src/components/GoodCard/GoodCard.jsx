@@ -40,11 +40,13 @@ export const GoodCard = ({ good }) => {
 
     return (
         <div className="GoodCard">
-            {imageUrl ? (
-                <img src={imageUrl} alt="Boat" className="GoodCard__img" />
-            ) : (
-                <p>Loading image...</p>
-            )}
+            <div className="box-good_img overflow-hidden">
+                {imageUrl ? (
+                    <img src={imageUrl} alt="Boat" className="GoodCard__img" />
+                ) : (
+                    <p>Loading image...</p>
+                )}
+            </div>
             <Link to={`/full-card/${good.id}`} className="GoodCard__name"> <h2>
                 {good.make} {good.model} </h2>
             </Link>

@@ -1,32 +1,44 @@
 import './Header.css';
 import {Link} from "react-router-dom";
+import {useState} from "react";
 
 export const Header = () => {
+  const [isNavbarCollapsed, setNavbarCollapsed] = useState(true);
+
+  const toggleNavbar = () => {
+    setNavbarCollapsed(!isNavbarCollapsed);
+  };
   return (
-    <header className="header">
-      <div className="header__logo">
-        <Link to="/" className='logo'>LOGO</Link>
-      </div>
-    <nav className="header__nav">
-      <ul className="header__nav__item">
-        <li className="header__nav__list">
-          <Link to="/yachts" className="header__nav__link">Yachts</Link>
-        </li>
-        <li className="header__nav__list">
-         <Link to="/" className="header__nav__link">How it works?</Link>
-        </li>
-        <li className="header__nav__list">
-          <Link to="/" className="header__nav__link">About us</Link>
-        </li>
-        <li className="header__nav__list">
-          <Link to="/form" className="header__nav__link">Form</Link>
-        </li>
-      </ul>
-    </nav>
-    <div className="header__buttons">
-      <button className="header__btn">Sign In</button>
-      <button className="header__btn">Sign Up</button>
-    </div>
+    <header>
+      <nav className="navbar navbar-expand-lg">
+        <div className="container-fluid">
+          <button className="navbar-toggler" type="button" aria-label="Toggle navigation" id="navbarBtnHamburger" onClick={toggleNavbar}>
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className={`collapse navbar-collapse ${isNavbarCollapsed ? '' : 'show'}`} id="navbarSupportedContent">
+            <ul className="navbar-nav header_navbar mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link to="/yachts" className="nav-link active">Yachts</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/" className="nav-link">How it works?</Link>
+              </li>
+              <li className="nav-item name_company">
+                <Link to="/" className="nav-link">
+                  <img src="/Images/Logo/logo.svg" alt="Logo Norse Yacht Co."/>
+                  <span>Norse Yacht Co.</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/review" className="nav-link">Reviews</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/" className="nav-link">Contact</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
   </header>
   )
 }
