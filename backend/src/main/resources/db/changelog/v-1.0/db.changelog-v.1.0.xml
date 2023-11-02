@@ -17,6 +17,7 @@
     <include file="90-changeset-drop-vesselfuel.xml" relativeToChangelogFile="true" />
     <include file="100-changeset-create-owner_info-table.xml" relativeToChangelogFile="true" />
     <include file="110-changeset-add-owner_info_id.xml" relativeToChangelogFile="true" />
+    <include file="120-changeset-fk_boats_owner_info.xml" relativeToChangelogFile="true" />
 
 
 </databaseChangeLog>

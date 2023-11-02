@@ -1,6 +1,8 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.mapper.BoatCreationMapper;
 import com.norwayyachtbrockers.dto.mapper.BoatShortMapper;
+import com.norwayyachtbrockers.dto.request.BoatCreationDto;
 import com.norwayyachtbrockers.dto.response.BoatShortResponseDto;
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.service.BoatService;
@@ -8,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +30,12 @@ public class BoatController {
 
     private final BoatShortMapper boatShortMapper;
 
-    public BoatController(BoatService boatService, BoatShortMapper boatShortMapper) {
+    private final BoatCreationMapper boatCreationMapper;
+
+    public BoatController(BoatService boatService, BoatShortMapper boatShortMapper, BoatCreationMapper boatCreationMapper) {
         this.boatService = boatService;
         this.boatShortMapper = boatShortMapper;
+        this.boatCreationMapper = boatCreationMapper;
     }
 
     @GetMapping("/{boatId}")
@@ -52,28 +58,41 @@ public class BoatController {
         return ResponseEntity.ok(boats);
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Boat> createBoat(
-            @RequestParam("boatName") String boatName,
-            @RequestParam("boatPrice") BigDecimal boatPrice,
-            @RequestParam("boatBrand") String boatBrand,
-            @RequestParam("boatYear") int boatYear,
-            @RequestParam("boatPlace") String boatPlace,
+            @RequestPart("boatData") BoatCreationDto boatData,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        // Create a new Boat object and set its properties
         Boat newBoat = new Boat();
-        newBoat.setBoatName(boatName);
-        newBoat.setBoatPrice(boatPrice);
-        newBoat.setBoatBrand(boatBrand);
-        newBoat.setBoatYear(boatYear);
-        newBoat.setBoatPlace(boatPlace);
 
-        // Save the Boat object with image
+        boatCreationMapper.mapDtoToEntity(boatData, newBoat);
+
         Boat createdBoat = boatService.save(newBoat, imageFile);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBoat);
     }
+//    @PostMapping
+//    public ResponseEntity<Boat> createBoat(
+//            @RequestParam("boatName") String boatName,
+//            @RequestParam("boatPrice") BigDecimal boatPrice,
+//            @RequestParam("boatBrand") String boatBrand,
+//            @RequestParam("boatYear") int boatYear,
+//            @RequestParam("boatPlace") String boatPlace,
+//            @RequestPart("imageFile") MultipartFile imageFile
+//    ) {
+//        // Create a new Boat object and set its properties
+//        Boat newBoat = new Boat();
+//        newBoat.setBoatName(boatName);
+//        newBoat.setBoatPrice(boatPrice);
+//        newBoat.setBoatBrand(boatBrand);
+//        newBoat.setBoatYear(boatYear);
+//        newBoat.setBoatPlace(boatPlace);
+//
+//        // Save the Boat object with image
+//        Boat createdBoat = boatService.save(newBoat, imageFile);
+//
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createdBoat);
+//    }
 
     // PUT update an existing boat (replace entire resource)
     @PutMapping("/{boatId}")

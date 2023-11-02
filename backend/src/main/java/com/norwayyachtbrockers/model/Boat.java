@@ -9,14 +9,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "boats")
+@Getter
+@Setter
+@ToString
 public class Boat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -59,75 +67,4 @@ public class Boat {
         this.ownerInfo = ownerInfo;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBoatName() {
-        return boatName;
-    }
-
-    public void setBoatName(String boatName) {
-        this.boatName = boatName;
-    }
-
-    public BigDecimal getBoatPrice() {
-        return boatPrice;
-    }
-
-    public void setBoatPrice(BigDecimal boatPrice) {
-        this.boatPrice = boatPrice;
-    }
-
-    public String getBoatBrand() {
-        return boatBrand;
-    }
-
-    public void setBoatBrand(String boatBrand) {
-        this.boatBrand = boatBrand;
-    }
-
-    public int getBoatYear() {
-        return boatYear;
-    }
-
-    public void setBoatYear(int boatYear) {
-        this.boatYear = boatYear;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getImageKey() {
-        return imageKey;
-    }
-
-    public void setImageKey(String imageKey) {
-        this.imageKey = imageKey;
-    }
-
-    public String getBoatPlace() {
-        return boatPlace;
-    }
-
-    public void setBoatPlace(String boatPlace) {
-        this.boatPlace = boatPlace;
-    }
-
-    public OwnerInfo getOwnerInfo() {
-        return ownerInfo;
-    }
-
-    public void setOwnerInfo(OwnerInfo ownerInfo) {
-        this.ownerInfo = ownerInfo;
-    }
 }

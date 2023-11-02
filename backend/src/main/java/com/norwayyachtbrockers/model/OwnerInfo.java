@@ -1,21 +1,27 @@
 package com.norwayyachtbrockers.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "owner_info")
 @Getter
 @Setter
+@ToString
 public class OwnerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "first_name", nullable = false)
@@ -29,6 +35,10 @@ public class OwnerInfo {
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @OneToOne(mappedBy = "ownerInfo",  cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Boat boat;
 
     public OwnerInfo() {
     }
