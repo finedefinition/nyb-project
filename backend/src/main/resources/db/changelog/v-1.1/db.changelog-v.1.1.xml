@@ -7,6 +7,7 @@
 
     <include file="10-changeset-vessels-table.xml" relativeToChangelogFile="true" />
     <include file="20-changeset-keel_type-table.xml" relativeToChangelogFile="true" />
+    <include file="30-changeset-fuel_type-table.xml" relativeToChangelogFile="true" />
 <!--    <include file="20-changeset-boat_models-table.xml" relativeToChangelogFile="true" />-->
 
 </databaseChangeLog>
