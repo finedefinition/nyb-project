@@ -13,15 +13,15 @@
         <tagDatabase tag="db_init"/>
     </changeSet>
 
-    <include file="v-1.0/db.changelog-v.1.0.xml" relativeToChangelogFile="true"/>
-
-    <changeSet id="1" author="sergii_bezrukov">
-        <tagDatabase tag="v.1.0"/>
-    </changeSet>
-<!--    <include file="v-1.1/db.changelog-v.1.1.xml" relativeToChangelogFile="true"/>-->
+<!--    <include file="v-1.0/db.changelog-v.1.0.xml" relativeToChangelogFile="true"/>-->
 
 <!--    <changeSet id="1" author="sergii_bezrukov">-->
-<!--        <tagDatabase tag="v.1.1"/>-->
+<!--        <tagDatabase tag="v.1.0"/>-->
 <!--    </changeSet>-->
+    <include file="v-1.1/db.changelog-v.1.1.xml" relativeToChangelogFile="true"/>
+
+    <changeSet id="1" author="sergii_bezrukov">
+        <tagDatabase tag="v.1.1"/>
+    </changeSet>
     
 </databaseChangeLog>

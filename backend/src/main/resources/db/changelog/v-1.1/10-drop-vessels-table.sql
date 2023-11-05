@@ -1,2 +1,2 @@
-DROP TABLE vessels
+DROP TABLE `vessels`
 GO
