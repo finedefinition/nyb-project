@@ -1,0 +1,2 @@
+DROP TABLE `country`
+GO
