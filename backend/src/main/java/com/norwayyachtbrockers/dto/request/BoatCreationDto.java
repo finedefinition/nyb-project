@@ -16,12 +16,4 @@ public class BoatCreationDto {
 
     private String boatPlace;
 
-    private String firstName;
-
-    private String lastName;
-
-    private String telephone;
-
-    private String email;
-
 }

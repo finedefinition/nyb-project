@@ -13,5 +13,6 @@
     <include file="60-changeset-location-table.xml" relativeToChangelogFile="true" />
     <include file="70-changeset-boat_models-table.xml" relativeToChangelogFile="true" />
     <include file="80-changeset-modify-decimal-values.xml" relativeToChangelogFile="true" />
+    <include file="90-changeset-boat_images-table.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

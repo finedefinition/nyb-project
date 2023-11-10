@@ -58,41 +58,41 @@ public class BoatController {
         return ResponseEntity.ok(boats);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Boat> createBoat(
-            @RequestPart("boatData") BoatCreationDto boatData,
-            @RequestPart("imageFile") MultipartFile imageFile
-    ) {
-        Boat newBoat = new Boat();
-
-        boatCreationMapper.mapDtoToEntity(boatData, newBoat);
-
-        Boat createdBoat = boatService.save(newBoat, imageFile);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdBoat);
-    }
-//    @PostMapping
+//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public ResponseEntity<Boat> createBoat(
-//            @RequestParam("boatName") String boatName,
-//            @RequestParam("boatPrice") BigDecimal boatPrice,
-//            @RequestParam("boatBrand") String boatBrand,
-//            @RequestParam("boatYear") int boatYear,
-//            @RequestParam("boatPlace") String boatPlace,
+//            @RequestPart("boatData") BoatCreationDto boatData,
 //            @RequestPart("imageFile") MultipartFile imageFile
 //    ) {
-//        // Create a new Boat object and set its properties
 //        Boat newBoat = new Boat();
-//        newBoat.setBoatName(boatName);
-//        newBoat.setBoatPrice(boatPrice);
-//        newBoat.setBoatBrand(boatBrand);
-//        newBoat.setBoatYear(boatYear);
-//        newBoat.setBoatPlace(boatPlace);
 //
-//        // Save the Boat object with image
+//        boatCreationMapper.mapDtoToEntity(boatData, newBoat);
+//
 //        Boat createdBoat = boatService.save(newBoat, imageFile);
 //
 //        return ResponseEntity.status(HttpStatus.CREATED).body(createdBoat);
 //    }
+    @PostMapping
+    public ResponseEntity<Boat> createBoat(
+            @RequestParam("boatName") String boatName,
+            @RequestParam("boatPrice") BigDecimal boatPrice,
+            @RequestParam("boatBrand") String boatBrand,
+            @RequestParam("boatYear") int boatYear,
+            @RequestParam("boatPlace") String boatPlace,
+            @RequestPart("imageFile") MultipartFile imageFile
+    ) {
+        // Create a new Boat object and set its properties
+        Boat newBoat = new Boat();
+        newBoat.setBoatName(boatName);
+        newBoat.setBoatPrice(boatPrice);
+        newBoat.setBoatBrand(boatBrand);
+        newBoat.setBoatYear(boatYear);
+        newBoat.setBoatPlace(boatPlace);
+
+        // Save the Boat object with image
+        Boat createdBoat = boatService.save(newBoat, imageFile);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdBoat);
+    }
 
     // PUT update an existing boat (replace entire resource)
     @PutMapping("/{boatId}")

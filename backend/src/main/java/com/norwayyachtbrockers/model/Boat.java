@@ -44,16 +44,16 @@ public class Boat {
 
     @Column(name = "place")
     private String boatPlace;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_info_id", nullable = true)
-    private OwnerInfo ownerInfo;
+//
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "owner_info_id", nullable = true)
+//    private OwnerInfo ownerInfo;
 
     public Boat() {
     }
 
     public Boat(String boatName, BigDecimal boatPrice, String boatBrand, int boatYear,
-                LocalDateTime createdAt, String imageKey, String boatPlace, OwnerInfo ownerInfo) {
+                LocalDateTime createdAt, String imageKey, String boatPlace) {
         this.boatName = boatName;
         this.boatPrice = boatPrice;
         this.boatBrand = boatBrand;
@@ -61,7 +61,5 @@ public class Boat {
         this.createdAt = createdAt;
         this.imageKey = imageKey;
         this.boatPlace = boatPlace;
-        this.ownerInfo = ownerInfo;
     }
-
 }

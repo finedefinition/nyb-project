@@ -11,11 +11,8 @@ import java.util.List;
 public interface BoatModelRepository extends JpaRepository<BoatModel, Long> {
 
     void deleteById(Long theId);
-
-    @RestResource(path = "byKeelType", rel = "byKeelType")
     List<BoatModel> findByKeelTypeId(@Param("keelType") Long keelTypeId);
 
-    @RestResource(path = "byFuelType", rel = "byFuelType")
     List<BoatModel> findByFuelTypeId(@Param("fuelType") Long keelTypeId);
 
 }

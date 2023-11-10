@@ -11,7 +11,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import java.math.BigDecimal;
 
 @Entity
@@ -33,13 +32,13 @@ public class BoatModel {
     @Column(name = "year", nullable = false)
     private Integer year;
 
-    @Column(name = "length_overall", nullable = false, precision = 3, scale = 2)
+    @Column(name = "length_overall", nullable = false, precision = 5, scale = 2)
     private BigDecimal lengthOverall;
 
-    @Column(name = "beam_width", nullable = false, precision = 2, scale = 2)
+    @Column(name = "beam_width", nullable = false, precision = 5, scale = 2)
     private BigDecimal beamWidth;
 
-    @Column(name = "draft_depth", nullable = false, precision = 2, scale = 2)
+    @Column(name = "draft_depth", nullable = false, precision = 5, scale = 2)
     private BigDecimal draftDepth;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})

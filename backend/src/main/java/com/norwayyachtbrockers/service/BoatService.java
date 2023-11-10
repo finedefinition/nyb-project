@@ -1,6 +1,8 @@
 package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.model.Boat;
+import com.norwayyachtbrockers.model.BoatModel;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
@@ -14,4 +16,6 @@ public interface BoatService {
     List<Boat> findAll();
 
     void deleteById(Long theId);
+
+
 }
