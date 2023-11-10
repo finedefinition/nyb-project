@@ -11,7 +11,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,7 +18,6 @@ import java.time.LocalDateTime;
 @Table(name = "boats")
 @Getter
 @Setter
-@ToString
 public class Boat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,10 +15,10 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
-@Table(name = "keel_type")
+@Table(name = "fuel_type")
 @Getter
 @Setter
-public class Keel {
+public class Fuel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,17 +27,15 @@ public class Keel {
     @Column(nullable = false, length = 40)
     private String name;
 
-    @OneToMany(mappedBy = "keelType",
-            fetch = FetchType.EAGER,
+    @OneToMany(mappedBy = "fuelType",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     private Set<BoatModel> boatModels;
 
-
-    public Keel(String name) {
-        this.name = name;
+    public Fuel() {
     }
 
-    public Keel() {
+    public Fuel(String name) {
+        this.name = name;
     }
 }

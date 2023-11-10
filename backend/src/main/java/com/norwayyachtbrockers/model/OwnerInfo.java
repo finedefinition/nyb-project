@@ -11,13 +11,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "owner_info")
 @Getter
 @Setter
-@ToString
 public class OwnerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
