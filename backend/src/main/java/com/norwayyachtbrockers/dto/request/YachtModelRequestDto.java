@@ -1,13 +1,10 @@
 package com.norwayyachtbrockers.dto.request;
 
-import com.norwayyachtbrockers.model.Fuel;
-import com.norwayyachtbrockers.model.Keel;
 import lombok.Data;
-
 import java.math.BigDecimal;
 
 @Data
-public class BoatModelRequestDto {
+public class YachtModelRequestDto {
 
     private String make;
 
@@ -21,7 +18,7 @@ public class BoatModelRequestDto {
 
     private BigDecimal draftDepth;
 
-    private Keel keelType;
+    private Long keelTypeId;
 
-    private Fuel fuelType;
+    private Long fuelTypeId;
 }

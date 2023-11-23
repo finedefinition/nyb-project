@@ -42,7 +42,7 @@ export const CreateForm = () => {
 
 
     useEffect(() => {
-        fetch('https://nyb-project-production.up.railway.app/keelTypes')
+        fetch('https://nyb-project-production.up.railway.app/enumKeelTypes')
             .then(response => response.json())
             .then(data => {
                 setKeelTypes(data);
@@ -50,7 +50,7 @@ export const CreateForm = () => {
     }, []);
 
     useEffect(() => {
-        fetch('https://nyb-project-production.up.railway.app/fuelTypes')
+        fetch('https://nyb-project-production.up.railway.app/enumFuelTypes')
             .then(response => response.json())
             .then(data => {
                 setFuelTypes(data);

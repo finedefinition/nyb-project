@@ -1,4 +1,4 @@
-CREATE TABLE `state` (
+CREATE TABLE `town` (
                        `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
                        `name` VARCHAR(40) NOT NULL,
                        `country_id` BIGINT NOT NULL,

@@ -22,8 +22,8 @@ public class FuelController {
     @GetMapping("/{id}")
     public ResponseEntity<Fuel> getById(@PathVariable Long id) {
         return fuelRepository.findById(id)
-                .map(ResponseEntity::ok)  // Wrap the Fuel object in a ResponseEntity if found
-                .orElse(ResponseEntity.notFound().build());  // Return 404 Not Found if not found
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping

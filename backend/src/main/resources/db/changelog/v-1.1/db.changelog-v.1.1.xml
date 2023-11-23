@@ -6,13 +6,13 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="10-changeset-vessels-table.xml" relativeToChangelogFile="true" />
-    <include file="20-changeset-keel_type-table.xml" relativeToChangelogFile="true" />
-    <include file="30-changeset-fuel_type-table.xml" relativeToChangelogFile="true" />
-    <include file="40-changeset-country-table.xml" relativeToChangelogFile="true" />
-    <include file="50-changeset-state-table.xml" relativeToChangelogFile="true" />
-    <include file="60-changeset-location-table.xml" relativeToChangelogFile="true" />
-    <include file="70-changeset-boat_models-table.xml" relativeToChangelogFile="true" />
-    <include file="80-changeset-modify-decimal-values.xml" relativeToChangelogFile="true" />
-    <include file="90-changeset-boat_images-table.xml" relativeToChangelogFile="true" />
+    <include file="20-changeset-keel_types-table.xml" relativeToChangelogFile="true" />
+    <include file="30-changeset-fuel_types-table.xml" relativeToChangelogFile="true" />
+    <include file="40-changeset-yacht_models-table.xml" relativeToChangelogFile="true" />
+<!--    <include file="40-changeset-country-table.xml" relativeToChangelogFile="true" />-->
+<!--    <include file="50-changeset-town-table.xml" relativeToChangelogFile="true" />-->
+<!--    <include file="60-changeset-location-table.xml" relativeToChangelogFile="true" />-->
+
+<!--    <include file="90-changeset-boat_images-table.xml" relativeToChangelogFile="true" />-->
 
 </databaseChangeLog>

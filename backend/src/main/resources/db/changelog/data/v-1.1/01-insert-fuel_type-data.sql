@@ -1,4 +1,4 @@
-INSERT INTO fuel_type (name) VALUES
+INSERT INTO `fuel_types` (`name`) VALUES
                                  ('All fuel types'),
                                  ('Diesel'),
                                  ('Electric'),

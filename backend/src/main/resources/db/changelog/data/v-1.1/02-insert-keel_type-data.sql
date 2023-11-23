@@ -1,4 +1,4 @@
-INSERT INTO keel_type (name) VALUES
+INSERT INTO `keel_types` (`name`) VALUES
                                  ('All keel types'),
                                  ('Bilge & Twin Keel'),
                                  ('Bulb Keel'),

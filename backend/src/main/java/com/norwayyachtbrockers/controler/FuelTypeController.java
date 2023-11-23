@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/fuelTypes")
+@RequestMapping("/enumFuelTypes")
 public class FuelTypeController {
     @GetMapping
     public List<Map<String, String>> getAllFuelTypes() {

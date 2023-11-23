@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,22 +16,24 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
-@Table(name = "fuel_type")
+@Table(name = "fuel_types")
 @Getter
 @Setter
 public class Fuel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @JsonProperty("fuel_type_id")
     private Long id;
 
-    @Column(nullable = false, length = 40)
+    @Column(name = "name", nullable = false, length = 40)
+    @JsonProperty("fuel_type_name")
     private String name;
 
     @OneToMany(mappedBy = "fuelType",
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
-    private Set<BoatModel> boatModels;
+    private Set<YachtModel> yachtModels;
 
     public Fuel() {
     }

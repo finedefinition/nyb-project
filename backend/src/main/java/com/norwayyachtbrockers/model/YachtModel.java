@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,13 +15,14 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "boat_models")
+@Table(name = "yacht_models")
 @Getter
 @Setter
-public class BoatModel {
+public class YachtModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("yacht_model_id")
     private Long id;
 
     @Column(name = "make", nullable = false, length = 40)
@@ -49,11 +51,11 @@ public class BoatModel {
     @JoinColumn(name = "fuel_type_id")
     private Fuel fuelType;
 
-    public BoatModel() {
+    public YachtModel() {
     }
 
-    public BoatModel(String make, String model, Integer year, BigDecimal lengthOverall,
-                     BigDecimal beamWidth, BigDecimal draftDepth, Keel keelType, Fuel fuelType) {
+    public YachtModel(String make, String model, Integer year, BigDecimal lengthOverall, BigDecimal beamWidth,
+                      BigDecimal draftDepth, Keel keelType, Fuel fuelType) {
         this.make = make;
         this.model = model;
         this.year = year;
