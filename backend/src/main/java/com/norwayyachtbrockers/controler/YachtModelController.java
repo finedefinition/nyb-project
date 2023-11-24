@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.YachtModelService;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -34,6 +37,12 @@ public class YachtModelController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
         return ResponseEntity.ok(yachtModels);
+    }
+
+    @PostMapping
+    public ResponseEntity<YachtModel> createYachtModel(@RequestBody YachtModelRequestDto yachtModelRequestDto) {
+        YachtModel createdYachtModel = yachtModelService.createYachtModel(yachtModelRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdYachtModel);
     }
 
     @DeleteMapping("/{yachtModelId}")

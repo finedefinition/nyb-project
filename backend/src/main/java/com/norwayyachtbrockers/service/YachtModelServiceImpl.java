@@ -5,6 +5,8 @@ import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.YachtModelRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -45,8 +47,12 @@ public class YachtModelServiceImpl implements YachtModelService {
 
     @Transactional
     @Override
-    public YachtModel save(YachtModel yachtModel) {
-        return yachtModelRepository.save(yachtModel);
+    public YachtModel createYachtModel(YachtModelRequestDto yachtModelRequestDto) {
+        YachtModel newYachtModel = new YachtModel();
+        yachtModelMapper.updateYachtModelFromDto(newYachtModel,yachtModelRequestDto);
+
+        YachtModel savedYachtModel = yachtModelRepository.save(newYachtModel);
+        return savedYachtModel;
     }
 
     @Transactional

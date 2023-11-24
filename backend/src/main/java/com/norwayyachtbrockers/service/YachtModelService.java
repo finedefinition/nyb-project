@@ -3,6 +3,9 @@ package com.norwayyachtbrockers.service;
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.model.YachtModel;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.List;
 
 public interface YachtModelService {
@@ -11,7 +14,7 @@ public interface YachtModelService {
 
     List<YachtModel> findAll();
 
-    YachtModel save(YachtModel yachtModel);
+    public YachtModel createYachtModel(@RequestBody YachtModelRequestDto yachtModelRequestDto);
 
     public YachtModel update(Long theId, YachtModelRequestDto yachtModelRequestDto);
     void deleteById(Long theId);

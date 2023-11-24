@@ -1,13 +1,9 @@
 package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
-import com.norwayyachtbrockers.model.Fuel;
-import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,6 +23,7 @@ public class YachtModelMapper {
         existingModel.setLengthOverall(yachtModelRequestDto.getLengthOverall());
         existingModel.setBeamWidth(yachtModelRequestDto.getBeamWidth());
         existingModel.setDraftDepth(yachtModelRequestDto.getDraftDepth());
-
+        existingModel.setFuelType(fuelRepository.getReferenceById(yachtModelRequestDto.getFuelTypeId()));
+        existingModel.setKeelType(keelRepository.getReferenceById(yachtModelRequestDto.getKeelTypeId()));
     }
 }
