@@ -2,7 +2,6 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.mapper.BoatCreationMapper;
 import com.norwayyachtbrockers.dto.mapper.BoatShortMapper;
-import com.norwayyachtbrockers.dto.request.BoatCreationDto;
 import com.norwayyachtbrockers.dto.response.BoatShortResponseDto;
 import com.norwayyachtbrockers.model.Boat;
 import com.norwayyachtbrockers.service.BoatService;
@@ -10,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

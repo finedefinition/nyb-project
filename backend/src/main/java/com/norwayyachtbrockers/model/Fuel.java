@@ -25,7 +25,7 @@ public class Fuel {
     @JsonProperty("fuel_type_id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 40)
+    @Column(name = "name", nullable = false, length = 40, unique = true)
     @JsonProperty("fuel_type_name")
     private String name;
 

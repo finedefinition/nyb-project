@@ -9,6 +9,7 @@ CREATE TABLE `yacht_models` (
                               `keel_type_id` bigint UNSIGNED,
                               `fuel_type_id` bigint UNSIGNED,
                               PRIMARY KEY (`id`),
+                              UNIQUE (make, model, year),
                               CONSTRAINT `fk_yacht_models_keel_types` FOREIGN KEY (`keel_type_id`) REFERENCES `keel_types` (`id`),
                               CONSTRAINT `fk_yacht_models_fuel_types` FOREIGN KEY (`fuel_type_id`) REFERENCES `fuel_types` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

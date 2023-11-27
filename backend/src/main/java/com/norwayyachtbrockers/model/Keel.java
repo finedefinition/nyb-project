@@ -25,7 +25,7 @@ public class Keel {
     @JsonProperty("keel_type_id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 40)
+    @Column(name = "name", nullable = false, length = 40, unique = true)
     @JsonProperty("keel_type_name")
     private String name;
 

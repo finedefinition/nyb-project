@@ -17,7 +17,7 @@ public class YachtModelMapper {
     }
 
     public void updateYachtModelFromDto(YachtModel existingModel, YachtModelRequestDto yachtModelRequestDto) {
-        existingModel.setModel(yachtModelRequestDto.getModel());
+        existingModel.setMake(yachtModelRequestDto.getMake());
         existingModel.setModel(yachtModelRequestDto.getModel());
         existingModel.setYear(yachtModelRequestDto.getYear());
         existingModel.setLengthOverall(yachtModelRequestDto.getLengthOverall());

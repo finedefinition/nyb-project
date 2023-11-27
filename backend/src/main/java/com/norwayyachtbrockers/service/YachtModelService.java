@@ -2,24 +2,24 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.model.YachtModel;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface YachtModelService {
+    YachtModel saveYachtModel(YachtModelRequestDto dto);
 
-    YachtModel findById(Long theId);
+    Optional<YachtModel> findId(Long id);
 
     List<YachtModel> findAll();
 
-    public YachtModel createYachtModel(@RequestBody YachtModelRequestDto yachtModelRequestDto);
+    YachtModel updateYachtModel(YachtModelRequestDto dto, Long id);
 
-    public YachtModel update(Long theId, YachtModelRequestDto yachtModelRequestDto);
-    void deleteById(Long theId);
+    void deleteById(Long id);
 
-    List<YachtModel> findByFuelTypeId(@Param("fuelType") Long keelTypeId);
+    // Find YachtModels by Keel Type ID
+    List<YachtModel> findByKeelType_Id(Long keelTypeId);
 
-    List<YachtModel> findByKeelTypeId(@Param("keelType") Long keelTypeId);
+    // Find YachtModels by Fuel Type ID
+    List<YachtModel> findByFuelType_Id(Long fuelTypeId);
 }

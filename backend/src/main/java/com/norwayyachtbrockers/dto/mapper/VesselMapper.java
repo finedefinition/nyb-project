@@ -2,12 +2,8 @@ package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.VesselRequestDto;
 import com.norwayyachtbrockers.model.Vessel;
-import com.norwayyachtbrockers.model.enums.FuelType;
-import com.norwayyachtbrockers.model.enums.KeelType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor

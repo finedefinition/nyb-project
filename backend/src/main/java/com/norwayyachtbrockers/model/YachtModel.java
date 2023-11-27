@@ -10,14 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.UniqueConstraint;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "yacht_models")
-@Getter
-@Setter
+@Table(name = "yacht_models",
+        uniqueConstraints = { @UniqueConstraint(columnNames = {"make", "model", "year"})})
+@JsonPropertyOrder({ "yacht_model_id", "make", "model", "year",
+        "lengthOverall", "beamWidth", "draftDepth", "keelType", "fuelType" })
 public class YachtModel {
 
     @Id
@@ -54,8 +55,8 @@ public class YachtModel {
     public YachtModel() {
     }
 
-    public YachtModel(String make, String model, Integer year, BigDecimal lengthOverall, BigDecimal beamWidth,
-                      BigDecimal draftDepth, Keel keelType, Fuel fuelType) {
+    public YachtModel(String make, String model, Integer year, BigDecimal lengthOverall,
+                      BigDecimal beamWidth, BigDecimal draftDepth, Keel keelType, Fuel fuelType) {
         this.make = make;
         this.model = model;
         this.year = year;
@@ -65,4 +66,77 @@ public class YachtModel {
         this.keelType = keelType;
         this.fuelType = fuelType;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public BigDecimal getLengthOverall() {
+        return lengthOverall;
+    }
+
+    public void setLengthOverall(BigDecimal lengthOverall) {
+        this.lengthOverall = lengthOverall;
+    }
+
+    public BigDecimal getBeamWidth() {
+        return beamWidth;
+    }
+
+    public void setBeamWidth(BigDecimal beamWidth) {
+        this.beamWidth = beamWidth;
+    }
+
+    public BigDecimal getDraftDepth() {
+        return draftDepth;
+    }
+
+    public void setDraftDepth(BigDecimal draftDepth) {
+        this.draftDepth = draftDepth;
+    }
+
+    public Keel getKeelType() {
+        return keelType;
+    }
+
+    public void setKeelType(Keel keelType) {
+        this.keelType = keelType;
+    }
+
+    public Fuel getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(Fuel fuelType) {
+        this.fuelType = fuelType;
+    }
+
 }

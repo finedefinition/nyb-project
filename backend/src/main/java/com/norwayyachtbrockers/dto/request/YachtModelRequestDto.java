@@ -1,7 +1,5 @@
 package com.norwayyachtbrockers.dto.request;
 
-import com.norwayyachtbrockers.model.Fuel;
-import com.norwayyachtbrockers.model.Keel;
 import lombok.Data;
 import java.math.BigDecimal;
 
