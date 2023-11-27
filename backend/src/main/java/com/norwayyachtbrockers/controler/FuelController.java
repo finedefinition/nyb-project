@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,11 @@ public class FuelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Fuel> getById(@PathVariable Long id) {
-        return fuelRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Fuel fuel = fuelRepository.findById(id)
+                .orElseThrow(() -> new AppEntityNotFoundException(
+                        String.format("Keel with ID: %d not found", id)));
+
+        return ResponseEntity.ok(fuel);
     }
 
     @GetMapping

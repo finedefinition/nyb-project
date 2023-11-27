@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.YachtModelService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,12 +28,13 @@ public class YachtModelController {
     }
 
     @PostMapping
-    public ResponseEntity<YachtModel> createYachtModel(@RequestBody YachtModelRequestDto dto) {
+    public ResponseEntity<YachtModel> createYachtModel(@Valid @RequestBody YachtModelRequestDto dto) {
         return ResponseEntity.ok(yachtModelService.saveYachtModel(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<YachtModel> updateYachtModel(@RequestBody YachtModelRequestDto dto, @PathVariable Long id) {
+    public ResponseEntity<YachtModel> updateYachtModel(@Valid @RequestBody YachtModelRequestDto dto,
+                                                       @PathVariable Long id) {
         try {
             YachtModel updatedYachtModel = yachtModelService.updateYachtModel(dto, id);
             return ResponseEntity.ok(updatedYachtModel);
@@ -51,9 +53,8 @@ public class YachtModelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<YachtModel> getYachtModelById(@PathVariable Long id) {
-        Optional<YachtModel> yachtModelOptional = yachtModelService.findId(id);
-
-        return yachtModelOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        YachtModel yachtModel = yachtModelService.findId(id);
+        return ResponseEntity.ok(yachtModel);
     }
 
     @DeleteMapping("/{yachtModelId}")

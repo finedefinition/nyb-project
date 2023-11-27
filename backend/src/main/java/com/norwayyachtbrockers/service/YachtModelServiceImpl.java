@@ -76,22 +76,23 @@ public class YachtModelServiceImpl implements YachtModelService {
 
 
     @Override
-    public Optional<YachtModel> findId(Long id) {
-        // Additional business logic (if any)
-        return yachtModelRepository.findById(id);
+    public YachtModel findId(Long id) {
+        return yachtModelRepository.findById(id)
+                .orElseThrow(() -> new AppEntityNotFoundException(String
+                        .format("Yacht Model with ID: %d not found", id)));
     }
 
     @Override
     public List<YachtModel> findAll() {
-        // Additional business logic (if any)
         return yachtModelRepository.findAll();
     }
 
     @Override
     @Transactional
-    public void deleteById(Long theId) {
-        YachtModel yachtModel = yachtModelRepository.findById(theId).orElseThrow(
-                () -> new AppEntityNotFoundException(String.format("Cannot delete the yacht model with ID: %d", theId)));
+    public void deleteById(Long id) {
+        YachtModel yachtModel = yachtModelRepository.findById(id).orElseThrow(
+                () -> new AppEntityNotFoundException(String
+                        .format("Cannot delete the yacht model with ID: %d", id)));
 
         // Detach related entities
         if (yachtModel.getKeelType() != null) {
@@ -106,11 +107,17 @@ public class YachtModelServiceImpl implements YachtModelService {
 
     @Override
     public List<YachtModel> findByKeelType_Id(Long keelTypeId) {
+        keelRepository.findById(keelTypeId)
+                .orElseThrow(() -> new AppEntityNotFoundException(String
+                        .format("Keel with ID: %d not found", keelTypeId)));
         return yachtModelRepository.findByKeelType_Id(keelTypeId);
     }
 
     @Override
     public List<YachtModel> findByFuelType_Id(Long fuelTypeId) {
+        fuelRepository.findById(fuelTypeId)
+                .orElseThrow(() -> new AppEntityNotFoundException(String
+                        .format("Fuel with ID: %d not found", fuelTypeId)));
         return yachtModelRepository.findByFuelType_Id(fuelTypeId);
     }
 

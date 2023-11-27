@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface YachtModelService {
     YachtModel saveYachtModel(YachtModelRequestDto dto);
 
-    Optional<YachtModel> findId(Long id);
+    YachtModel findId(Long id);
 
     List<YachtModel> findAll();
 

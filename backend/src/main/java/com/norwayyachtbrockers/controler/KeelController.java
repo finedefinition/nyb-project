@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,11 @@ public class KeelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Keel> getById(@PathVariable Long id) {
-        return keelRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Keel keel = keelRepository.findById(id)
+                .orElseThrow(() -> new AppEntityNotFoundException(
+                        String.format("Keel with ID: %d not found", id)));
+
+        return ResponseEntity.ok(keel);
     }
 
     @GetMapping
