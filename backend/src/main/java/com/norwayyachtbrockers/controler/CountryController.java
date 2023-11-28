@@ -1,45 +1,60 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
+import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.Country;
-import com.norwayyachtbrockers.repository.CountryRepository;
+import com.norwayyachtbrockers.service.CountryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
 @RequestMapping("/countries")
 public class CountryController {
-    private final CountryRepository countryRepository;
+    private final CountryService countryService;
 
-    public CountryController(CountryRepository countryRepository) {
-        this.countryRepository = countryRepository;
+    public CountryController(CountryService countryService) {
+        this.countryService = countryService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Country> createCountry(@Valid @RequestBody CountryRequestDto dto) {
+        return ResponseEntity.ok(countryService.saveCountry(dto));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Country> getById(@PathVariable Long id) {
-        Country country = countryRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(
-                        String.format("Country with ID: %d not found", id)));
-
-        return ResponseEntity.ok(country);
+        return ResponseEntity.ok(countryService.findId(id));
     }
 
     @GetMapping
     public ResponseEntity<List<Country>> getAllCountries() {
-        List<Country> countries = countryRepository.findAll();
+        List<Country> countries = countryService.findAll();
 
         if (countries.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-
-        countries.sort(Comparator.comparing(Country::getId));
-
         return ResponseEntity.ok(countries);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Country> updateCountry(@Valid @RequestBody CountryRequestDto dto,
+                                           @PathVariable Long id) {
+        return ResponseEntity.ok(countryService.updateCountry(dto, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        countryService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Successfully deleted the Country with ID:" + id);
     }
 }

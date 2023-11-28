@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,12 +12,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Set;
 
 @Entity
-@Table(name = "fuel_types")
+@Table(name = "fuel_types", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@JsonPropertyOrder({ "fuel_type_id", "fuel_type_name"})
 @Getter
 @Setter
 public class Fuel {

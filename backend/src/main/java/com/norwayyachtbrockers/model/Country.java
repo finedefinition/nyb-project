@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "countries", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
-@JsonPropertyOrder({ "country_id", "name" })
+@JsonPropertyOrder({ "country_id", "country_name" })
 @Getter
 @Setter
 public class Country {
@@ -31,6 +31,7 @@ public class Country {
     private Long id;
 
     @Column(name = "name", nullable = false, length = 40)
+    @JsonProperty("country_name")
     private String name;
 
     @OneToMany(mappedBy = "country",
