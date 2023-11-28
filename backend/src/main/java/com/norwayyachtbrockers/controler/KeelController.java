@@ -33,8 +33,7 @@ public class KeelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Keel> getKeelById(@PathVariable Long id) {
-        Keel keel = keelService.findId(id);
-        return ResponseEntity.ok(keel);
+        return ResponseEntity.ok(keelService.findId(id));
     }
 
     @GetMapping

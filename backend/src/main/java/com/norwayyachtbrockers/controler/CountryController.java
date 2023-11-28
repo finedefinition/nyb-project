@@ -31,7 +31,7 @@ public class CountryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Country> getById(@PathVariable Long id) {
+    public ResponseEntity<Country> getCountryById(@PathVariable Long id) {
         return ResponseEntity.ok(countryService.findId(id));
     }
 

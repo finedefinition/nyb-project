@@ -30,23 +30,19 @@ public class Town {
     private Long id;
 
     @Column(name = "name", nullable = false, length = 40)
+    @JsonProperty("town_name")
     private String name;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "country_id", nullable = false)
-    @JsonIgnore
+    @JsonProperty("country_name")
     private Country country;
-
-    @Transient
-    @JsonIgnore
-    private Long countryId;
 
     public Town() {
     }
 
-    public Town(String name, Country country, Long countryId) {
+    public Town(String name, Country country) {
         this.name = name;
         this.country = country;
-        this.countryId = countryId;
     }
 }

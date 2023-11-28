@@ -12,7 +12,6 @@ import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
 import com.norwayyachtbrockers.service.YachtModelService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -91,8 +90,8 @@ public class YachtModelServiceImpl implements YachtModelService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        YachtModel yachtModel = yachtModelRepository.findById(id).orElseThrow(
-                () -> new AppEntityNotFoundException(String
+        YachtModel yachtModel = yachtModelRepository.findById(id)
+                .orElseThrow(() -> new AppEntityNotFoundException(String
                         .format("Cannot delete. The Yacht Model with ID: %d not found", id)));
 
         // Detach related entities

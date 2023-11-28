@@ -16,14 +16,14 @@ public class YachtModelMapper {
         this.fuelService = fuelService;
     }
 
-    public void updateYachtModelFromDto(YachtModel existingModel, YachtModelRequestDto yachtModelRequestDto) {
-        existingModel.setMake(yachtModelRequestDto.getMake());
-        existingModel.setModel(yachtModelRequestDto.getModel());
-        existingModel.setYear(yachtModelRequestDto.getYear());
-        existingModel.setLengthOverall(yachtModelRequestDto.getLengthOverall());
-        existingModel.setBeamWidth(yachtModelRequestDto.getBeamWidth());
-        existingModel.setDraftDepth(yachtModelRequestDto.getDraftDepth());
-        existingModel.setFuelType(fuelService.findId(yachtModelRequestDto.getFuelTypeId()));
-        existingModel.setKeelType(keelService.findId(yachtModelRequestDto.getKeelTypeId()));
+    public void updateYachtModelFromDto(YachtModel existingModel, YachtModelRequestDto dto) {
+        existingModel.setMake(dto.getMake());
+        existingModel.setModel(dto.getModel());
+        existingModel.setYear(dto.getYear());
+        existingModel.setLengthOverall(dto.getLengthOverall());
+        existingModel.setBeamWidth(dto.getBeamWidth());
+        existingModel.setDraftDepth(dto.getDraftDepth());
+        existingModel.setFuelType(fuelService.findId(dto.getFuelTypeId()));
+        existingModel.setKeelType(keelService.findId(dto.getKeelTypeId()));
     }
 }

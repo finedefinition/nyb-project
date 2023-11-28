@@ -32,8 +32,7 @@ public class FuelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Fuel> getFuelById(@PathVariable Long id) {
-        Fuel fuel = fuelService.findId(id);
-        return ResponseEntity.ok(fuel);
+        return ResponseEntity.ok(fuelService.findId(id));
     }
 
     @GetMapping

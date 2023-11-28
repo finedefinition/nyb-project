@@ -1,19 +1,14 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.dto.request.FuelRequestDto;
+import com.norwayyachtbrockers.dto.request.TownRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
-import com.norwayyachtbrockers.model.Country;
-import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.model.YachtModel;
-import com.norwayyachtbrockers.repository.CountryRepository;
-import com.norwayyachtbrockers.repository.TownRepository;
+import com.norwayyachtbrockers.service.TownService;
 import jakarta.validation.Valid;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,76 +17,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
 @RequestMapping("/towns")
 public class TownController {
-    private final TownRepository townRepository;
+    private final TownService townService;
 
-    private final CountryRepository countryRepository;
-
-    public TownController(TownRepository townRepository, CountryRepository countryRepository) {
-        this.townRepository = townRepository;
-        this.countryRepository = countryRepository;
+    public TownController(TownService townService) {
+        this.townService = townService;
     }
 
+    @PostMapping
+    public ResponseEntity<Town> createTown(@Valid @RequestBody TownRequestDto dto) {
+        return ResponseEntity.ok(townService.saveTown(dto));
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Town> getById(@PathVariable Long id) {
-        Town town = townRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(
-                        String.format("Town with ID: %d not found", id)));
-
-        return ResponseEntity.ok(town);
+    public ResponseEntity<Town> getTownById(@PathVariable Long id) {
+        return ResponseEntity.ok(townService.findId(id));
     }
 
     @GetMapping
     public ResponseEntity<List<Town>> getAllTowns() {
-        List<Town> towns = townRepository.findAll();
+        List<Town> towns = townService.findAll();
 
         if (towns.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-
-        towns.sort(Comparator.comparing(Town::getId));
-
         return ResponseEntity.ok(towns);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createTown(@RequestBody Town town) {
-
-        Country country = countryRepository.findById(town.getCountryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Country not found"));
-
-
-        town.setCountry(country);
-
-
-        Town savedTown = townRepository.save(town);
-        return ResponseEntity.ok(savedTown);
+    @PutMapping("/{id}")
+    public ResponseEntity<Town> updateTown(@Valid @RequestBody TownRequestDto dto,
+                                                       @PathVariable Long id) {
+        return ResponseEntity.ok(townService.updateTown(dto, id));
     }
 
-    @PutMapping("/{id}")
-    @Transactional
-    public ResponseEntity<Town> updateTown(@PathVariable Long id, @RequestBody Town townDetails) {
-        Town town = townRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException("Town not found with id : " + id));
-
-        // Update town details. Here, only name is updated. Add other fields if needed.
-        town.setName(townDetails.getName());
-
-
-        // If countryId is being updated, ensure the new country exists.
-        if (townDetails.getCountryId() != null && !town.getCountry().getId().equals(townDetails.getCountryId())) {
-            Country newCountry = countryRepository.findById(townDetails.getCountryId())
-                    .orElseThrow(() -> new AppEntityNotFoundException("Country not found with id : " + townDetails.getCountryId()));
-            town.setCountry(newCountry);
-        }
-
-        final Town updatedTown = townRepository.save(town);
-        return ResponseEntity.ok(updatedTown);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        townService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Successfully deleted the Town with ID:" + id);
     }
 }
+
