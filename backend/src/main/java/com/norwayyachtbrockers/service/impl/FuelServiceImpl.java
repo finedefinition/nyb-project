@@ -69,6 +69,5 @@ public class FuelServiceImpl implements FuelService {
                         .format("Cannot delete. The Fuel with ID: %d not found", id)));
 
         fuelRepository.delete(fuel);
-
     }
 }

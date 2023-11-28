@@ -1,17 +1,11 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
-import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Fuel;
-import com.norwayyachtbrockers.model.Keel;
-import com.norwayyachtbrockers.model.YachtModel;
-import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.service.FuelService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -54,7 +47,7 @@ public class FuelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Fuel> updateYachtModel(@Valid @RequestBody FuelRequestDto dto,
+    public ResponseEntity<Fuel> updateKeel(@Valid @RequestBody FuelRequestDto dto,
                                                  @PathVariable Long id) {
         return ResponseEntity.ok(fuelService.updateFuel(dto, id));
     }
@@ -65,6 +58,4 @@ public class FuelController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Successfully deleted the Fuel with ID:" + id);
     }
-
-
 }
