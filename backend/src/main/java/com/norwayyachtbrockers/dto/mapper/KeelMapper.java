@@ -1,8 +1,6 @@
 package com.norwayyachtbrockers.dto.mapper;
 
-import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
-import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.Keel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

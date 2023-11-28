@@ -1,8 +1,6 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
-import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.YachtModelService;
 import jakarta.validation.Valid;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -52,14 +51,7 @@ public class YachtModelController {
     @PutMapping("/{id}")
     public ResponseEntity<YachtModel> updateYachtModel(@Valid @RequestBody YachtModelRequestDto dto,
                                                        @PathVariable Long id) {
-        try {
-            YachtModel updatedYachtModel = yachtModelService.updateYachtModel(dto, id);
-            return ResponseEntity.ok(updatedYachtModel);
-        } catch (AppEntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        return ResponseEntity.ok(yachtModelService.updateYachtModel(dto, id));
     }
 
     @DeleteMapping("/{yachtModelId}")

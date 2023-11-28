@@ -12,6 +12,8 @@ import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
 import com.norwayyachtbrockers.service.YachtModelService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -58,7 +60,9 @@ public class YachtModelServiceImpl implements YachtModelService {
 
     @Override
     public List<YachtModel> findAll() {
-        return yachtModelRepository.findAll();
+        List<YachtModel> yachtModels = yachtModelRepository.findAll();
+        yachtModels.sort(Comparator.comparing(YachtModel::getId));
+        return yachtModels;
     }
 
     @Override

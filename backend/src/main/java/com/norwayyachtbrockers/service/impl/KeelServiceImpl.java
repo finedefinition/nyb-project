@@ -15,7 +15,6 @@ import java.util.List;
 public class KeelServiceImpl implements KeelService {
 
     private final KeelRepository keelRepository;
-
     private final KeelMapper keelMapper;
 
     public KeelServiceImpl(KeelRepository keelRepository,
