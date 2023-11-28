@@ -1,4 +1,4 @@
-CREATE TABLE `country` (
+CREATE TABLE `countries` (
                          `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
                          `name` VARCHAR(40) NOT NULL,
                          UNIQUE (name)

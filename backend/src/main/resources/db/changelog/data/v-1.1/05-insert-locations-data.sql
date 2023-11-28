@@ -1,4 +1,4 @@
-INSERT INTO location (country_id, state_id) VALUES
+INSERT INTO locations (country_id, state_id) VALUES
                                                 (1, 1), -- Belgium, Flanders
                                                 (2, 2), -- Denmark, Capital Region of Denmark
                                                 (2, 3), -- Denmark, Central Denmark Region

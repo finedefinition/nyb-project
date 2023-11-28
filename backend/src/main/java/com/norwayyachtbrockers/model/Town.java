@@ -1,5 +1,8 @@
 package com.norwayyachtbrockers.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,13 +18,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "town", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "country_id"})})
+@Table(name = "towns", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "country_id"})})
+@JsonPropertyOrder({ "town_id", "name" })
 @Getter
 @Setter
 public class Town {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("town_id")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 40)
@@ -29,9 +34,11 @@ public class Town {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "country_id", nullable = false)
+    @JsonIgnore
     private Country country;
 
     @Transient
+    @JsonIgnore
     private Long countryId;
 
     public Town() {

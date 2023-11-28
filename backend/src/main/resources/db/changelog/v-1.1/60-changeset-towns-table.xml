@@ -12,7 +12,7 @@
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"
-                 path="60-create-location-table.sql"/>
+                 path="60-create-towns-table.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"
@@ -20,7 +20,7 @@
                      relativeToChangelogFile="true"
                      splitStatements="true"
                      stripComments="true"
-                     path="60-drop-location-table.sql"/>
+                     path="60-drop-towns-table.sql"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

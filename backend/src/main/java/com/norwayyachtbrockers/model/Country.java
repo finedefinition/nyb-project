@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,17 +16,18 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Set;
 
 @Entity
-@Table(name = "country", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Table(name = "countries", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@JsonPropertyOrder({ "country_id", "name" })
 @Getter
 @Setter
 public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("country_id")
     private Long id;
 
     @Column(name = "name", nullable = false, length = 40)

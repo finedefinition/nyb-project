@@ -1,4 +1,4 @@
-INSERT INTO `town` (`name`, `country_id`) VALUES
+INSERT INTO `towns` (`name`, `country_id`) VALUES
                                               ('Sor-Varanger', 9),
                                               ('Vadso', 9),
                                               ('Askoy', 9),

@@ -9,9 +9,9 @@
     <include file="20-changeset-keel_types-table.xml" relativeToChangelogFile="true" />
     <include file="30-changeset-fuel_types-table.xml" relativeToChangelogFile="true" />
     <include file="40-changeset-yacht_models-table.xml" relativeToChangelogFile="true" />
-<!--    <include file="40-changeset-country-table.xml" relativeToChangelogFile="true" />-->
-<!--    <include file="50-changeset-town-table.xml" relativeToChangelogFile="true" />-->
-<!--    <include file="60-changeset-location-table.xml" relativeToChangelogFile="true" />-->
+    <include file="50-changeset-countries-table.xml" relativeToChangelogFile="true" />
+    <include file="60-changeset-towns-table.xml" relativeToChangelogFile="true" />
+    <include file="70-changeset-locations-table.xml" relativeToChangelogFile="true" />
 
 <!--    <include file="90-changeset-boat_images-table.xml" relativeToChangelogFile="true" />-->
 

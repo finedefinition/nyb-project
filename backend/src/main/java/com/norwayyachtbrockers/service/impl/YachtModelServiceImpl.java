@@ -1,4 +1,4 @@
-package com.norwayyachtbrockers.service;
+package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.YachtModelMapper;
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
@@ -9,19 +9,17 @@ import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
+import com.norwayyachtbrockers.service.YachtModelService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class YachtModelServiceImpl implements YachtModelService {
 
     private final YachtModelRepository yachtModelRepository;
     private final YachtModelMapper yachtModelMapper;
-
     private final KeelRepository keelRepository;
-
     private final FuelRepository fuelRepository;
 
     public YachtModelServiceImpl(YachtModelRepository yachtModelRepository, YachtModelMapper yachtModelMapper,
@@ -37,11 +35,11 @@ public class YachtModelServiceImpl implements YachtModelService {
     public YachtModel saveYachtModel(YachtModelRequestDto dto) {
         Keel keel = keelRepository.findById(dto.getKeelTypeId())
                 .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot update the Yacht Model with Keel ID: %d", dto.getKeelTypeId())));
+                        .format("Cannot save the Yacht Model. Keel ID: %d not found", dto.getKeelTypeId())));
 
         Fuel fuel = fuelRepository.findById(dto.getFuelTypeId())
                 .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot update the Yacht Model with Fuel ID: %d", dto.getFuelTypeId())));
+                        .format("Cannot save the Yacht Model. Fuel ID: %d not found", dto.getFuelTypeId())));
         YachtModel yachtModel = new YachtModel();
         yachtModelMapper.updateYachtModelFromDto(yachtModel, dto);
 
@@ -49,6 +47,18 @@ public class YachtModelServiceImpl implements YachtModelService {
         yachtModel.setFuelType(fuel);
 
         return yachtModelRepository.save(yachtModel);
+    }
+
+    @Override
+    public YachtModel findId(Long id) {
+        return yachtModelRepository.findById(id)
+                .orElseThrow(() -> new AppEntityNotFoundException(String
+                        .format("Yacht Model with ID: %d not found", id)));
+    }
+
+    @Override
+    public List<YachtModel> findAll() {
+        return yachtModelRepository.findAll();
     }
 
     @Override
@@ -74,25 +84,12 @@ public class YachtModelServiceImpl implements YachtModelService {
         return yachtModelRepository.save(existingModel);
     }
 
-
-    @Override
-    public YachtModel findId(Long id) {
-        return yachtModelRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Yacht Model with ID: %d not found", id)));
-    }
-
-    @Override
-    public List<YachtModel> findAll() {
-        return yachtModelRepository.findAll();
-    }
-
     @Override
     @Transactional
     public void deleteById(Long id) {
         YachtModel yachtModel = yachtModelRepository.findById(id).orElseThrow(
                 () -> new AppEntityNotFoundException(String
-                        .format("Cannot delete the yacht model with ID: %d", id)));
+                        .format("Cannot delete. The Yacht Model with ID: %d not found", id)));
 
         // Detach related entities
         if (yachtModel.getKeelType() != null) {

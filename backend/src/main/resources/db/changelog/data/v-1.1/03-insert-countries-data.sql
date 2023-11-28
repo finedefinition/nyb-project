@@ -1,4 +1,4 @@
-INSERT INTO `country` (`name`) VALUES
+INSERT INTO `countries` (`name`) VALUES
                                ('Belgium'),
                                ('Denmark'),
                                ('Finland'),

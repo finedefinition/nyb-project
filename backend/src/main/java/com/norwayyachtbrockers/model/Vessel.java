@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
 import jakarta.persistence.Column;
@@ -25,6 +26,7 @@ public class Vessel {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @JsonProperty("vessel_id")
         private Long id;
 
         @Column(name = "featured", nullable = false)

@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
+import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.YachtModelService;
 import jakarta.validation.Valid;
@@ -32,6 +33,22 @@ public class YachtModelController {
         return ResponseEntity.ok(yachtModelService.saveYachtModel(dto));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<YachtModel> getYachtModelById(@PathVariable Long id) {
+        YachtModel yachtModel = yachtModelService.findId(id);
+        return ResponseEntity.ok(yachtModel);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<YachtModel>> getAllYachtModels() {
+        List<YachtModel> yachtModels = yachtModelService.findAll();
+
+        if (yachtModels.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        return ResponseEntity.ok(yachtModels);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<YachtModel> updateYachtModel(@Valid @RequestBody YachtModelRequestDto dto,
                                                        @PathVariable Long id) {
@@ -39,22 +56,10 @@ public class YachtModelController {
             YachtModel updatedYachtModel = yachtModelService.updateYachtModel(dto, id);
             return ResponseEntity.ok(updatedYachtModel);
         } catch (AppEntityNotFoundException e) {
-            // Handle the case where the yacht model or related entities are not found
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            // Handle other exceptions
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-    }
-    @GetMapping
-    public List<YachtModel> getAllYachtModels() {
-        return yachtModelService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<YachtModel> getYachtModelById(@PathVariable Long id) {
-        YachtModel yachtModel = yachtModelService.findId(id);
-        return ResponseEntity.ok(yachtModel);
     }
 
     @DeleteMapping("/{yachtModelId}")

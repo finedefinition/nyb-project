@@ -1,4 +1,4 @@
-package com.norwayyachtbrockers.service;
+package com.norwayyachtbrockers.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.dto.request.VesselRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.repository.VesselRepository;
+import com.norwayyachtbrockers.service.VesselService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

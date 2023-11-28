@@ -1,10 +1,15 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.request.FuelRequestDto;
+import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Country;
+import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.Town;
+import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.CountryRepository;
 import com.norwayyachtbrockers.repository.TownRepository;
+import jakarta.validation.Valid;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -30,11 +37,14 @@ public class TownController {
         this.countryRepository = countryRepository;
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<Town> getById(@PathVariable Long id) {
-        return townRepository.findById(id)
-                .map(ResponseEntity::ok)  // Wrap the Fuel object in a ResponseEntity if found
-                .orElse(ResponseEntity.notFound().build());  // Return 404 Not Found if not found
+        Town town = townRepository.findById(id)
+                .orElseThrow(() -> new AppEntityNotFoundException(
+                        String.format("Town with ID: %d not found", id)));
+
+        return ResponseEntity.ok(town);
     }
 
     @GetMapping
@@ -44,19 +54,22 @@ public class TownController {
         if (towns.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
+
+        towns.sort(Comparator.comparing(Town::getId));
+
         return ResponseEntity.ok(towns);
     }
 
     @PostMapping
     public ResponseEntity<?> createTown(@RequestBody Town town) {
-        // Find the country by countryId
+
         Country country = countryRepository.findById(town.getCountryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Country not found"));
 
-        // Set the country to the town entity
+
         town.setCountry(country);
 
-        // Save the town
+
         Town savedTown = townRepository.save(town);
         return ResponseEntity.ok(savedTown);
     }

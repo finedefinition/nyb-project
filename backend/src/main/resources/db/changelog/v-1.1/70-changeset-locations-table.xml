@@ -5,14 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="40" author="sergii_bezrukov">
+    <changeSet id="70" author="sergii_bezrukov">
         <sqlFile dbms="mysql"
                  encoding="utf8"
                  endDelimiter="\nGO"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"
-                 path="40-create-country-table.sql"/>
+                 path="70-create-locations-table.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"
@@ -20,7 +20,7 @@
                      relativeToChangelogFile="true"
                      splitStatements="true"
                      stripComments="true"
-                     path="40-drop-country-table.sql"/>
+                     path="70-drop-locations-table.sql"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>
