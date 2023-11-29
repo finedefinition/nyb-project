@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 @RestController
@@ -48,14 +49,16 @@ public class KeelController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Keel> updateKeel(@Valid @RequestBody KeelRequestDto dto,
-                                                 @PathVariable Long id) {
+                                           @PathVariable Long id) {
         return ResponseEntity.ok(keelService.updateKeel(dto, id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        String keelType = keelService.findId(id).getName();
         keelService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Keel with ID:" + id);
+                .body("Successfully deleted the Keel type with ID:" +
+                        id + " --> \"" + keelType + "\"");
     }
 }

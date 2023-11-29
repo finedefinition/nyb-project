@@ -1,17 +1,18 @@
 package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.TownRequestDto;
+import com.norwayyachtbrockers.dto.response.TownResponseDto;
 import com.norwayyachtbrockers.model.Town;
 import java.util.List;
 
 public interface TownService {
-    Town saveTown(TownRequestDto dto);
+    TownResponseDto saveTown(TownRequestDto dto);
 
-    Town findId(Long id);
+    TownResponseDto findId(Long id);
 
-    List<Town> findAll();
+    List<TownResponseDto> findAll();
 
-    Town updateTown(TownRequestDto dto, Long id);
+    TownResponseDto updateTown(TownRequestDto dto, Long id);
 
     void deleteById(Long id);
 }

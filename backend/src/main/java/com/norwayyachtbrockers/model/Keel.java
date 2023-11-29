@@ -15,6 +15,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 import java.util.Set;
 
 @Entity
@@ -37,7 +39,6 @@ public class Keel {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     private Set<YachtModel> yachtModels;
-
 
     public Keel(String name) {
         this.name = name;

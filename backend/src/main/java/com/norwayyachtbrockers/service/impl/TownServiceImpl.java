@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.TownMapper;
 import com.norwayyachtbrockers.dto.request.TownRequestDto;
+import com.norwayyachtbrockers.dto.response.TownResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Town;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TownServiceImpl implements TownService {
@@ -29,7 +31,7 @@ public class TownServiceImpl implements TownService {
 
     @Override
     @Transactional
-    public Town saveTown(TownRequestDto dto) {
+    public TownResponseDto saveTown(TownRequestDto dto) {
         Country country = countryRepository.findById(dto.getCountryId())
                 .orElseThrow(() -> new AppEntityNotFoundException(String
                         .format("Cannot save the Town. Country with ID: %d not found", dto.getCountryId())));
@@ -37,27 +39,31 @@ public class TownServiceImpl implements TownService {
         townMapper.updateTownFromDto(town, dto);
 
         town.setCountry(country);
+        townRepository.save(town);
 
-        return townRepository.save(town);
+        return townMapper.convertToDto(town);
     }
 
     @Override
-    public Town findId(Long id) {
-        return townRepository.findById(id)
+    public TownResponseDto findId(Long id) {
+        Town town = townRepository.findById(id)
                 .orElseThrow(() -> new AppEntityNotFoundException(String
                         .format("Town with ID: %d not found", id)));
+
+        return townMapper.convertToDto(town);
     }
 
     @Override
-    public List<Town> findAll() {
-        List<Town> towns = townRepository.findAll();
-        towns.sort(Comparator.comparing(Town::getId));
-        return towns;
+    public List<TownResponseDto> findAll() {
+        return townRepository.findAll().stream()
+                .sorted(Comparator.comparing(Town::getId))
+                .map(townMapper::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public Town updateTown(TownRequestDto dto, Long id) {
+    public TownResponseDto updateTown(TownRequestDto dto, Long id) {
 
         Town existingTown = townRepository.findById(id)
                 .orElseThrow(() -> new AppEntityNotFoundException(String
@@ -71,7 +77,7 @@ public class TownServiceImpl implements TownService {
 
         existingTown.setCountry(country);
 
-        return townRepository.save(existingTown);
+        return townMapper.convertToDto(existingTown);
     }
 
     @Override
@@ -83,7 +89,6 @@ public class TownServiceImpl implements TownService {
         if (town.getCountry() != null) {
             town.getCountry().getTowns().remove(town);
         }
-
         townRepository.delete(town);
     }
 }

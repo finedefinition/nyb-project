@@ -53,8 +53,10 @@ public class FuelController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        String fuelType = fuelService.findId(id).getName();
         fuelService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Fuel with ID:" + id);
+                .body("Successfully deleted the Fuel type with ID:"
+                        + id + " --> \"" + fuelType + "\"");
     }
 }

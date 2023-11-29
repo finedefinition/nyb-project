@@ -53,9 +53,12 @@ public class YachtModelController {
 
     @DeleteMapping("/{yachtModelId}")
     public ResponseEntity<String> deleteById(@PathVariable Long yachtModelId) {
+        YachtModel yachtModel = yachtModelService.findId(yachtModelId);
         yachtModelService.deleteById(yachtModelId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Yacht Model with ID:" + yachtModelId);
+                .body("Successfully deleted the Yacht Model with ID:" + yachtModelId +
+                         " --> \"" + yachtModel.getMake() + ", " + yachtModel.getModel() +
+                        ", " + yachtModel.getYear() + "\"");
     }
 
     @GetMapping("byKeelType/{keelTypeId}")

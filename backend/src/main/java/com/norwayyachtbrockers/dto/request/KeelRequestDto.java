@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.norwayyachtbrockers.util.TrimStringDeserializer;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public class KeelRequestDto {
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Keeel type must start with a capital "
             + "letter and can consist of letters, spaces, and hyphens")
     @JsonDeserialize(using = TrimStringDeserializer.class)
+    @JsonProperty("keel_type_name")
     private String name;
 
 }

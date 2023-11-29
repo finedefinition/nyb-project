@@ -53,8 +53,10 @@ public class CountryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
+        String country = countryService.findId(id).getName();
         countryService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Country with ID:" + id);
+                .body("Successfully deleted the Country with ID:" + id
+                        + " --> \"" + country + "\"");
     }
 }
