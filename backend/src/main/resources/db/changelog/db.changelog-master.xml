@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <preConditions>
         <dbms type="mysql"/>
@@ -13,15 +13,11 @@
         <tagDatabase tag="db_init"/>
     </changeSet>
 
-<!--    <include file="v-1.0/db.changelog-v.1.0.xml" relativeToChangelogFile="true"/>-->
-
-<!--    <changeSet id="1" author="sergii_bezrukov">-->
-<!--        <tagDatabase tag="v.1.0"/>-->
-<!--    </changeSet>-->
+    <!-- Include other changelog files if necessary -->
     <include file="v-1.1/db.changelog-v.1.1.xml" relativeToChangelogFile="true"/>
 
     <changeSet id="1" author="sergii_bezrukov">
         <tagDatabase tag="v.1.1"/>
     </changeSet>
-    
+
 </databaseChangeLog>
