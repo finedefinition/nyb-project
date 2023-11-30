@@ -1,0 +1,2 @@
+DROP TABLE `yachts`
+GO

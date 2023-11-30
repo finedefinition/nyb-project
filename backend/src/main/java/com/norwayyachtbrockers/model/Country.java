@@ -40,6 +40,12 @@ public class Country {
     @JsonIgnore
     private Set<Town> towns;
 
+    @OneToMany(mappedBy = "country",
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Yacht> yachts;
+
 
     public Country() {
     }

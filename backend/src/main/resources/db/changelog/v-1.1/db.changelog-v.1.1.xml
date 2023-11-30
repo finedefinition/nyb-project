@@ -12,7 +12,9 @@
     <include file="50-changeset-countries-table.xml" relativeToChangelogFile="true" />
     <include file="60-changeset-towns-table.xml" relativeToChangelogFile="true" />
     <include file="70-changeset-locations-table.xml" relativeToChangelogFile="true" />
-
-<!--    <include file="90-changeset-boat_images-table.xml" relativeToChangelogFile="true" />-->
+    <include file="90-changeset-owner_infos-table.xml" relativeToChangelogFile="true" />
+    <include file="100-changeset-yacht_details-table.xml" relativeToChangelogFile="true" />
+    <include file="110-changeset-yachts-table.xml" relativeToChangelogFile="true" />
+    <include file="80-changeset-yacht_images-table.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

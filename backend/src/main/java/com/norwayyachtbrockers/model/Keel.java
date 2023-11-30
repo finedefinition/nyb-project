@@ -40,10 +40,10 @@ public class Keel {
     @JsonIgnore
     private Set<YachtModel> yachtModels;
 
-    public Keel(String name) {
-        this.name = name;
+    public Keel() {
     }
 
-    public Keel() {
+    public Keel(String name) {
+        this.name = name;
     }
 }

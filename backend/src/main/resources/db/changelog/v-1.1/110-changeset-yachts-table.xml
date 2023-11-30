@@ -5,20 +5,20 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="90" author="sergii_bezrukov">
+    <changeSet id="110" author="sergii_bezrukov">
         <sqlFile dbms="mysql"
                  encoding="utf8"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"
-                 path="90-create-boat_images-table.sql"/>
+                 path="110-create-yachts-table.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"
                      relativeToChangelogFile="true"
                      splitStatements="true"
                      stripComments="true"
-                     path="90-drop-boat_images-table.sql"/>
+                     path="110-drop-yachts-table.sql"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>
