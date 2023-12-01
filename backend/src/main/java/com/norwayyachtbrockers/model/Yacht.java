@@ -56,7 +56,7 @@ public class Yacht {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "yacht_detail_id", referencedColumnName = "id")
-    private YachtDetails yachtDetails;
+    private YachtDetail yachtDetail;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_info_id", referencedColumnName = "id")
@@ -70,7 +70,7 @@ public class Yacht {
 
     public Yacht(boolean featured, BigDecimal price, String mainImageKey,
                  YachtModel yachtModel, Country country, Town town,
-                 Set<YachtImage> yachtImages, YachtDetails yachtDetails, OwnerInfo ownerInfo, LocalDateTime createdAt) {
+                 Set<YachtImage> yachtImages, YachtDetail yachtDetail, OwnerInfo ownerInfo, LocalDateTime createdAt) {
         this.featured = featured;
         this.price = price;
         this.mainImageKey = mainImageKey;
@@ -78,7 +78,7 @@ public class Yacht {
         this.country = country;
         this.town = town;
         this.yachtImages = yachtImages;
-        this.yachtDetails = yachtDetails;
+        this.yachtDetail = yachtDetail;
         this.ownerInfo = ownerInfo;
         this.createdAt = createdAt;
     }

@@ -13,7 +13,7 @@ import lombok.Setter;
 @Table(name = "yacht_details")
 @Getter
 @Setter
-public class YachtDetails {
+public class YachtDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,11 @@ public class YachtDetails {
     @Column(name = "description", length = 5000)
     private String description;
 
-    public YachtDetails() {
+    public YachtDetail() {
     }
 
-    public YachtDetails(Integer cabin, Integer berth,
-                        Integer heads, Integer shower, String description) {
+    public YachtDetail(Integer cabin, Integer berth,
+                       Integer heads, Integer shower, String description) {
         this.cabin = cabin;
         this.berth = berth;
         this.heads = heads;
