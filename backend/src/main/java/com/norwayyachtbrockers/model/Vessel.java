@@ -30,6 +30,7 @@ public class Vessel {
         private Long id;
 
         @Column(name = "featured", nullable = false)
+        @JsonProperty("featured")
         private boolean featuredVessel;
 
         @NotNull(message="Make is required")
@@ -37,21 +38,25 @@ public class Vessel {
         @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Make must start with a capital "
                 + "letter and can consist of letters, spaces, and hyphens")
         @Column(name = "make", nullable = false)
+        @JsonProperty("vessel_make")
         private String vesselMake;
 
         @NotNull(message="Model is required")
         @Size(min=1, message="Model cannot be empty")
         @Column(name = "model", nullable = false)
+        @JsonProperty("vessel_model")
         private String vesselModel;
 
         @NotNull(message="Price is required")
         @DecimalMin(value="0.0", inclusive=false, message="Price must be greater than 0")
         @Column(name = "price", nullable = false)
+        @JsonProperty("vessel_price")
         private BigDecimal vesselPrice;
 
         @Min(value=1900, message="Year must be later than 1900")
         @Max(value=2100, message="Year must be earlier than 2100")
         @Column(name = "year", nullable = false)
+        @JsonProperty("vessel_year")
         private int vesselYear;
 
         @NotNull(message="Location country is required")
@@ -59,6 +64,7 @@ public class Vessel {
         @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location country start with a capital"
                 + " letter and consist of only letters")
         @Column(name = "location_country", nullable = false)
+        @JsonProperty("vessel_country")
         private String vesselLocationCountry;
 
         @NotNull(message="Location state is required")
@@ -66,52 +72,64 @@ public class Vessel {
         @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location state must start with a capital"
                 + " letter and consist of only letters")
         @Column(name = "location_state", nullable = false)
+        @JsonProperty("vessel_town")
         private String vesselLocationState;
 
         @NotNull(message="Length overall is required")
         @DecimalMin(value="0.0", inclusive=false, message="Length overall must be greater than 0")
         @Column(name = "loa", precision = 6, scale = 2, nullable = false)
+        @JsonProperty("vessel_loa")
         private BigDecimal vesselLengthOverall;
 
         @NotNull(message="Beam is required")
         @DecimalMin(value="0.0", inclusive=false, message="Beam must be greater than 0")
         @Column(name = "beam", precision = 6, scale = 2, nullable = false)
+        @JsonProperty("vessel_beam")
         private BigDecimal vesselBeam;
 
         @NotNull(message="Draft is required")
         @DecimalMin(value="0.0", inclusive=false, message="Draft must be greater than 0")
         @Column(name = "draft", precision = 6, scale = 2, nullable = false)
+        @JsonProperty("vessel_draft")
         private BigDecimal vesselDraft;
 
         @Min(value=0, message="Number of cabins must be non-negative")
         @Column(name = "cabin", nullable = false)
+        @JsonProperty("vessel_cabin")
         private int vesselCabin;
 
         @Min(value=0, message="Number of berths must be non-negative")
         @Column(name = "berth", nullable = false)
+        @JsonProperty("vessel_berth")
         private int vesselBerth;
 
         @Column(name = "fuel", nullable = true)
         @Enumerated(EnumType.STRING)
+        @JsonProperty("vessel_fuel_type")
         private FuelType fuelType;
 
         @Column(name = "keel", nullable = true)
         @Enumerated(EnumType.STRING)
+        @JsonProperty("vessel_keel_type")
         private KeelType keelType;
 
         @Min(value=0, message="Number of engines must be non-negative")
         @Column(name = "engines", nullable = false)
+        @JsonProperty("vessel_engine")
         private int engineQuantity;
 
         @NotNull(message="Description is required")
         @Size(min=1, message="Description cannot be empty")
         @Column(name = "description", nullable = false)
+        @JsonProperty("vessel_description")
         private String vesselDescription;
 
         @Column(name = "created_at", nullable = false)
+        @JsonProperty("vessel_created_at")
         private LocalDateTime createdAt;
 
         @Column(name = "image_key", nullable = false)
+        @JsonProperty("vessel_image_key")
         private String imageKey;
 
     public Vessel() {

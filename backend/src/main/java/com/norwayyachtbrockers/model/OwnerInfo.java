@@ -1,5 +1,7 @@
 package com.norwayyachtbrockers.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,10 +16,12 @@ import lombok.Setter;
 @Table(name = "owner_infos", uniqueConstraints = { @UniqueConstraint(columnNames = {"email", "telephone" })})
 @Getter
 @Setter
+@JsonPropertyOrder({"owner_info_id"})
 public class OwnerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @JsonProperty("owner_info_id")
     private Long id;
 
     @Column(name = "first_name", nullable = false)

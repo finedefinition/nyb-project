@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Table(name = "yacht_images")
 @Getter
 @Setter
+@JsonPropertyOrder({"yacht_image_id"})
 public class YachtImage {
 
     @Id
@@ -23,7 +25,7 @@ public class YachtImage {
     @JsonProperty("yacht_image_id")
     private Long id;
 
-    @Column(name = "image_key", nullable = false)
+    @Column(name = "image_key")
     private String imageKey;
 
     @ManyToOne
