@@ -27,5 +27,4 @@ public class VesselMapper {
         existingVessel.setEngineQuantity(vesselRequestDto.getEngineQuantity());
         existingVessel.setVesselDescription(vesselRequestDto.getVesselDescription());
     }
-
 }

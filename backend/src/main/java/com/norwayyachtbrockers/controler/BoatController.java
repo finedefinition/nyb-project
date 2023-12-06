@@ -56,19 +56,6 @@ public class BoatController {
         return ResponseEntity.ok(boats);
     }
 
-//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<Boat> createBoat(
-//            @RequestPart("boatData") BoatCreationDto boatData,
-//            @RequestPart("imageFile") MultipartFile imageFile
-//    ) {
-//        Boat newBoat = new Boat();
-//
-//        boatCreationMapper.mapDtoToEntity(boatData, newBoat);
-//
-//        Boat createdBoat = boatService.save(newBoat, imageFile);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createdBoat);
-//    }
     @PostMapping
     public ResponseEntity<Boat> createBoat(
             @RequestParam("boatName") String boatName,
@@ -78,7 +65,6 @@ public class BoatController {
             @RequestParam("boatPlace") String boatPlace,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-        // Create a new Boat object and set its properties
         Boat newBoat = new Boat();
         newBoat.setBoatName(boatName);
         newBoat.setBoatPrice(boatPrice);

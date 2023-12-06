@@ -41,10 +41,6 @@ public class Boat {
 
     @Column(name = "place")
     private String boatPlace;
-//
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "owner_info_id", nullable = true)
-//    private OwnerInfo ownerInfo;
 
     public Boat() {
     }

@@ -21,6 +21,5 @@ public class VesselShortMapper {
         dto.setImageUrl(vessel.getImageKey());
 
         return dto;
-
     }
 }

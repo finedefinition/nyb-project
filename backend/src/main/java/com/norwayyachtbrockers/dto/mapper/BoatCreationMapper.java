@@ -13,13 +13,5 @@ public class BoatCreationMapper {
         boat.setBoatBrand(dto.getBoatBrand());
         boat.setBoatYear(dto.getBoatYear());
         boat.setBoatPlace(dto.getBoatPlace());
-        // Map fields from DTO to OwnerInfo entity
-//        OwnerInfo ownerInfo = new OwnerInfo();
-//        ownerInfo.setFirstName(dto.getFirstName());
-//        ownerInfo.setLastName(dto.getLastName());
-//        ownerInfo.setTelephone(dto.getTelephone());
-//        ownerInfo.setEmail(dto.getEmail());
-//
-//        boat.setOwnerInfo(ownerInfo);
     }
 }

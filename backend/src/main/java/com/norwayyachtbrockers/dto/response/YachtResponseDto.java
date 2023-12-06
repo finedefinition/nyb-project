@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.norwayyachtbrockers.model.YachtImage;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.util.Set;
 @Data
 public class YachtResponseDto {
 
+    @JsonProperty("yacht_id")
     private Long id;
 
     private boolean featured;
@@ -37,7 +39,7 @@ public class YachtResponseDto {
 
     private String town;
 
-    private Set<YachtImage> yachtImages;
+//    private Set<YachtImage> yachtImages;
 
     private Integer cabin;
 
