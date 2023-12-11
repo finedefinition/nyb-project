@@ -42,7 +42,7 @@ export const GoodList = () => {
         <div className="GoodList">
             <div className="card-container">
                 {displayedGoods.map((good) => (
-                    <GoodCard key={good.id} good={good} />
+                    <GoodCard key={good.vessel_id} good={good} />
                 ))}
             </div>
         </div>

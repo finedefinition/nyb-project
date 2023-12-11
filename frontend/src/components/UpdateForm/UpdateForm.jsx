@@ -5,8 +5,8 @@ import AWS from 'aws-sdk';
 import './UpdateForm.css';
 
 export const UpdateForm = () => {
-    const {id} = useParams() || {id: 'defaultId'};
-    console.log('Initial ID from useParams:', id);
+    const {vessel_id} = useParams() || {vessel_id: 'defaultId'};
+    console.log('Initial ID from useParams:', vessel_id);
     const fileInputRef = React.useRef(null);
     const [formErrors, setFormErrors] = useState({});
     const [imageUrl, setImageUrl] = useState('');
@@ -17,22 +17,22 @@ export const UpdateForm = () => {
     const [fuelTypes, setFuelTypes] = useState([]);
     const [formData, setFormData] = useState(
         {
-        featuredVessel: false,
-        vesselMake: '',
-        vesselModel: '',
-        vesselPrice: 0,
-        vesselYear: 0,
-        vesselLocationCountry: '',
-        vesselLocationState: '',
-        vesselLengthOverall: 0,
-        vesselBeam: 0,
-        vesselDraft: 0,
-        vesselCabin: 0,
-        vesselBerth: 0,
-        keelType: 'ALL_KEEL_TYPES',
-        fuelType: 'ALL_FUEL_TYPES',
-        engineQuantity: 0,
-        vesselDescription: '',
+        featured: false,
+        vessel_make: '',
+        vessel_model: '',
+        vessel_price: 0,
+        vessel_year: 0,
+        vessel_country: '',
+        vessel_town: '',
+        vessel_loa: 0,
+        vessel_beam: 0,
+        vessel_draft: 0,
+        vessel_cabin: 0,
+        vessel_berth: 0,
+        vessel_keel_type: 'ALL_KEEL_TYPES',
+        vessel_fuel_type: 'ALL_FUEL_TYPES',
+        vessel_engine: 0,
+        vessel_description: '',
         imageKey: '',
     }
     );
@@ -118,7 +118,7 @@ export const UpdateForm = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${id}`);
+                const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vessel_id}`);
                 if (!response.ok) {
                     throw Error(`Failed to fetch data: ${response.status}`);
                 }
@@ -142,11 +142,11 @@ export const UpdateForm = () => {
         }
 
         fetchData();
-    }, [id, s3, bucketName]);
+    }, [vessel_id, s3, bucketName]);
 
 
     const handleUpdate = async () => {
-        const vesselId = id;
+        const vesselId = vessel_id;
         const formDataToSend = new FormData();
 
         if (formData.imageFile) {
@@ -167,8 +167,8 @@ export const UpdateForm = () => {
                     });
                     console.log("Send data to server");
                     console.log(vesselData);
-                    console.log('Attempting to update vessel with ID:', vesselId);
-                    navigate(`/full-card/${vesselId}`);
+                    console.log('Attempting to update vessel with ID:', vessel_id);
+                    navigate(`/full-card/${vessel_id}`);
                 } else {
                     setSubmitStatus({
                         status: 'error',
@@ -230,8 +230,8 @@ export const UpdateForm = () => {
 
     const handleDelete = async () => {
         try {
-            const vesselId = id;
-            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vesselId}`, {
+            const vesselId = vessel_id;
+            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vessel_id}`, {
                 method: 'DELETE'
             });
 
@@ -283,12 +283,12 @@ export const UpdateForm = () => {
                             <label>
                                 Featured
                                 <div className="custom-toggle">
-                                    <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>
+                                    <label className={`toggle-label ${formData.featured ? 'active' : ''}`}>
                                         <input
                                             type="checkbox"
                                             name="featuredVessel"
-                                            checked={formData.featuredVessel}
-                                            onChange={(e) => setFormData({...formData, featuredVessel: e.target.checked})}
+                                            checked={formData.featured}
+                                            onChange={(e) => setFormData({...formData, featured: e.target.checked})}
                                         />
                                         <span className="slider"></span>
                                     </label>
@@ -301,7 +301,7 @@ export const UpdateForm = () => {
                                 Description
                                 <textarea
                                     name="vesselDescription"
-                                    value={formData.vesselDescription}
+                                    value={formData.vessel_description}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -317,7 +317,7 @@ export const UpdateForm = () => {
                                 <input
                                     type="text"
                                     name="vesselMake"
-                                    value={formData.vesselMake}
+                                    value={formData.vessel_make}
                                     onChange={handleChange}
                                 />
                             </label>

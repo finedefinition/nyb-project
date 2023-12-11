@@ -209,7 +209,7 @@ export const CreateForm = () => {
                     <div className="right-side">
                         <FeatureSection formData={formData}
                                         setFormData={setFormData}
-                                        featuredVessel={formData.featuredVessel}/>
+                                        featuredVessel={formData.featured}/>
                         {/*<div className="feature-section">*/}
                         {/*    <label>*/}
                         {/*        Featured Vessel*/}
@@ -234,7 +234,7 @@ export const CreateForm = () => {
                                 Description
                                 <textarea
                                     name="vesselDescription"
-                                    value={formData.vesselDescription}
+                                    value={formData.vessel_description}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -250,9 +250,9 @@ export const CreateForm = () => {
                                 type="text"
                                 name="vesselMake"
                                 onChange={handleChange}
-                                value={formData.vesselMake}
+                                value={formData.vessel_make}
                             />
-                            {formErrors.vesselMake && <span className="error">{formErrors.vesselMake}</span>}
+                            {formErrors.vessel_make && <span className="error">{formErrors.vessel_make}</span>}
                         </div>
                         <div className="form-row">
                             <label>
@@ -260,7 +260,7 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="vesselLengthOverall"
-                                    value={formData.vesselLengthOverall}
+                                    value={formData.vessel_loa}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -271,7 +271,7 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="vesselCabin"
-                                    value={formData.vesselCabin}
+                                    value={formData.vessel_cabin}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -285,12 +285,12 @@ export const CreateForm = () => {
                                 <input
                                     type="text"
                                     name="vesselModel"
-                                    value={formData.vesselModel}
+                                    value={formData.vessel_model}
                                     onChange={handleChange}
                                 />
                             </label>
-                            {formErrors.vesselModel &&
-                                <span className="error">{formErrors.vesselModel}</span>}
+                            {formErrors.vessel_model &&
+                                <span className="error">{formErrors.vessel_model}</span>}
                         </div>
                         <div className="form-row">
                             <label>
@@ -298,7 +298,7 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="vesselBeam"
-                                    value={formData.vesselBeam}
+                                    value={formData.vessel_beam}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -309,7 +309,7 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="vesselBerth"
-                                    value={formData.vesselBerth}
+                                    value={formData.vessel_berth}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -323,7 +323,7 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="vesselPrice"
-                                    value={formData.vesselPrice}
+                                    value={formData.vessel_price}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -334,7 +334,7 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="vesselDraft"
-                                    value={formData.vesselDraft}
+                                    value={formData.vessel_draft}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -348,16 +348,16 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="vesselYear"
-                                    value={formData.vesselYear}
+                                    value={formData.vessel_year}
                                     onChange={handleChange}
                                 />
-                                {formErrors.vesselYear && <span className="error">{formErrors.vesselYear}</span>}
+                                {formErrors.vessel_year && <span className="error">{formErrors.vessel_year}</span>}
                             </label>
                         </div>
                         <div className="form-row">
                             <label>
                                 Keel Type
-                                <select name="keelType" value={formData.keelType} onChange={handleChange}>
+                                <select name="keelType" value={formData.vessel_keel_type} onChange={handleChange}>
                                     {keelTypes.map((keelType, index) => (
                                         <option key={index} value={keelType.value}>
                                             {keelType.value}
@@ -375,7 +375,7 @@ export const CreateForm = () => {
                                 <input
                                     type="text"
                                     name="vesselLocationCountry"
-                                    value={formData.vesselLocationCountry}
+                                    value={formData.vessel_country}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -383,7 +383,7 @@ export const CreateForm = () => {
                         <div className="form-row">
                             <label>
                                 Fuel Type
-                                <select name="fuelType" value={formData.fuelType} onChange={handleChange}>
+                                <select name="fuelType" value={formData.vessel_fuel_type} onChange={handleChange}>
                                     {fuelTypes.map((fuelType, index) => (
                                         <option key={index} value={fuelType.value}>
                                             {fuelType.value}
@@ -401,7 +401,7 @@ export const CreateForm = () => {
                                 <input
                                     type="text"
                                     name="vesselLocationState"
-                                    value={formData.vesselLocationState}
+                                    value={formData.vessel_town}
                                     onChange={handleChange}
                                 />
                             </label>
@@ -412,7 +412,7 @@ export const CreateForm = () => {
                                 <input
                                     type="number"
                                     name="engineQuantity"
-                                    value={formData.engineQuantity}
+                                    value={formData.vessel_engine}
                                     onChange={handleChange}
                                 />
                             </label>

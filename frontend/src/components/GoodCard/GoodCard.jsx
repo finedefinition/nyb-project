@@ -45,14 +45,14 @@ export const GoodCard = ({ good }) => {
             ) : (
                 <p>Loading image...</p>
             )}
-            <Link to={`/full-card/${good.id}`} className="GoodCard__name"> <h2>
-                {good.make} {good.model} </h2>
+            <Link to={`/full-card/${good.vessel_id}`} className="GoodCard__name"> <h2>
+                {good.vessel_make} {good.vessel_model} </h2>
             </Link>
             <div className="GoodCard__place"><h3>
-                {good.country}, {good.state} | {good.year} </h3>
+                {good.vessel_country}, {good.vessel_town} | {good.vessel_year} </h3>
             </div>
             <div className="GoodCard__price"><h3>
-                <b>€{good.price}</b></h3>
+                <b>€{good.vessel_price}</b></h3>
             </div>
         </div>
     );

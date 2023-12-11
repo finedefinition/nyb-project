@@ -4,14 +4,14 @@ export const FeatureSection = ({ formData, setFormData, featuredVessel }) => {
             <label>
                 Featured Vessel
                 <div className="custom-toggle">
-                    <label className={`toggle-label ${formData.featuredVessel ? 'active' : ''}`}>
+                    <label className={`toggle-label ${formData.featured ? 'active' : ''}`}>
                     <input
                             type="checkbox"
                             name="featuredVessel"
                             checked={featuredVessel}
                             onChange={(e) => setFormData({
                                 ...formData,
-                                featuredVessel: e.target.checked
+                                featured: e.target.checked
                             })}
                         />
                         <span className="slider"></span>

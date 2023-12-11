@@ -9,11 +9,11 @@ export const FullCard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
-    const {id} = useParams();
+    const {vessel_id} = useParams();
 
     async function fetchData() {
         try {
-            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${id}`);
+            const response = await fetch(`https://nyb-project-production.up.railway.app/vessels/${vessel_id}`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch boat data: ${response.status}`);
             }
@@ -54,7 +54,7 @@ export const FullCard = () => {
 
     useEffect(() => {
         fetchData();
-    }, [id]);
+    }, [vessel_id]);
 
     useEffect(() => {
         if (boatData) {
@@ -84,78 +84,78 @@ export const FullCard = () => {
                 </div>
                 <div className="right-side">
                     <label>ABOUT</label>
-                    <p className="form-row">{boatData.vesselDescription}</p>
+                    <p className="form-row">{boatData.vessel_description}</p>
                 </div>
             </div>
             <div className="form-columns">
                 <div className="form-column">
                     <div className="form-row">
                         <label>MAKE</label>
-                        {boatData.vesselMake}
+                        {boatData.vessel_make}
                     </div>
                     <div className="form-row">
                         <label>LENGTH OVERALL</label>
-                        {boatData.vesselLengthOverall}
+                        {boatData.vessel_loa}
                     </div>
                     <div className="form-row">
                         <label>CABIN</label>
-                        {boatData.vesselCabin}
+                        {boatData.vessel_cabin}
                     </div>
                 </div>
                 <div className="form-column">
                     <div className="form-row">
                         <label>MODEL</label>
-                        {boatData.vesselModel}
+                        {boatData.vessel_model}
                     </div>
                     <div className="form-row">
                         <label>BEAM</label>
-                        {boatData.vesselBeam}
+                        {boatData.vessel_beam}
                     </div>
                     <div className="form-row">
                         <label>BERTH</label>
-                        {boatData.vesselBerth}
+                        {boatData.vessel_berth}
                     </div>
                 </div>
                 <div className="form-column">
                     <div className="form-row">
                         <label>PRICE</label>
-                        {boatData.vesselPrice}
+                        {boatData.vessel_price}
                     </div>
                     <div className="form-row">
                         <label>DRAFT</label>
-                        {boatData.vesselDraft}
+                        {boatData.vessel_draft}
                     </div>
                 </div>
                 <div className="form-column">
                     <div className="form-row">
                         <label>YEAR</label>
-                        {boatData.vesselYear}
+                        {boatData.vessel_year}
                     </div>
                     <div className="form-row">
                         <label>KEEL TYPE</label>
-                        {boatData.keelType}
+                        {boatData.vessel_keel_type}
                     </div>
                 </div>
                 <div className="form-column">
                     <div className="form-row">
                         <label>COUNTRY</label>
-                        {boatData.vesselLocationCountry}
+                        {boatData.vessel_country}
                     </div>
                     <div className="form-row">
                         <div className="form-row">
                             <label>FUEL TYPE</label>
-                            {boatData.fuelType}
+                            {boatData.vessel_fuel_type}
                         </div>
                     </div>
                 </div>
                 <div className="form-column">
                     <div className="form-row">
                         <label>STATE</label>
-                        {boatData.vesselLocationState}
+                        {boatData.vessel_town}
                     </div>
                     <div className="form-row">
                         <label>ENGINE QTY</label>
-                        {boatData.engineQuantity}
+                        {boatData.vessel_engine}
                     </div>
                 </div>
             </div>
