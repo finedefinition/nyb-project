@@ -11,9 +11,9 @@ public interface YachtImageService {
 
     List<YachtImage> findAll();
 
-    YachtImage save(YachtImageRequestDto dto, MultipartFile imageFile);
+    YachtImage save(MultipartFile imageFile);
 
-    YachtImage update(Long id, YachtImageRequestDto dto, MultipartFile imageFile);
+    YachtImage update(Long id, MultipartFile imageFile);
 
     void delete(Long id);
 }

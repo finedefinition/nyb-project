@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.service.YachtImageService;
 import org.springframework.http.HttpStatus;
@@ -28,12 +27,10 @@ public class YachtImageController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<YachtImage> save(
-            @RequestPart("yachtImageData")YachtImageRequestDto dto,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
-
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(yachtImageService.save(dto, imageFile));
+                .body(yachtImageService.save(imageFile));
     }
 
     @GetMapping("/{id}")
@@ -54,10 +51,9 @@ public class YachtImageController {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<YachtImage> update(
             @PathVariable Long id,
-            @RequestPart("yachtImageData") YachtImageRequestDto dto,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
     ) {
-        return ResponseEntity.ok(yachtImageService.update(id, dto, imageFile));
+        return ResponseEntity.ok(yachtImageService.update(id, imageFile));
     }
 
     @DeleteMapping("/{id}")

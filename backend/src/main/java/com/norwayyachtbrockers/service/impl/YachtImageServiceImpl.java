@@ -30,9 +30,8 @@ public class YachtImageServiceImpl implements YachtImageService {
 
     @Override
     @Transactional
-    public YachtImage save(YachtImageRequestDto dto, MultipartFile imageFile) {
+    public YachtImage save(MultipartFile imageFile) {
         YachtImage yachtImage = new YachtImage();
-        yachtImageMapper.updateFromDto(yachtImage, dto);
         setImageKey(yachtImage, imageFile);
         return yachtImageRepository.save(yachtImage);
     }
@@ -51,11 +50,10 @@ public class YachtImageServiceImpl implements YachtImageService {
 
     @Override
     @Transactional
-    public YachtImage update(Long id, YachtImageRequestDto dto, MultipartFile imageFile) {
+    public YachtImage update(Long id,  MultipartFile imageFile) {
         YachtImage yachtImage = yachtImageRepository.findById(id)
                 .orElseThrow(() -> new AppEntityNotFoundException(String
                         .format("Cannot find the Yacht Image with ID: %d", id)));
-        yachtImageMapper.updateFromDto(yachtImage, dto);
         setImageKey(yachtImage, imageFile);
         return yachtImageRepository.save(yachtImage);
     }
