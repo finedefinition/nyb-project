@@ -39,4 +39,4 @@ build/
 
 ### Custom ###
 #../.env
-/backend/src/main/resources/liquibase.properties
+
