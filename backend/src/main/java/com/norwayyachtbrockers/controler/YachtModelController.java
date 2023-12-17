@@ -26,17 +26,17 @@ public class YachtModelController {
     }
 
     @PostMapping
-    public ResponseEntity<YachtModel> createYachtModel(@Valid @RequestBody YachtModelRequestDto dto) {
+    public ResponseEntity<YachtModel> create(@Valid @RequestBody YachtModelRequestDto dto) {
         return ResponseEntity.ok(yachtModelService.saveYachtModel(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<YachtModel> getYachtModelById(@PathVariable Long id) {
+    public ResponseEntity<YachtModel> getById(@PathVariable Long id) {
         return ResponseEntity.ok(yachtModelService.findId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<YachtModel>> getAllYachtModels() {
+    public ResponseEntity<List<YachtModel>> getAll() {
         List<YachtModel> yachtModels = yachtModelService.findAll();
 
         if (yachtModels.isEmpty()) {
@@ -46,13 +46,13 @@ public class YachtModelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<YachtModel> updateYachtModel(@Valid @RequestBody YachtModelRequestDto dto,
+    public ResponseEntity<YachtModel> update(@Valid @RequestBody YachtModelRequestDto dto,
                                                        @PathVariable Long id) {
         return ResponseEntity.ok(yachtModelService.updateYachtModel(dto, id));
     }
 
     @DeleteMapping("/{yachtModelId}")
-    public ResponseEntity<String> deleteById(@PathVariable Long yachtModelId) {
+    public ResponseEntity<String> delete(@PathVariable Long yachtModelId) {
         YachtModel yachtModel = yachtModelService.findId(yachtModelId);
         yachtModelService.deleteById(yachtModelId);
         return ResponseEntity.status(HttpStatus.OK)
