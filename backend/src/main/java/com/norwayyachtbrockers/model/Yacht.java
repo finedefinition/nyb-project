@@ -1,9 +1,9 @@
 package com.norwayyachtbrockers.model;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,32 +32,35 @@ public class Yacht {
     @Column(name = "featured", nullable = false)
     private boolean featured;
 
+    @Column(name = "vat_included", nullable = false)
+    private boolean vatIncluded;
+
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
     @Column(name = "main_image_key", length = 40)
     private String mainImageKey;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "yacht_model_id")
     private YachtModel yachtModel;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "town_id")
     private Town town;
 
-    @OneToMany(mappedBy = "yacht", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "yacht", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<YachtImage> yachtImages = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "yacht_detail_id", referencedColumnName = "id")
     private YachtDetail yachtDetail;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_info_id", referencedColumnName = "id")
     private OwnerInfo ownerInfo;
 

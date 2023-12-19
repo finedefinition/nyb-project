@@ -10,6 +10,8 @@ import com.norwayyachtbrockers.util.S3ImageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,10 +32,17 @@ public class YachtImageServiceImpl implements YachtImageService {
 
     @Override
     @Transactional
-    public YachtImage save(MultipartFile imageFile) {
-        YachtImage yachtImage = new YachtImage();
-        setImageKey(yachtImage, imageFile);
-        return yachtImageRepository.save(yachtImage);
+    public List<YachtImage> saveMultipleImages(List<MultipartFile> imageFiles) {
+        List<YachtImage> savedImages = new ArrayList<>();
+        for (MultipartFile file : imageFiles) {
+            if (file != null && !file.isEmpty()) {
+                YachtImage yachtImage = new YachtImage();
+                String imageKey = s3ImageService.uploadImageToS3(file);
+                yachtImage.setImageKey(imageKey);
+                savedImages.add(yachtImageRepository.save(yachtImage));
+            }
+        }
+        return savedImages;
     }
 
     @Override

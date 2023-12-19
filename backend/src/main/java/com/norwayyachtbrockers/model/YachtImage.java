@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Column;
@@ -30,6 +31,7 @@ public class YachtImage {
 
     @ManyToOne
     @JoinColumn(name = "yacht_id")
+    @JsonIgnore
     private Yacht yacht;
 
 

@@ -150,4 +150,11 @@ public class YachtModel {
         this.fuelType = fuelType;
     }
 
+    public Set<Yacht> getYachts() {
+        return yachts;
+    }
+
+    public void setYachts(Set<Yacht> yachts) {
+        this.yachts = yachts;
+    }
 }

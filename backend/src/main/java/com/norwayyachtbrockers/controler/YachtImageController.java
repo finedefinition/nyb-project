@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,12 +27,12 @@ public class YachtImageController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<YachtImage> save(
-            @RequestPart("imageFile") MultipartFile imageFile
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(yachtImageService.save(imageFile));
+    public ResponseEntity<List<YachtImage>> uploadMultipleImages(@RequestParam("images") List<MultipartFile> files) {
+        List<YachtImage> yachtImages = yachtImageService.saveMultipleImages(files);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(yachtImages);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<YachtImage> getById(@PathVariable Long id) {

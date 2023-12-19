@@ -1,9 +1,7 @@
 package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
-import com.norwayyachtbrockers.dto.response.TownResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
-import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.service.OwnerInfoService;
@@ -16,43 +14,38 @@ import org.springframework.stereotype.Component;
 public class YachtMapper {
     private final YachtModelService yachtModelService;
 
-    private final CountryService countryService;
-
     private final TownService townService;
+
+    private final CountryService countryService;
 
     private final YachtDetailService yachtDetailService;
 
     private final OwnerInfoService ownerInfoService;
 
-    private final TownMapper townMapper;
-
-    public YachtMapper(YachtModelService yachtModelService, CountryService countryService, TownService townService,
-                       YachtDetailService yachtDetailService, OwnerInfoService ownerInfoService, TownMapper townMapper) {
+    public YachtMapper(YachtModelService yachtModelService, TownService townService, CountryService countryService,
+                       YachtDetailService yachtDetailService, OwnerInfoService ownerInfoService) {
         this.yachtModelService = yachtModelService;
-        this.countryService = countryService;
         this.townService = townService;
+        this.countryService = countryService;
         this.yachtDetailService = yachtDetailService;
         this.ownerInfoService = ownerInfoService;
-        this.townMapper = townMapper;
     }
 
-    public void updateFromDto(Yacht yacht, YachtRequestDto dto) {
-        yacht.setFeatured(dto.isFeatured());
-        yacht.setPrice(dto.getPrice());
-        yacht.setYachtModel(yachtModelService.findId(dto.getYachtModelId()));
-        yacht.setCountry(countryService.findId(dto.getCountryId()));
-        yacht.setCountry(countryService.findId(dto.getCountryId()));
-        TownResponseDto townResponseDto = townService.findId(dto.getTownId());
-        Town town = townMapper.convertToTown(townResponseDto);
-        yacht.setTown(town);
-        yacht.setYachtDetail(yachtDetailService.findId(dto.getYachtDetailId()));
-        yacht.setOwnerInfo(ownerInfoService.findId(dto.getOwnerInfoId()));
+    public void updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
+        updateFields(yacht, dto);
+    }
+
+    public Yacht convertToYacht(YachtRequestDto dto) {
+        Yacht yacht = new Yacht();
+        updateFields(yacht, dto);
+        return yacht;
     }
 
     public YachtResponseDto convertToDto(Yacht yacht) {
         YachtResponseDto dto = new YachtResponseDto();
         dto.setId(yacht.getId());
         dto.setFeatured(yacht.isFeatured());
+        dto.setVatIncluded(yacht.isVatIncluded());
         dto.setPrice(yacht.getPrice());
         dto.setMainImageKey(yacht.getMainImageKey());
         // Yacht Model set
@@ -64,6 +57,8 @@ public class YachtMapper {
         dto.setDraftDepth(yacht.getYachtModel().getDraftDepth());
         dto.setKeelType(yacht.getYachtModel().getKeelType().getName());
         dto.setFuelType(yacht.getYachtModel().getFuelType().getName());
+        // Yacht Images set
+        dto.setYachtImages(yacht.getYachtImages());
         // Country
         dto.setCountry(yacht.getCountry().getName());
         // Town
@@ -83,5 +78,16 @@ public class YachtMapper {
         dto.setCreatedAt(yacht.getCreatedAt());
 
         return dto;
+    }
+
+    private void updateFields(Yacht yacht, YachtRequestDto dto) {
+        yacht.setFeatured(dto.isFeatured());
+        yacht.setVatIncluded(dto.isVatIncluded());
+        yacht.setPrice(dto.getPrice());
+        yacht.setYachtModel(yachtModelService.findId(dto.getYachtModelId()));
+        yacht.setCountry(countryService.findId(dto.getCountryId()));
+        yacht.setTown(townService.findTownById(dto.getTownId()));
+        yacht.setYachtDetail(yachtDetailService.findId(dto.getYachtDetailId()));
+        yacht.setOwnerInfo(ownerInfoService.findId(dto.getOwnerInfoId()));
     }
 }

@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface YachtService {
+
+    YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
+                          List<MultipartFile> additionalImageFiles);
     YachtResponseDto save(YachtRequestDto dto, MultipartFile imageFile);
 
     YachtResponseDto findId(Long id);

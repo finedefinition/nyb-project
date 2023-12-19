@@ -1,19 +1,27 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.YachtService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @RestController
@@ -27,14 +35,23 @@ public class YachtController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<YachtResponseDto> save(
+    public ResponseEntity<YachtResponseDto> createYacht(
             @RequestPart("yachtData") YachtRequestDto dto,
-            @RequestPart("imageFile") MultipartFile imageFile
-    ) {
+            @RequestParam("mainImage") MultipartFile mainImageFile,
+            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(yachtService.save(dto, imageFile));
+        YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
+        return new ResponseEntity<>(savedYachtDto, HttpStatus.CREATED);
     }
+//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<YachtResponseDto> save(
+//            @RequestPart("yachtData") YachtRequestDto dto,
+//            @RequestPart("imageFile") MultipartFile imageFile
+//    ) {
+//
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(yachtService.save(dto, imageFile));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<YachtResponseDto> getById(@PathVariable Long id) {
@@ -51,10 +68,19 @@ public class YachtController {
         return ResponseEntity.ok(yachts);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<YachtResponseDto> update(
+            @PathVariable Long id,
+            @RequestPart("yachtData") YachtRequestDto dto,
+            @RequestPart("imageFile") MultipartFile imageFile) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(yachtService.update(dto, id, imageFile));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         yachtService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Yacht Model with ID:" + id);
+                .body("Successfully deleted the Yacht with ID:" + id);
     }
 }

@@ -54,6 +54,13 @@ public class TownServiceImpl implements TownService {
     }
 
     @Override
+    public Town findTownById(Long id) {
+        return townRepository.findById(id)
+                .orElseThrow(() -> new AppEntityNotFoundException(String
+                        .format("Town with ID: %d not found", id)));
+    }
+
+    @Override
     public List<TownResponseDto> findAll() {
         return townRepository.findAll().stream()
                 .sorted(Comparator.comparing(Town::getId))
