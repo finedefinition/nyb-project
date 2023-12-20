@@ -1,9 +1,7 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
-import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,11 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -36,6 +32,7 @@ public class YachtController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<YachtResponseDto> createYacht(
+            @Valid
             @RequestPart("yachtData") YachtRequestDto dto,
             @RequestParam("mainImage") MultipartFile mainImageFile,
             @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
@@ -68,13 +65,16 @@ public class YachtController {
         return ResponseEntity.ok(yachts);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<YachtResponseDto> update(
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<YachtResponseDto> updateYacht(
+            @Valid
             @PathVariable Long id,
             @RequestPart("yachtData") YachtRequestDto dto,
-            @RequestPart("imageFile") MultipartFile imageFile) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(yachtService.update(dto, id, imageFile));
+            @RequestParam("mainImage") MultipartFile mainImageFile,
+            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
+
+        YachtResponseDto updatedYachtDto = yachtService.update(dto, id, mainImageFile, additionalImageFiles);
+        return new ResponseEntity<>(updatedYachtDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

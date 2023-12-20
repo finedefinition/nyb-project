@@ -2,13 +2,13 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.YachtDetailMapper;
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.repository.YachtDetailRepository;
 import com.norwayyachtbrockers.service.YachtDetailService;
+import com.norwayyachtbrockers.util.EntityUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -34,34 +34,25 @@ public class YachtDetailServiceImpl implements YachtDetailService {
 
     @Override
     public YachtDetail findId(Long id) {
-        return yachtDetailRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                .format("Yacht detail with ID: %d not found", id)));
+        return EntityUtils.findEntityOrThrow(id, yachtDetailRepository, "YachtDetail");
     }
 
     @Override
     public List<YachtDetail> findAll() {
-        List<YachtDetail> yachtDetails = yachtDetailRepository.findAll();
-        yachtDetails.sort(Comparator.comparing(YachtDetail::getId));
-        return yachtDetails;
+        return yachtDetailRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override
     @Transactional
     public YachtDetail update(YachtDetailRequestDto dto, Long id) {
-        YachtDetail yachtDetail = yachtDetailRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Yacht detail with ID: %d not found", id)));
+        YachtDetail yachtDetail = EntityUtils.findEntityOrThrow(id, yachtDetailRepository, "YachtDetail");
         yachtDetailMapper.updateFromDto(yachtDetail, dto);
-
         return yachtDetailRepository.save(yachtDetail);
     }
 
     @Override
     public void deleteById(Long id) {
-        YachtDetail yachtDetail = yachtDetailRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Yacht detail with ID: %d not found", id)));
+        YachtDetail yachtDetail = EntityUtils.findEntityOrThrow(id, yachtDetailRepository, "YachtDetail");
         yachtDetailRepository.delete(yachtDetail);
     }
 }

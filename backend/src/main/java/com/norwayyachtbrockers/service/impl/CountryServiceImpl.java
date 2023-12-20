@@ -2,13 +2,13 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.CountryMapper;
 import com.norwayyachtbrockers.dto.request.CountryRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.repository.CountryRepository;
 import com.norwayyachtbrockers.service.CountryService;
+import com.norwayyachtbrockers.util.EntityUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -26,47 +26,37 @@ public class CountryServiceImpl implements CountryService {
     @Override
     @Transactional
     public Country saveCountry(CountryRequestDto dto) {
-
         Country country = new Country();
         countryMapper.updateCountryFromDto(country, dto);
-
         return countryRepository.save(country);
     }
 
     @Override
     public Country findId(Long id) {
-        return countryRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Country with ID: %d not found", id)));
+        return EntityUtils.findEntityOrThrow(id, countryRepository, "Country");
     }
 
     @Override
     public List<Country> findAll() {
-        List<Country> countries = countryRepository.findAll();
-        countries.sort(Comparator.comparing(Country::getId));
-        return countries;
+        return countryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override
     @Transactional
     public Country updateCountry(CountryRequestDto dto, Long id) {
-
-        Country country = countryRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot update. The Country with ID: %d not found", id)));
-
+        Country country = EntityUtils
+                .findEntityOrThrow(id, countryRepository, "Country");
         countryMapper.updateCountryFromDto(country, dto);
-
         return countryRepository.save(country);
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
-        Country country = countryRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot delete. The Country with ID: %d not found", id)));
-
-       countryRepository.delete(country);
+        Country country = EntityUtils
+                .findEntityOrThrow(id, countryRepository, "Country");
+        country.getTowns().forEach(town -> town.setCountry(null));
+        country.getYachts().forEach(yacht -> yacht.setCountry(null));
+        countryRepository.delete(country);
     }
 }

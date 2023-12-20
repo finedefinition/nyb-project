@@ -47,4 +47,16 @@ public class Town {
         this.name = name;
         this.country = country;
     }
+
+    public void addYacht(Yacht yacht) {
+        yachts.add(yacht);
+        yacht.setTown(this);
+    }
+
+    public void removeYacht(Yacht yacht) {
+        yachts.remove(yacht);
+        if (yacht.getTown() == this) {
+            yacht.setTown(null);
+        }
+    }
 }

@@ -16,7 +16,10 @@ public interface YachtService {
 
     List<YachtResponseDto> findAll();
 
-    YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile imageFile);
+//    YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile imageFile);
+
+    YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
+                            List<MultipartFile> additionalImageFiles);
 
     void deleteById(Long id);
 }

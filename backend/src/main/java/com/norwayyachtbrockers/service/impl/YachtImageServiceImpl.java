@@ -1,16 +1,14 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.YachtImageMapper;
-import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.repository.YachtImageRepository;
 import com.norwayyachtbrockers.service.YachtImageService;
+import com.norwayyachtbrockers.util.EntityUtils;
 import com.norwayyachtbrockers.util.S3ImageService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +17,10 @@ public class YachtImageServiceImpl implements YachtImageService {
 
     private final YachtImageRepository yachtImageRepository;
 
-    private final YachtImageMapper yachtImageMapper;
-
     private final S3ImageService s3ImageService;
 
-    public YachtImageServiceImpl(YachtImageRepository yachtImageRepository,
-                                 YachtImageMapper yachtImageMapper, S3ImageService s3ImageService) {
+    public YachtImageServiceImpl(YachtImageRepository yachtImageRepository, S3ImageService s3ImageService) {
         this.yachtImageRepository = yachtImageRepository;
-        this.yachtImageMapper = yachtImageMapper;
         this.s3ImageService = s3ImageService;
     }
 
@@ -47,22 +41,18 @@ public class YachtImageServiceImpl implements YachtImageService {
 
     @Override
     public YachtImage findById(Long id) {
-        return yachtImageRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot find the Yacht Image with ID: %d", id)));
+        return EntityUtils.findEntityOrThrow(id, yachtImageRepository, "YachtImage");
     }
 
     @Override
     public List<YachtImage> findAll() {
-        return yachtImageRepository.findAll();
+        return yachtImageRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override
     @Transactional
     public YachtImage update(Long id,  MultipartFile imageFile) {
-        YachtImage yachtImage = yachtImageRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot find the Yacht Image with ID: %d", id)));
+        YachtImage yachtImage = EntityUtils.findEntityOrThrow(id, yachtImageRepository, "YachtImage");
         setImageKey(yachtImage, imageFile);
         return yachtImageRepository.save(yachtImage);
     }
@@ -70,9 +60,7 @@ public class YachtImageServiceImpl implements YachtImageService {
     @Override
     @Transactional
     public void delete(Long id) {
-        YachtImage yachtImage = yachtImageRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot find the Yacht Image with ID: %d", id)));
+        YachtImage yachtImage = EntityUtils.findEntityOrThrow(id, yachtImageRepository, "YachtImage");
         yachtImageRepository.delete(yachtImage);
 
     }

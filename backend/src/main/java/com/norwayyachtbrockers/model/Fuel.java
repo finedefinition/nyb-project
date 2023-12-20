@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,4 +45,19 @@ public class Fuel {
     public Fuel(String name) {
         this.name = name;
     }
+
+    // Convenience method to add a YachtModel to the Fuel type
+    public void addYachtModel(YachtModel yachtModel) {
+        yachtModels.add(yachtModel);
+        yachtModel.setFuelType(this);
+    }
+
+    // Convenience method to remove a YachtModel from the Fuel type
+    public void removeYachtModel(YachtModel yachtModel) {
+        yachtModels.remove(yachtModel);
+        if (yachtModel.getFuelType() == this) {
+            yachtModel.setFuelType(null);
+        }
+    }
+
 }

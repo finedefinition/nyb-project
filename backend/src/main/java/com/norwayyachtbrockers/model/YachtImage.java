@@ -27,6 +27,7 @@ public class YachtImage {
     private Long id;
 
     @Column(name = "image_key")
+    @JsonProperty("yacht_image_key")
     private String imageKey;
 
     @ManyToOne
@@ -40,5 +41,17 @@ public class YachtImage {
 
     public YachtImage(String imageKey) {
         this.imageKey = imageKey;
+    }
+
+    public void setYacht(Yacht yacht) {
+        if (this.yacht != null) {
+            this.yacht.getYachtImages().remove(this);
+        }
+
+        if (yacht != null) {
+            yacht.getYachtImages().add(this);
+        }
+
+        this.yacht = yacht;
     }
 }

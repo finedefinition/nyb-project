@@ -35,7 +35,7 @@ public class Country {
     private String name;
 
     @OneToMany(mappedBy = "country",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     private Set<Town> towns;
@@ -46,11 +46,34 @@ public class Country {
     @JsonIgnore
     private Set<Yacht> yachts;
 
-
     public Country() {
     }
 
     public Country(String name) {
         this.name = name;
+    }
+
+    public void addYacht(Yacht yacht) {
+        yachts.add(yacht);
+        yacht.setCountry(this);
+    }
+
+    public void removeYacht(Yacht yacht) {
+        yachts.remove(yacht);
+        if (yacht.getCountry() == this) {
+            yacht.setCountry(null);
+        }
+    }
+
+    public void addTown(Town town) {
+        towns.add(town);
+        town.setCountry(this);
+    }
+
+    public void removeTown(Town town) {
+        towns.remove(town);
+        if (town.getCountry() == this) {
+            town.setCountry(null);
+        }
     }
 }

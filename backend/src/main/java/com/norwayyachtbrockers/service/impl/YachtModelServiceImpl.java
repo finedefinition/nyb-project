@@ -2,7 +2,6 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.YachtModelMapper;
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
-import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.YachtModel;
@@ -10,9 +9,10 @@ import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
 import com.norwayyachtbrockers.service.YachtModelService;
+import com.norwayyachtbrockers.util.EntityUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -34,90 +34,85 @@ public class YachtModelServiceImpl implements YachtModelService {
     @Override
     @Transactional
     public YachtModel saveYachtModel(YachtModelRequestDto dto) {
-        Keel keel = keelRepository.findById(dto.getKeelTypeId())
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot save the Yacht Model. Keel ID: %d not found", dto.getKeelTypeId())));
-
-        Fuel fuel = fuelRepository.findById(dto.getFuelTypeId())
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot save the Yacht Model. Fuel ID: %d not found", dto.getFuelTypeId())));
+        Keel keel = EntityUtils.findEntityOrThrow(dto.getKeelTypeId(), keelRepository, "Keel");
+        Fuel fuel = EntityUtils.findEntityOrThrow(dto.getFuelTypeId(), fuelRepository, "Fuel");
         YachtModel yachtModel = new YachtModel();
         yachtModelMapper.updateYachtModelFromDto(yachtModel, dto);
 
-        yachtModel.setKeelType(keel);
-        yachtModel.setFuelType(fuel);
+        // Assuming Keel and Fuel entities have convenience methods to add a yacht model
+        keel.addYachtModel(yachtModel);
+        fuel.addYachtModel(yachtModel);
 
+        // No need to set Keel and Fuel on the yachtModel directly if the addYachtModel methods set the inverse relationship
         return yachtModelRepository.save(yachtModel);
     }
 
     @Override
     public YachtModel findId(Long id) {
-        return yachtModelRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Yacht Model with ID: %d not found", id)));
+        return EntityUtils.findEntityOrThrow(id, yachtModelRepository, "YachtModel");
     }
 
     @Override
     public List<YachtModel> findAll() {
-        List<YachtModel> yachtModels = yachtModelRepository.findAll();
-        yachtModels.sort(Comparator.comparing(YachtModel::getId));
-        return yachtModels;
+        return yachtModelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Override
     @Transactional
     public YachtModel updateYachtModel(YachtModelRequestDto dto, Long id) {
-        YachtModel existingModel = yachtModelRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Yacht Model with ID: %d not found", id)));
+        YachtModel existingModel = EntityUtils.findEntityOrThrow(id, yachtModelRepository, "YachtModel");
+        Keel newKeel = EntityUtils.findEntityOrThrow(dto.getKeelTypeId(), keelRepository, "Keel");
+        Fuel newFuel = EntityUtils.findEntityOrThrow(dto.getFuelTypeId(), fuelRepository, "Fuel");
 
-        Keel keel = keelRepository.findById(dto.getKeelTypeId())
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Keel with ID: %d not found", dto.getKeelTypeId())));
+        // If Keel has changed, update it
+        if (!newKeel.equals(existingModel.getKeelType())) {
+            if (existingModel.getKeelType() != null) {
+                existingModel.getKeelType().removeYachtModel(existingModel);
+            }
+            newKeel.addYachtModel(existingModel);
+        }
 
-        Fuel fuel = fuelRepository.findById(dto.getFuelTypeId())
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Fuel with ID: %d not found", dto.getFuelTypeId())));
+        // If Fuel has changed, update it
+        if (!newFuel.equals(existingModel.getFuelType())) {
+            if (existingModel.getFuelType() != null) {
+                existingModel.getFuelType().removeYachtModel(existingModel);
+            }
+            newFuel.addYachtModel(existingModel);
+        }
 
+        // Update other fields
         yachtModelMapper.updateYachtModelFromDto(existingModel, dto);
-
-        existingModel.setKeelType(keel);
-        existingModel.setFuelType(fuel);
 
         return yachtModelRepository.save(existingModel);
     }
 
+
     @Override
     @Transactional
     public void deleteById(Long id) {
-        YachtModel yachtModel = yachtModelRepository.findById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot delete. The Yacht Model with ID: %d not found", id)));
+        YachtModel yachtModel = EntityUtils.findEntityOrThrow(id, yachtModelRepository, "YachtModel");
 
-        // Detach related entities
+        // Detach the yacht model from Keel and Fuel
         if (yachtModel.getKeelType() != null) {
-            yachtModel.getKeelType().getYachtModels().remove(yachtModel);
+            yachtModel.getKeelType().removeYachtModel(yachtModel);
         }
         if (yachtModel.getFuelType() != null) {
-            yachtModel.getFuelType().getYachtModels().remove(yachtModel);
+            yachtModel.getFuelType().removeYachtModel(yachtModel);
         }
 
         yachtModelRepository.delete(yachtModel);
     }
 
+
     @Override
     public List<YachtModel> findByKeelType_Id(Long keelTypeId) {
-        keelRepository.findById(keelTypeId)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Keel with ID: %d not found", keelTypeId)));
+        EntityUtils.findEntityOrThrow(keelTypeId, keelRepository, "Keel");
         return yachtModelRepository.findByKeelType_Id(keelTypeId);
     }
 
     @Override
     public List<YachtModel> findByFuelType_Id(Long fuelTypeId) {
-        fuelRepository.findById(fuelTypeId)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Fuel with ID: %d not found", fuelTypeId)));
+        EntityUtils.findEntityOrThrow(fuelTypeId, fuelRepository, "Fuel");
         return yachtModelRepository.findByFuelType_Id(fuelTypeId);
     }
 

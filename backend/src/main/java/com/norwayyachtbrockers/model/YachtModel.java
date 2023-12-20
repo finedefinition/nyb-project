@@ -157,4 +157,17 @@ public class YachtModel {
     public void setYachts(Set<Yacht> yachts) {
         this.yachts = yachts;
     }
+
+    // Convenience method to add a Yacht to the YachtModel
+    public void addYacht(Yacht yacht) {
+        yachts.add(yacht);
+        yacht.setYachtModel(this);
+    }
+
+    // Convenience method to remove a Yacht from the YachtModel
+    public void removeYacht(Yacht yacht) {
+        yachts.remove(yacht);
+        yacht.setYachtModel(null);
+    }
+
 }

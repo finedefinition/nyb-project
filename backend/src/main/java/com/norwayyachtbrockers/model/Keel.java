@@ -44,4 +44,18 @@ public class Keel {
     public Keel(String name) {
         this.name = name;
     }
+
+    // Convenience method to add a YachtModel to the Keel type
+    public void addYachtModel(YachtModel yachtModel) {
+        yachtModels.add(yachtModel);
+        yachtModel.setKeelType(this);
+    }
+
+    // Convenience method to remove a YachtModel from the Keel type
+    public void removeYachtModel(YachtModel yachtModel) {
+        yachtModels.remove(yachtModel);
+        if (yachtModel.getKeelType() == this) {
+            yachtModel.setKeelType(null);
+        }
+    }
 }

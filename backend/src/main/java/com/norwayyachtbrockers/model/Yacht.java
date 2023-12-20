@@ -53,14 +53,18 @@ public class Yacht {
     @JoinColumn(name = "town_id")
     private Town town;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "yacht", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "yacht",
+            cascade = CascadeType.ALL, orphanRemoval = true
+    )
     private Set<YachtImage> yachtImages = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "yacht_detail_id", referencedColumnName = "id")
     private YachtDetail yachtDetail;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "owner_info_id", referencedColumnName = "id")
     private OwnerInfo ownerInfo;
 
@@ -83,6 +87,59 @@ public class Yacht {
         this.yachtDetail = yachtDetail;
         this.ownerInfo = ownerInfo;
         this.createdAt = createdAt;
+    }
+
+    public void setYachtModel(YachtModel yachtModel) {
+        this.yachtModel = yachtModel;
+        yachtModel.getYachts().add(this);
+    }
+
+    // Convenience method to add a YachtImage to the Yacht
+    public void addYachtImage(YachtImage yachtImage) {
+        yachtImages.add(yachtImage);
+        yachtImage.setYacht(this);
+    }
+
+    // Convenience method to remove a YachtImage from the Yacht
+    public void removeYachtImage(YachtImage yachtImage) {
+        yachtImages.remove(yachtImage);
+        yachtImage.setYacht(null);
+    }
+
+    public void setTown(Town newTown) {
+        // Remove yacht from the current town
+        if (this.town != null) {
+            this.town.getYachts().remove(this);
+        }
+
+        // Add yacht to the new town
+        if (newTown != null) {
+            newTown.getYachts().add(this);
+        }
+
+        this.town = newTown;
+    }
+
+    public void setCountry(Country newCountry) {
+        // Remove yacht from the current country
+        if (this.country != null) {
+            this.country.getYachts().remove(this);
+        }
+
+        // Add yacht to the new country
+        if (newCountry != null) {
+            newCountry.getYachts().add(this);
+        }
+
+        this.country = newCountry;
+    }
+
+    public void setYachtDetail(YachtDetail yachtDetail) {
+        this.yachtDetail = yachtDetail;
+    }
+
+    public void setOwnerInfo(OwnerInfo ownerInfo) {
+        this.ownerInfo = ownerInfo;
     }
 }
 
