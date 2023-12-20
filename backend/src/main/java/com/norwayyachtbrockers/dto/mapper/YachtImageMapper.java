@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
+import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.service.YachtService;
 import org.springframework.stereotype.Component;
@@ -16,11 +17,11 @@ public class YachtImageMapper {
         this.yachtMapper = yachtMapper;
     }
 
-    public void updateFromDto(YachtImage yachtImage, YachtImageRequestDto dto) {
-        yachtImage.setImageKey(dto.getImageKey());
-//        YachtResponseDto yachtResponseDto = yachtService.findId(dto.getYachtId());
-//        Yacht yacht = new Yacht();
-//        yachtMapper.updateFromDto(yachtResponseDto, yacht);
-//        yachtImage.setYacht(yachtMapper.updateFromDto(yachtResponseDto);
+    public YachtImageResponseDto convertToResponseDto(YachtImage yachtImage) {
+        YachtImageResponseDto dto = new YachtImageResponseDto();
+        dto.setId(yachtImage.getId());
+        dto.setImageKey(yachtImage.getImageKey());
+        dto.setYachtId(yachtImage.getYacht().getId());
+        return dto;
     }
 }

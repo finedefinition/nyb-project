@@ -1,19 +1,19 @@
 package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
-import com.norwayyachtbrockers.model.YachtImage;
+import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface YachtImageService {
 
-    YachtImage findById(Long id);
+    YachtImageResponseDto findById(Long id);
 
-    List<YachtImage> findAll();
+    List<YachtImageResponseDto> findAll();
 
-    List<YachtImage> saveMultipleImages(List<MultipartFile> imageFiles);
+    List<YachtImageResponseDto> saveMultipleImages(YachtImageRequestDto dto, List<MultipartFile> imageFiles);
 
-    YachtImage update(Long id, MultipartFile imageFile);
+    YachtImageResponseDto update(Long id, YachtImageRequestDto dto, MultipartFile imageFile);
 
     void delete(Long id);
 }

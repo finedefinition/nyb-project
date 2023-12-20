@@ -1,7 +1,9 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.model.YachtImage;
+import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
+import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.service.YachtImageService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,21 +29,24 @@ public class YachtImageController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<List<YachtImage>> uploadMultipleImages(@RequestParam("images") List<MultipartFile> files) {
-        List<YachtImage> yachtImages = yachtImageService.saveMultipleImages(files);
+    public ResponseEntity<List<YachtImageResponseDto>> uploadMultipleImages(
+            @Valid
+            @RequestPart("yachtData") YachtImageRequestDto dto,
+            @RequestParam("images") List<MultipartFile> files) {
+        List<YachtImageResponseDto> yachtImages = yachtImageService.saveMultipleImages(dto, files);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(yachtImages);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<YachtImage> getById(@PathVariable Long id) {
+    public ResponseEntity<YachtImageResponseDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(yachtImageService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<YachtImage>> getAll() {
-        List<YachtImage> yachtImages = yachtImageService.findAll();
+    public ResponseEntity<List<YachtImageResponseDto>> getAll() {
+        List<YachtImageResponseDto> yachtImages = yachtImageService.findAll();
 
         if (yachtImages.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
@@ -50,11 +55,13 @@ public class YachtImageController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<YachtImage> update(
+    public ResponseEntity<YachtImageResponseDto> update(
+            @Valid
             @PathVariable Long id,
+            @RequestPart("yachtData") YachtImageRequestDto dto,
             @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
     ) {
-        return ResponseEntity.ok(yachtImageService.update(id, imageFile));
+        return ResponseEntity.ok(yachtImageService.update(id, dto, imageFile));
     }
 
     @DeleteMapping("/{id}")
