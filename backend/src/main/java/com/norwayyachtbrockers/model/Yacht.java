@@ -41,29 +41,29 @@ public class Yacht {
     @Column(name = "main_image_key", length = 40)
     private String mainImageKey;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "yacht_model_id")
     private YachtModel yachtModel;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "town_id")
     private Town town;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "yacht",
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "yacht",
             cascade = CascadeType.ALL, orphanRemoval = true
     )
     private Set<YachtImage> yachtImages = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JoinColumn(name = "yacht_detail_id", referencedColumnName = "id")
     private YachtDetail yachtDetail;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JoinColumn(name = "owner_info_id", referencedColumnName = "id")
     private OwnerInfo ownerInfo;
