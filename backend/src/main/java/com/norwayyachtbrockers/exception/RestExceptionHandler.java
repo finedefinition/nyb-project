@@ -4,6 +4,9 @@ import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +39,19 @@ public class RestExceptionHandler {
         error.setTimeStamp(LocalDateTime.now());
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        BindingResult bindingResult = ex.getBindingResult();
+
+        StringBuilder errorMessage = new StringBuilder();
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            errorMessage.append(fieldError.getField()).append(": ")
+                    .append(fieldError.getDefaultMessage()).append("; ");
+        }
+
+        return ResponseEntity.badRequest().body(errorMessage.toString());
     }
 
     @InitBinder

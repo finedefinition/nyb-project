@@ -2,9 +2,9 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.model.ContactForm;
 import com.norwayyachtbrockers.service.EmailService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ public class ContactController {
     }
 
     @PostMapping
-    public ResponseEntity<String> sendContactMessage(@RequestBody ContactForm contactForm) {
+    public ResponseEntity<String> sendContactMessage(@Valid @RequestBody ContactForm contactForm) {
         boolean sent = emailService.sendSimpleMessage(
                 contactForm.getUserEmail(),
                 "New contact message from: " + contactForm.getUserEmail(),
