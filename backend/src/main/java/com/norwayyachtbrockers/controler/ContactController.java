@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/contact")
 public class ContactController {
@@ -24,7 +23,7 @@ public class ContactController {
     @PostMapping
     public ResponseEntity<String> sendContactMessage(@RequestBody ContactForm contactForm) {
         boolean sent = emailService.sendSimpleMessage(
-                "sergiibezrukov@gmail.com",
+                contactForm.getUserEmail(),
                 "New contact message from: " + contactForm.getUserEmail(),
                 contactForm.getMessage()
         );

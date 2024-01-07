@@ -15,11 +15,15 @@ public class EmailServiceImpl implements EmailService {
         this.emailSender = emailSender;
     }
 
-    public boolean sendSimpleMessage(String to, String subject, String text) {
+    public boolean sendSimpleMessage(String userEmailAddress, String subject, String text) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("yourEmail@gmail.com");
-            message.setTo(to);
+            message.setFrom(userEmailAddress); // User's email address as the sender
+
+            // Predefined list of recipients
+            String[] toAddresses = {"sergiibezrukov@gmail.com", "qwertyblack@protonmail.com"};
+            message.setTo(toAddresses);
+
             message.setSubject(subject);
             message.setText(text);
             emailSender.send(message);
