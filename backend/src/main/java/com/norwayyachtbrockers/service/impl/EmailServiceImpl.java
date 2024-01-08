@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.service.EmailService;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +22,9 @@ public class EmailServiceImpl implements EmailService {
             message.setFrom(userEmailAddress); // User's email address as the sender
 
             // Predefined list of recipients
-            String[] toAddresses = {"sergiibezrukov@gmail.com", "natali.kapii777@gmail.com"};
+            String[] toAddresses = {"sergiibezrukov@gmail.com",
+                    "natali.kapii777@gmail.com"
+            };
             message.setTo(toAddresses);
 
             message.setSubject(subject);
@@ -29,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
             emailSender.send(message);
             return true;
         } catch (MailException exception) {
-            exception.printStackTrace();
+            System.err.println("Error sending email: " + exception.getMessage());
             return false;
         }
     }

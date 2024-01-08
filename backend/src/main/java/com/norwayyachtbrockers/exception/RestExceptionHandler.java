@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,6 +53,18 @@ public class RestExceptionHandler {
         }
 
         return ResponseEntity.badRequest().body(errorMessage.toString());
+    }
+
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<AppEntityErrorResponse> handleMailSendException(MailSendException exc) {
+        AppEntityErrorResponse error = new AppEntityErrorResponse();
+
+        error.setStatus(HttpStatus.SERVICE_UNAVAILABLE.value());
+        error.setMessage("Error sending email: " + exc.getMessage());
+        error.setException(exc.getClass().getSimpleName());
+        error.setTimeStamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @InitBinder
