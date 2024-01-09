@@ -24,7 +24,16 @@ public class VesselShortResponseDto {
     private String model;
 
     @JsonProperty("vessel_price")
-    private BigDecimal price;
+    private String price;
+
+    @JsonProperty("vessel_price_USD")
+    private String priceUSD;
+
+    @JsonProperty("vessel_price_GBP")
+    private String priceGBP;
+
+    @JsonProperty("vessel_price_NOK")
+    private String priceNOK;
 
     @JsonProperty("vessel_year")
     private int year;
