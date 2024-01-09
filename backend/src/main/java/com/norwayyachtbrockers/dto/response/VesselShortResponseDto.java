@@ -23,7 +23,7 @@ public class VesselShortResponseDto {
     @JsonProperty("vessel_model")
     private String model;
 
-    @JsonProperty("vessel_price")
+    @JsonProperty("vessel_price_EUR")
     private String price;
 
     @JsonProperty("vessel_price_USD")
