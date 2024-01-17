@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.norwayyachtbrockers.dto.mapper.VesselMapper;
 import com.norwayyachtbrockers.dto.mapper.VesselShortMapper;
 import com.norwayyachtbrockers.dto.request.VesselRequestDto;
+import com.norwayyachtbrockers.dto.response.VesselResponseDto;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.service.VesselService;
@@ -39,14 +40,14 @@ public class VesselController {
     }
 
     @GetMapping("/{vesselId}")
-    public ResponseEntity<Vessel> getVesselById(@PathVariable Long vesselId) {
-        Vessel vessel = vesselService.findById(vesselId);
+    public ResponseEntity<VesselResponseDto> getVesselById(@PathVariable Long vesselId) {
+        VesselResponseDto vessel = vesselService.findById(vesselId);
         return ResponseEntity.ok(vessel);
     }
 
     @GetMapping
-    public ResponseEntity<List<Vessel>> getAllVessels() {
-        List<Vessel> vessels = vesselService.findAll();
+    public ResponseEntity<List<VesselResponseDto>> getAllVessels() {
+        List<VesselResponseDto> vessels = vesselService.findAll();
 
         if (vessels.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
@@ -95,10 +96,10 @@ public class VesselController {
 
     @GetMapping("/cards")
     public ResponseEntity<List<VesselShortResponseDto>> findAllShortVesselCards() {
-        List<Vessel> vessels = vesselService.findAll();
+        List<VesselResponseDto> vessels = vesselService.findAll();
 
         List<VesselShortResponseDto> vesselShortResponseDtoList = vessels.stream()
-                .map(vesselShortMapper::toVesselShortResponseDto)
+                .map(vesselMapper::toVesselShortResponseDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(vesselShortResponseDtoList);

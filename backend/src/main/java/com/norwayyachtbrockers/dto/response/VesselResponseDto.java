@@ -2,9 +2,11 @@ package com.norwayyachtbrockers.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
-public class VesselShortResponseDto {
+public class VesselResponseDto {
 
     @JsonProperty("vessel_id")
     private Long id;
@@ -38,6 +40,36 @@ public class VesselShortResponseDto {
 
     @JsonProperty("vessel_town")
     private String state;
+
+    @JsonProperty("vessel_loa")
+    private BigDecimal vesselLengthOverall;
+
+    @JsonProperty("vessel_beam")
+    private BigDecimal vesselBeam;
+
+    @JsonProperty("vessel_draft")
+    private BigDecimal vesselDraft;
+
+    @JsonProperty("vessel_cabin")
+    private int vesselCabin;
+
+    @JsonProperty("vessel_berth")
+    private int vesselBerth;
+
+    @JsonProperty("vessel_fuel_type")
+    private String fuelType;
+
+    @JsonProperty("vessel_keel_type")
+    private String keelType;
+
+    @JsonProperty("vessel_engine")
+    private int engineQuantity;
+
+    @JsonProperty("vessel_description")
+    private String vesselDescription;
+
+    @JsonProperty("vessel_created_at")
+    private LocalDateTime createdAt;
 
     @JsonProperty("vessel_image_key")
     private String imageUrl;

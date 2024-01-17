@@ -4,18 +4,23 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.norwayyachtbrockers.dto.mapper.VesselMapper;
 import com.norwayyachtbrockers.dto.request.VesselRequestDto;
+import com.norwayyachtbrockers.dto.response.VesselResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
+import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.VesselRepository;
 import com.norwayyachtbrockers.service.VesselService;
+import com.norwayyachtbrockers.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class VesselServiceImpl implements VesselService {
@@ -37,15 +42,17 @@ public class VesselServiceImpl implements VesselService {
 
     @Transactional
     @Override
-    public Vessel findById(Long vesselId) {
-        return vesselRepository.findById(vesselId)
-                .orElseThrow(() -> new AppEntityNotFoundException(String
-                        .format("Cannot find the vessel with ID: %d", vesselId)));
+    public VesselResponseDto findById(Long vesselId) {
+        Vessel vessel = EntityUtils.findEntityOrThrow(vesselId, vesselRepository, "Vessel");
+        return vesselMapper.toVesselResponseDto(vessel);
     }
 
     @Override
-    public List<Vessel> findAll() {
-        return vesselRepository.findAll();
+    public List<VesselResponseDto> findAll() {
+        return vesselRepository.findAll().stream()
+                .sorted(Comparator.comparing(Vessel::getId))
+                .map(vesselMapper::toVesselResponseDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
