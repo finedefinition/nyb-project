@@ -3,14 +3,15 @@ package com.norwayyachtbrockers.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
+import jakarta.persistence.EntityListeners;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.math.BigDecimal;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class VesselRequestDto {
 
     @JsonProperty("featured")
