@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableJpaRepositories
 @EnableScheduling
-//@PropertySource("file:${user.dir}/.env")
+@PropertySource("file:${user.dir}/.env")
 @OpenAPIDefinition(
         info = @Info(
                 title = "Norse Yacht Co. REST API Documentation",
