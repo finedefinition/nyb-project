@@ -41,10 +41,10 @@ public class Vessel {
     @JsonProperty("featured")
     private boolean featuredVessel;
 
-    @NotNull(message = "Make is required")
-    @Size(min = 3, message = "Make must be at least 3 characters long")
-    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Make must start with a capital "
-            + "letter and can consist of letters, spaces, and hyphens")
+    @NotNull(message = "Make is required.")
+    @Size(min = 3, message = "Make must be at least 3 characters long.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Make must start with a capital letter and can include" +
+            " letters, spaces, and hyphens.")
     @Column(name = "make", nullable = false)
     @JsonProperty("vessel_make")
     private String vesselMake;
@@ -56,57 +56,55 @@ public class Vessel {
     private String vesselModel;
 
     @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be a positive value.")
     @Column(name = "price", nullable = false)
     @JsonProperty("vessel_price")
     private BigDecimal vesselPrice;
 
-    @Min(value = 1900, message = "Year must be later than 1900")
-    @Max(value = 2100, message = "Year must be earlier than 2100")
+    @Min(value = 1900, message = "Year must be no earlier than 1900.")
+    @Max(value = 2100, message = "Year must be no later than 2100.")
     @Column(name = "year", nullable = false)
     @JsonProperty("vessel_year")
     private int vesselYear;
 
-    @NotNull(message = "Location country is required")
-    @Size(min = 1, message = "Location country cannot be empty")
-    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location country start with a capital"
-            + " letter and consist of only letters")
+    @NotNull(message = "Country is required.")
+    @Size(min = 3, message = "Country must be at least 3 characters long.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Country must start with a capital letter and only contain letters.")
     @Column(name = "location_country", nullable = false)
     @JsonProperty("vessel_country")
     private String vesselLocationCountry;
 
-    @NotNull(message = "Location state is required")
-    @Size(min = 1, message = "Location state cannot be empty")
-    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location state must start with a capital"
-            + " letter and consist of only letters")
+    @NotNull(message = "Town is required.")
+    @Size(min = 3, message = "Town must be at least 3 characters long.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Country must start with a capital letter and only contain letters.")
     @Column(name = "location_state", nullable = false)
     @JsonProperty("vessel_town")
     private String vesselLocationState;
 
     @NotNull(message = "Length overall is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Length overall must be greater than 0")
+    @DecimalMin(value = "0.0", inclusive = false, message = "LOA must be a positive value.")
     @Column(name = "loa", precision = 6, scale = 2, nullable = false)
     @JsonProperty("vessel_loa")
     private BigDecimal vesselLengthOverall;
 
     @NotNull(message = "Beam is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Beam must be greater than 0")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Beam must be a positive value.")
     @Column(name = "beam", precision = 6, scale = 2, nullable = false)
     @JsonProperty("vessel_beam")
     private BigDecimal vesselBeam;
 
     @NotNull(message = "Draft is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Draft must be greater than 0")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Draft must be a positive value.")
     @Column(name = "draft", precision = 6, scale = 2, nullable = false)
     @JsonProperty("vessel_draft")
     private BigDecimal vesselDraft;
 
-    @Min(value = 0, message = "Number of cabins must be non-negative")
+    @Min(value = 0, message = "Cabin count must be zero or positive.")
     @Column(name = "cabin", nullable = false)
     @JsonProperty("vessel_cabin")
     private int vesselCabin;
 
-    @Min(value = 0, message = "Number of berths must be non-negative")
+    @Min(value = 0, message = "Berth count must be zero or positive.")
     @Column(name = "berth", nullable = false)
     @JsonProperty("vessel_berth")
     private int vesselBerth;
@@ -121,13 +119,13 @@ public class Vessel {
     @JsonProperty("vessel_keel_type")
     private KeelType keelType;
 
-    @Min(value = 0, message = "Number of engines must be non-negative")
+    @Min(value = 0, message = "Engine count must be zero or positive.")
     @Column(name = "engines", nullable = false)
     @JsonProperty("vessel_engine")
     private int engineQuantity;
 
     @NotNull(message = "Description is required")
-    @Size(min = 1, message = "Description cannot be empty")
+    @Size(min = 4, max = 5000, message = "Description must be between 4 and 5000 characters.")
     @Column(name = "description", nullable = false)
     @JsonProperty("vessel_description")
     private String vesselDescription;
