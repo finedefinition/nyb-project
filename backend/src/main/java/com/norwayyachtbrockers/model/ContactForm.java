@@ -11,6 +11,10 @@ public class ContactForm {
     @Email(message = "Invalid email format")
     private String userEmail;
 
+    @NotBlank(message = "Name cannot be empty")
+    @Size(max = 30, message = "Name cannot exceed 30 characters")
+    private String name;
+
     @NotBlank(message = "Message cannot be empty")
     @Size(max = 5000, message = "Message cannot exceed 5000 characters")
     private String message;

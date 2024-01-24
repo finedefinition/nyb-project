@@ -28,6 +28,7 @@ public class ContactController {
     public ResponseEntity<String> sendContactMessage(@Valid @RequestBody ContactForm contactForm) {
         boolean sent = emailService.sendSimpleMessage(
                 contactForm.getUserEmail(),
+                contactForm.getName(),
                 "New contact message from: " + contactForm.getUserEmail(),
                 contactForm.getMessage()
         );
