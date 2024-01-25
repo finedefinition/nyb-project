@@ -49,7 +49,7 @@ public class RestExceptionHandler {
         StringBuilder errorMessage = new StringBuilder();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             errorMessage.append(fieldError.getField()).append(": ")
-                    .append(fieldError.getDefaultMessage()).append("; ");
+                    .append(fieldError.getDefaultMessage());
         }
 
         return ResponseEntity.badRequest().body(errorMessage.toString());

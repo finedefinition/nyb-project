@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 public class YachtImageRequestDto {
 
-    @NotNull(message = "Yacht ID cannot be null")
-    @Positive(message = "Yacht ID must be a positive number")
     @JsonProperty("yacht_id")
+    @NotNull(message = "Yacht ID cannot be null.")
+    @Positive(message = "Yacht ID must be a positive number.")
     private Long yachtId;
 }
