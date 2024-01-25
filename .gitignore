@@ -40,7 +40,8 @@ target/
 
 ### Custom ###
 .env
+.env.local
 backend/.env
 /backend/src/main/resources/liquibase.properties
-
+/backend/src/main/resources/liquibase.properties.local
 
