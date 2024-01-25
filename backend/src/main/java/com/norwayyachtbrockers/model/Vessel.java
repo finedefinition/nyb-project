@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.norwayyachtbrockers.constants.ApplicationConstants;
 import com.norwayyachtbrockers.model.enums.FuelType;
 import com.norwayyachtbrockers.model.enums.KeelType;
 import jakarta.persistence.Column;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -33,111 +35,116 @@ import java.time.LocalDateTime;
 public class Vessel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("vessel_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "featured", nullable = false)
     @JsonProperty("featured")
+    @Column(name = "featured", nullable = false)
     private boolean featuredVessel;
 
-    @NotNull(message = "Make is required")
-    @Size(min = 3, message = "Make must be at least 3 characters long")
-    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Make must start with a capital "
-            + "letter and can consist of letters, spaces, and hyphens")
-    @Column(name = "make", nullable = false)
     @JsonProperty("vessel_make")
+    @NotNull(message = "Make is required.")
+    @Size(min = 3,max = 30, message = "Make must be at least 3 characters long and less than 30 characters.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Make must start with a capital letter and can include" +
+            " letters, spaces, and hyphens.")
+    @Column(name = "make", nullable = false)
     private String vesselMake;
 
-    @NotNull(message = "Model is required")
-    @Size(min = 1, message = "Model cannot be empty")
-    @Column(name = "model", nullable = false)
     @JsonProperty("vessel_model")
+    @NotNull(message = "Model is required.")
+    @Size(min=1, max = 30, message="Model must be at least 1 characters long and less than 30 characters.")
+    @Column(name = "model", nullable = false)
     private String vesselModel;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    @Column(name = "price", nullable = false)
     @JsonProperty("vessel_price")
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be a positive value.")
+    @DecimalMax(value = "5000000", message = "Price must not exceed 5 000 000 euro.")
+    @Column(name = "price", nullable = false)
     private BigDecimal vesselPrice;
 
-    @Min(value = 1900, message = "Year must be later than 1900")
-    @Max(value = 2100, message = "Year must be earlier than 2100")
-    @Column(name = "year", nullable = false)
     @JsonProperty("vessel_year")
+    @NotNull(message = "Year is required")
+    @Min(value = 1930, message = "Year must be no earlier than 1930.")
+    @Max(value = ApplicationConstants.NEXT_YEAR,
+            message = "Year must be no later than " + ApplicationConstants.NEXT_YEAR)
+    @Column(name = "year", nullable = false)
     private int vesselYear;
 
-    @NotNull(message = "Location country is required")
-    @Size(min = 1, message = "Location country cannot be empty")
-    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location country start with a capital"
-            + " letter and consist of only letters")
-    @Column(name = "location_country", nullable = false)
     @JsonProperty("vessel_country")
+    @NotNull(message = "Country is required.")
+    @Size(min = 3, max = 20, message = "Country must be at least 3 characters long and less than 20 characters.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Country must start with a capital letter and only contain letters.")
+    @Column(name = "location_country", nullable = false)
     private String vesselLocationCountry;
 
-    @NotNull(message = "Location state is required")
-    @Size(min = 1, message = "Location state cannot be empty")
-    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Location state must start with a capital"
-            + " letter and consist of only letters")
-    @Column(name = "location_state", nullable = false)
     @JsonProperty("vessel_town")
+    @NotNull(message = "Town is required.")
+    @Size(min = 3, max = 30, message = "Town must be at least 3 characters long and less than 30 characters.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Country must start with a capital letter and only contain letters.")
+    @Column(name = "location_state", nullable = false)
     private String vesselLocationState;
 
-    @NotNull(message = "Length overall is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Length overall must be greater than 0")
-    @Column(name = "loa", precision = 6, scale = 2, nullable = false)
     @JsonProperty("vessel_loa")
+    @NotNull(message = "Length overall is required.")
+    @DecimalMin(value = "2.5", message = "Length overall must be at least 2.5 meters.")
+    @DecimalMax(value = "300", message = "Length overall must not exceed 300 meters.")
     private BigDecimal vesselLengthOverall;
 
-    @NotNull(message = "Beam is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Beam must be greater than 0")
-    @Column(name = "beam", precision = 6, scale = 2, nullable = false)
     @JsonProperty("vessel_beam")
+    @NotNull(message="Beam width is required.")
+    @DecimalMin(value = "1", message = "Beam width must be at least 1 meter.")
+    @DecimalMax(value = "25", message = "Beam width must not exceed 25 meters.")
+    @Column(name = "beam", precision = 6, scale = 2, nullable = false)
     private BigDecimal vesselBeam;
 
-    @NotNull(message = "Draft is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Draft must be greater than 0")
-    @Column(name = "draft", precision = 6, scale = 2, nullable = false)
     @JsonProperty("vessel_draft")
+    @NotNull(message = "Draft is required.")
+    @DecimalMin(value = "0.3", message = "Draft depth must be at least 0.3 meter.")
+    @DecimalMax(value = "16", message = "Draft depth must not exceed 16 meters.")
+    @Column(name = "draft", precision = 6, scale = 2, nullable = false)
     private BigDecimal vesselDraft;
 
-    @Min(value = 0, message = "Number of cabins must be non-negative")
-    @Column(name = "cabin", nullable = false)
     @JsonProperty("vessel_cabin")
+    @Min(value = 0, message = "Cabin count must be a non-negative number.")
+    @Max(value = 10, message = "Cabin count must not exceed 10. Please provide a valid number of cabins.")
+    @Column(name = "cabin", nullable = false)
     private int vesselCabin;
 
-    @Min(value = 0, message = "Number of berths must be non-negative")
-    @Column(name = "berth", nullable = false)
     @JsonProperty("vessel_berth")
+    @Min(value = 0, message = "Berth count must be a non-negative number.")
+    @Max(value = 20, message = "Berth count must not exceed 20. Please provide a valid number of berths.")
+    @Column(name = "berth", nullable = false)
     private int vesselBerth;
 
-    @Column(name = "fuel", nullable = true)
-    @Enumerated(EnumType.STRING)
     @JsonProperty("vessel_fuel_type")
+    @Column(name = "fuel")
+    @Enumerated(EnumType.STRING)
     private FuelType fuelType;
 
-    @Column(name = "keel", nullable = true)
-    @Enumerated(EnumType.STRING)
     @JsonProperty("vessel_keel_type")
+    @Column(name = "keel")
+    @Enumerated(EnumType.STRING)
     private KeelType keelType;
 
-    @Min(value = 0, message = "Number of engines must be non-negative")
-    @Column(name = "engines", nullable = false)
     @JsonProperty("vessel_engine")
+    @Min(value = 0, message = "Engine count must be zero or positive.")
+    @Column(name = "engines", nullable = false)
     private int engineQuantity;
 
-    @NotNull(message = "Description is required")
-    @Size(min = 1, message = "Description cannot be empty")
-    @Column(name = "description", nullable = false)
     @JsonProperty("vessel_description")
+    @NotNull(message = "Description is required")
+    @Size(min = 4, max = 5000, message = "Description must be between 4 and 5000 characters.")
+    @Column(name = "description", nullable = false)
     private String vesselDescription;
 
-    @Column(name = "created_at", nullable = false)
     @JsonProperty("vessel_created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "image_key", nullable = false)
     @JsonProperty("vessel_image_key")
+    @Column(name = "image_key", nullable = false)
     private String imageKey;
 
     public Vessel() {

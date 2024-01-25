@@ -1,11 +1,13 @@
 package com.norwayyachtbrockers.constants;
 
+import java.time.LocalDateTime;
+
 public class ApplicationConstants {
     private ApplicationConstants() {
         // restrict instantiation
     }
 
-
+    public static final int NEXT_YEAR = 2025;
     public static final String  STATUS_201 = "201";
     public static final String  MESSAGE_201 = "Account created successfully";
     public static final String  STATUS_200 = "200";
