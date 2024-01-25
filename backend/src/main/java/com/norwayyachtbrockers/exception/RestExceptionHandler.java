@@ -49,16 +49,13 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
-
-        StringBuilder errorMessage = new StringBuilder();
+        List<ExceptionMessageDto> response = new ArrayList<>();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            errorMessage.append(fieldError.getField()).append(": ")
-                    .append(fieldError.getDefaultMessage()).append("; ");
+            response.add(new ExceptionMessageDto(fieldError.getDefaultMessage()));
         }
-
-        return ResponseEntity.badRequest().body(errorMessage.toString());
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

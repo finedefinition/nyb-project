@@ -7,6 +7,8 @@ import com.norwayyachtbrockers.dto.response.VesselResponseDto;
 import com.norwayyachtbrockers.dto.response.VesselShortResponseDto;
 import com.norwayyachtbrockers.model.Vessel;
 import com.norwayyachtbrockers.service.VesselService;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/vessels")
