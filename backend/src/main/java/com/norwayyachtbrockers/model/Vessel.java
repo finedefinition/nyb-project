@@ -90,6 +90,7 @@ public class Vessel {
     @NotNull(message = "Length overall is required.")
     @DecimalMin(value = "2.5", message = "Length overall must be at least 2.5 meters.")
     @DecimalMax(value = "300", message = "Length overall must not exceed 300 meters.")
+    @Column(name = "loa", precision = 6, scale = 2, nullable = false)
     private BigDecimal vesselLengthOverall;
 
     @JsonProperty("vessel_beam")
