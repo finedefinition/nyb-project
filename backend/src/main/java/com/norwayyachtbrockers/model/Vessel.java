@@ -82,7 +82,7 @@ public class Vessel {
     @JsonProperty("vessel_town")
     @NotNull(message = "Town is required.")
     @Size(min = 3, max = 30, message = "Town must be at least 3 characters long and less than 30 characters.")
-    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Country must start with a capital letter and only contain letters.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z]*$", message = "Town must start with a capital letter and only contain letters.")
     @Column(name = "location_state", nullable = false)
     private String vesselLocationState;
 
