@@ -58,7 +58,6 @@ public class VesselServiceImpl implements VesselService {
     @Transactional
     @Override
     public Vessel save(Vessel vessel, MultipartFile imageFile) {
-        vessel.setCreatedAt(LocalDateTime.now());
         setImageKeyForVessel(vessel, imageFile);
         return vesselRepository.save(vessel);
     }

@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "vessels")
 @EntityListeners(AuditingEntityListener.class)
-public class Vessel {
+public class Vessel  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -132,10 +132,6 @@ public class Vessel {
     @JsonProperty("vessel_description")
     private String vesselDescription;
 
-    @Column(name = "created_at", nullable = false)
-    @JsonProperty("vessel_created_at")
-    private LocalDateTime createdAt;
-
     @Column(name = "image_key", nullable = false)
     @JsonProperty("vessel_image_key")
     private String imageKey;
@@ -147,7 +143,7 @@ public class Vessel {
                   int vesselYear, String vesselLocationCountry, String vesselLocationState,
                   BigDecimal vesselLengthOverall, BigDecimal vesselBeam, BigDecimal vesselDraft, int vesselCabin,
                   int vesselBerth, KeelType keelType, FuelType fuelType,
-                  int engineQuantity, String vesselDescription, LocalDateTime createdAt, String imageKey) {
+                  int engineQuantity, String vesselDescription, String imageKey) {
         this.featuredVessel = featuredVessel;
         this.vesselMake = vesselMake;
         this.vesselModel = vesselModel;
@@ -164,7 +160,6 @@ public class Vessel {
         this.keelType = keelType;
         this.engineQuantity = engineQuantity;
         this.vesselDescription = vesselDescription;
-        this.createdAt = createdAt;
         this.imageKey = imageKey;
     }
 
@@ -302,14 +297,6 @@ public class Vessel {
 
     public void setVesselDescription(String vesselDescription) {
         this.vesselDescription = vesselDescription;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public String getImageKey() {
