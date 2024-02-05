@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonPropertyOrder({"yacht_detail_id"})
-public class YachtDetail {
+public class YachtDetail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

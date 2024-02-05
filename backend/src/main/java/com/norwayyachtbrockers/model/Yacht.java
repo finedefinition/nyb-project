@@ -23,7 +23,7 @@ import java.util.Set;
 @Table(name = "yachts")
 @Getter
 @Setter
-public class Yacht {
+public class Yacht extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,15 +68,12 @@ public class Yacht {
     @JoinColumn(name = "owner_info_id", referencedColumnName = "id")
     private OwnerInfo ownerInfo;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
     public Yacht() {
     }
 
     public Yacht(boolean featured, BigDecimal price, String mainImageKey,
                  YachtModel yachtModel, Country country, Town town,
-                 Set<YachtImage> yachtImages, YachtDetail yachtDetail, OwnerInfo ownerInfo, LocalDateTime createdAt) {
+                 Set<YachtImage> yachtImages, YachtDetail yachtDetail, OwnerInfo ownerInfo) {
         this.featured = featured;
         this.price = price;
         this.mainImageKey = mainImageKey;
@@ -86,7 +83,6 @@ public class Yacht {
         this.yachtImages = yachtImages;
         this.yachtDetail = yachtDetail;
         this.ownerInfo = ownerInfo;
-        this.createdAt = createdAt;
     }
 
     public void setYachtModel(YachtModel yachtModel) {

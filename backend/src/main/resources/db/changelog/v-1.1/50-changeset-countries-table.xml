@@ -13,6 +13,13 @@
                  splitStatements="true"
                  stripComments="true"
                  path="50-create-countries-table.sql"/>
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 endDelimiter="\nGO"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"
+                 path="170-add-created_updated-columns.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"

@@ -24,7 +24,7 @@ import java.util.Set;
         uniqueConstraints = { @UniqueConstraint(columnNames = {"make", "model", "year"})})
 @JsonPropertyOrder({ "yacht_model_id", "make", "model", "year",
         "lengthOverall", "beamWidth", "draftDepth", "fuelType", "keelType" })
-public class YachtModel {
+public class YachtModel extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -17,7 +17,16 @@
     <include file="110-changeset-yachts-table.xml" relativeToChangelogFile="true" />
     <include file="80-changeset-yacht_images-table.xml" relativeToChangelogFile="true" />
     <include file="120-changeset-vat_included-column.xml" relativeToChangelogFile="true" />
-<!--    <include file="130-changeset-create_update.xml" relativeToChangelogFile="true" />-->
-
+    <include file="130-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="140-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="150-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="160-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="170-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="180-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="190-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="200-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="210-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="220-changeset-create_update.xml" relativeToChangelogFile="true" />
+    <include file="230-changeset-create_update.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

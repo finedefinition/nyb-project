@@ -23,7 +23,7 @@ import java.util.Set;
 @JsonPropertyOrder({ "country_id", "country_name" })
 @Getter
 @Setter
-public class Country {
+public class Country extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -22,7 +22,7 @@ import java.util.Set;
 @JsonPropertyOrder({ "keel_type_id", "keel_type_name" })
 @Getter
 @Setter
-public class Keel {
+public class Keel extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("keel_type_id")

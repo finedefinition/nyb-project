@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "vessels")
 @EntityListeners(AuditingEntityListener.class)
-public class Vessel  extends BaseEntity {
+public class Vessel extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

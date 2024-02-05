@@ -37,7 +37,6 @@ public class YachtServiceImpl implements YachtService {
                                  List<MultipartFile> additionalImageFiles) {
         // Convert DTO to Yacht entity
         Yacht yacht = yachtMapper.convertToYacht(dto);
-        yacht.setCreatedAt(LocalDateTime.now());
 
         // Upload and set the main image key if it's provided
         if (mainImageFile != null && !mainImageFile.isEmpty()) {
@@ -59,7 +58,6 @@ public class YachtServiceImpl implements YachtService {
     public YachtResponseDto save(YachtRequestDto dto, MultipartFile imageFile) {
 
         Yacht yacht = yachtMapper.convertToYacht(dto);
-        yacht.setCreatedAt(LocalDateTime.now());
         setImageKeyForVessel(yacht, imageFile);
         yachtRepository.save(yacht);
 

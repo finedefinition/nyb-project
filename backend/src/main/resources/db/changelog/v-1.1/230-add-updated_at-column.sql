@@ -1,0 +1,3 @@
+ALTER TABLE `yachts`
+ADD COLUMN `updated_at` DATETIME DEFAULT NULL
+GO

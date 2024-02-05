@@ -12,6 +12,12 @@
                  splitStatements="true"
                  stripComments="true"
                  path="110-create-yachts-table.sql"/>
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"
+                 path="230-add-updated_at-column.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"
