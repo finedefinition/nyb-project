@@ -5,20 +5,20 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="210" author="liubomyr_stepanenko">
+    <changeSet id="130" author="liubomyr_stepanenko">
         <sqlFile dbms="mysql"
                  encoding="utf8"
                  relativeToChangelogFile="true"
                  splitStatements="true"
                  stripComments="true"
-                 path="210-add-created_updated-columns.sql"/>
+                 path="130-add-created_updated-columns-for-all-tables.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"
                      relativeToChangelogFile="true"
                      splitStatements="true"
                      stripComments="true"
-                     path="210-drop-created_updated-columns.sql"/>
+                     path="130-drop-created_updated-columns-for-all-tables.sql"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

@@ -12,12 +12,6 @@
                  splitStatements="true"
                  stripComments="true"
                  path="90-create-owner_infos-table.sql"/>
-        <sqlFile dbms="mysql"
-                 encoding="utf8"
-                 relativeToChangelogFile="true"
-                 splitStatements="true"
-                 stripComments="true"
-                 path="210-add-created_updated-columns.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"

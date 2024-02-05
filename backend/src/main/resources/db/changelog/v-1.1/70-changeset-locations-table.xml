@@ -13,13 +13,6 @@
                  splitStatements="true"
                  stripComments="true"
                  path="70-create-locations-table.sql"/>
-        <sqlFile dbms="mysql"
-                 encoding="utf8"
-                 endDelimiter="\nGO"
-                 relativeToChangelogFile="true"
-                 splitStatements="true"
-                 stripComments="true"
-                 path="190-add-created_updated-columns.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"

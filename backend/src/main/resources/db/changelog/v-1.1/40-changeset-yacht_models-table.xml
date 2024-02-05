@@ -13,13 +13,6 @@
                  splitStatements="true"
                  stripComments="true"
                  path="40-create-yacht_models-table.sql"/>
-        <sqlFile dbms="mysql"
-                 encoding="utf8"
-                 endDelimiter="\nGO"
-                 relativeToChangelogFile="true"
-                 splitStatements="true"
-                 stripComments="true"
-                 path="160-add-created_updated-columns.sql"/>
         <rollback>
             <sqlFile dbms="mysql"
                      encoding="utf8"
