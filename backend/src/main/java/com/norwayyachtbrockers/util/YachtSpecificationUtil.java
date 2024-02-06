@@ -14,6 +14,15 @@ public class YachtSpecificationUtil {
         }
     }
 
+    public static <T> Specification<Yacht> getSpecificationOrElseThrow(T value, String model, String key, String keyParam) {
+        if (value != null) {
+            return (root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get(model).get(key).get(keyParam), value);
+        } else {
+            throw new IllegalArgumentException(String.format("Invalid parameter type for %s", key));
+        }
+    }
+
     public static <T extends Comparable<? super T>> Specification<Yacht>
     getSpecificationInRangeOrElseThrow(T[] range, String key, String keyParam) {
         if (range != null && range.length == 2) {
