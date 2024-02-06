@@ -14,30 +14,32 @@ public class OwnerInfoRequestDto {
 
     private Long id;
 
-    @NotNull(message="First name is required")
-    @Size(min=1, message="First name must be at least 1 characters long")
-    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "First name must start with a capital "
-            + "letter and can consist of letters, spaces, and hyphens")
-    @JsonDeserialize(using = TrimStringDeserializer.class)
     @JsonProperty("first_name")
+    @NotNull(message="First name is required.")
+    @Size(min = 1, message="First name must be at least 1 character long.")
+    @Size(max = 30, message="First name must not exceed 30 characters.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "First name must start with a capital "
+            + "letter and can include letters, spaces, and hyphens")
+    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String firstName;
 
-    @NotNull(message="Last name is required")
-    @Size(min=1, message="Last name must be at least 1 characters long")
-    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Last name must start with a capital "
-            + "letter and can consist of letters, spaces, and hyphens")
-    @JsonDeserialize(using = TrimStringDeserializer.class)
     @JsonProperty("last_name")
+    @NotNull(message="Last name is required.")
+    @Size(min=1, message="Last name must be at least 1 characters long.")
+    @Size(max=30, message="Last name must not exceed 30 characters.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Last name must start with a capital "
+            + "letter and can include letters, spaces, and hyphens")
+    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String lastName;
 
+    @JsonProperty("phone_number")
     @NotNull(message = "Telephone number is required")
     @Size(min = 7, max = 15, message = "Telephone number must be between 7 and 15 digits")
     @Pattern(regexp = "^[0-9]+$", message = "Telephone must consist of only numbers")
-    @JsonProperty("phone_number")
     private String telephone;
 
-    @NotNull(message = "Email is required")
-    @Email(message = "Email should be valid")
     @JsonProperty("e-mail")
+    @NotNull(message = "Email is required.")
+    @Email(message = "Please provide a valid email format.")
     private String email;
 }

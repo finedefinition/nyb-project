@@ -29,7 +29,8 @@ public class ContactController {
         boolean sent = emailService.sendSimpleMessage(
                 contactForm.getUserEmail(),
                 "New contact message from: " + contactForm.getUserEmail(),
-                contactForm.getMessage()
+                contactForm.getName(),
+                contactForm.getMessage() + "\n" + "From user: " + contactForm.getName()
         );
 
         if (sent) {

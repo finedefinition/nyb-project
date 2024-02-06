@@ -39,4 +39,5 @@ build/
 
 ### Custom ###
 #../.env
+src/main/resources/liquibase.properties.local
 
