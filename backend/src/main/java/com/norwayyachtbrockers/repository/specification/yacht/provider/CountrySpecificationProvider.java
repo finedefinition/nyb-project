@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.repository.specification.yacht.provider;
 
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationProvider;
+import com.norwayyachtbrockers.util.YachtSpecificationUtil;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +15,6 @@ public class CountrySpecificationProvider implements SpecificationProvider<Yacht
 
     @Override
     public Specification<Yacht> getSpecification(Object param) {
-        if (param instanceof String countryName) {
-            return (root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("country").get("name"), countryName);
-        } else {
-            throw new IllegalArgumentException("Invalid parameter type for country name");
-        }
+        return YachtSpecificationUtil.getSpecificationOrElseThrow(param, getKey(), "name");
     }
 }
