@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonPropertyOrder({"yacht_image_id"})
-public class YachtImage {
+public class YachtImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

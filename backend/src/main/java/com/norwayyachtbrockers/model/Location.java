@@ -15,7 +15,7 @@ import lombok.Setter;
 @Table(name = "locations")
 @Getter
 @Setter
-public class Location {
+public class Location extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

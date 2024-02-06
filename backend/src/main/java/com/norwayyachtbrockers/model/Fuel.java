@@ -23,7 +23,7 @@ import java.util.Set;
 @JsonPropertyOrder({ "fuel_type_id", "fuel_type_name"})
 @Getter
 @Setter
-public class Fuel {
+public class Fuel extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("fuel_type_id")

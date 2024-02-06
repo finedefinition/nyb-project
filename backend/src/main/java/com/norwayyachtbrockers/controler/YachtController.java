@@ -1,9 +1,11 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
+import com.norwayyachtbrockers.dto.request.YahctSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/yachts")
@@ -63,6 +63,11 @@ public class YachtController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
         return ResponseEntity.ok(yachts);
+    }
+
+    @GetMapping("/search")
+    public List<YachtResponseDto> searchYachts(YahctSearchParametersDto searchParameters) {
+        return yachtService.search(searchParameters);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
