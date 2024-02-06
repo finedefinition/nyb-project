@@ -15,6 +15,7 @@ public class KeelTypeSpecificationProvider implements SpecificationProvider<Yach
 
     @Override
     public Specification<Yacht> getSpecification(Object param) {
-        return YachtSpecificationUtil.getSpecificationOrElseThrow(param, getKey(), "name");
+        return YachtSpecificationUtil.getSpecificationOrElseThrow(param,
+                "yachtModel", getKey(), "name");
     }
 }
