@@ -1,4 +1,0 @@
-url=jdbc:mysql://localhost:3306/nyb
-username=root
-password=12345678
-changeLogFile=/db/changelog/db.changelog-master.xml

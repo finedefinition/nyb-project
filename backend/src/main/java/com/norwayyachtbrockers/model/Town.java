@@ -21,7 +21,7 @@ import java.util.Set;
 @Table(name = "towns", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "country_id"})})
 @Getter
 @Setter
-public class Town {
+public class Town extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
