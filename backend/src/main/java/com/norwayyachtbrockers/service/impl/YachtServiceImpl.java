@@ -2,32 +2,36 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.YachtMapper;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
+import com.norwayyachtbrockers.dto.request.YahctSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.repository.YachtRepository;
+import com.norwayyachtbrockers.repository.specification.yacht.YachtSpecificationBuilder;
 import com.norwayyachtbrockers.service.YachtService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import com.norwayyachtbrockers.util.S3ImageService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class YachtServiceImpl implements YachtService {
 
     private final YachtRepository yachtRepository;
-
     private final YachtMapper yachtMapper;
+    private final YachtSpecificationBuilder yachtSpecificationBuilder;
     private final S3ImageService s3ImageService;
 
-    public YachtServiceImpl(YachtRepository yachtRepository, YachtMapper yachtMapper, S3ImageService s3ImageService) {
+    public YachtServiceImpl(YachtRepository yachtRepository, YachtMapper yachtMapper,
+                            YachtSpecificationBuilder yachtSpecificationBuilder, S3ImageService s3ImageService) {
         this.yachtRepository = yachtRepository;
         this.yachtMapper = yachtMapper;
+        this.yachtSpecificationBuilder = yachtSpecificationBuilder;
         this.s3ImageService = s3ImageService;
     }
 
@@ -76,6 +80,14 @@ public class YachtServiceImpl implements YachtService {
                 .sorted(Comparator.comparing(Yacht::getId))
                 .map(yachtMapper::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<YachtResponseDto> search(YahctSearchParametersDto searchParametersDto) {
+        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+        return yachtRepository.findAll(yachtSpecification).stream()
+                .map(yachtMapper::convertToDto)
+                .toList();
     }
 
     @Override
