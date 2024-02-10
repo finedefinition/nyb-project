@@ -18,5 +18,6 @@
     <include file="80-changeset-yacht_images-table.xml" relativeToChangelogFile="true" />
     <include file="120-changeset-vat_included-column.xml" relativeToChangelogFile="true" />
     <include file="130-changeset-create_update-columns-for-all-tables.xml" relativeToChangelogFile="true" />
+    <include file="140-changeset-drop_created_by_vessels.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

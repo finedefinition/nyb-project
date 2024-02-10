@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class VesselResponseDto {
@@ -73,5 +74,8 @@ public class VesselResponseDto {
 
     @JsonProperty("vessel_image_key")
     private String imageUrl;
+
+    @JsonProperty("vessel_images")
+    private List<VesselImageDto> vesselImages;
 
 }

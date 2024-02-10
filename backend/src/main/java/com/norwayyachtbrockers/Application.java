@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.config.server.EnableConfigServer;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaRepositories
 @EnableJpaAuditing
 @EnableScheduling
-//@PropertySource("file:${user.dir}/.env")
+@PropertySource("file:${user.dir}/.env")
 @OpenAPIDefinition(
         info = @Info(
                 title = "Norse Yacht Co. REST API Documentation",
@@ -37,6 +38,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
                 url = "https://www.norseyacht.com/swagger-ui.html"
         )
 )
+@EnableConfigServer
 public class Application {
 
     public static void main(String[] args) {

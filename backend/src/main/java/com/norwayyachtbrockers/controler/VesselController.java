@@ -56,14 +56,15 @@ public class VesselController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Vessel> createVessel(
+    public ResponseEntity<VesselResponseDto> createVessel(
             @RequestPart("vesselData") VesselRequestDto vesselData,
             @RequestPart("imageFile") MultipartFile imageFile
     ) {
         Vessel newVessel = new Vessel();
         vesselMapper.updateVesselFromDto(newVessel, vesselData);
         Vessel createdVessel = vesselService.save(newVessel, imageFile);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdVessel);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(vesselMapper.toVesselResponseDto(createdVessel));
     }
 
     @PutMapping(value = "/{vesselId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
