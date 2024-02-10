@@ -38,7 +38,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
                 url = "https://www.norseyacht.com/swagger-ui.html"
         )
 )
-@EnableConfigServer
+//@EnableConfigServer
 public class Application {
 
     public static void main(String[] args) {
