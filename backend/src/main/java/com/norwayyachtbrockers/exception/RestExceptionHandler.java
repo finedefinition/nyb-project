@@ -1,12 +1,15 @@
 package com.norwayyachtbrockers.exception;
 
+import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import com.norwayyachtbrockers.dto.response.ExceptionMessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
@@ -68,6 +71,12 @@ public class RestExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(UsernameExistsException.class)
+    protected ResponseEntity<Object> handleUsernameExistsException(UsernameExistsException ex) {
+        ExceptionMessageDto response = new ExceptionMessageDto(ex.getErrorMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
+
     @ExceptionHandler(MailSendException.class)
     public ResponseEntity<AppEntityErrorResponse> handleMailSendException(MailSendException exc) {
         AppEntityErrorResponse error = new AppEntityErrorResponse();
@@ -83,5 +92,13 @@ public class RestExceptionHandler {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }
+
+    private Map<String, Object> getConflictResponseBody(Exception ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.CONFLICT);
+        body.put("message", ex.getMessage());
+        return body;
     }
 }
