@@ -27,10 +27,11 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/api/auth/**", "/error", "/swagger-ui/**")
-                                .permitAll()
+                                // Explicitly permit public endpoints
+                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/api/auth/**", "/error", "/swagger-ui/**").authenticated()
                                 .anyRequest()
-                                .authenticated()
+                                .permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
@@ -41,6 +42,8 @@ public class SecurityConfig {
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .build();
     }
+
+
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
