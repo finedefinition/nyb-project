@@ -25,16 +25,19 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        auth -> auth
-                                .requestMatchers("/api/auth/**", "/error", "/swagger-ui/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        // Explicitly permit public endpoints
+                        .requestMatchers("/public/**", "/home", "/").permitAll()
+                        // Secure specific endpoints and require roles
+                        .requestMatchers("/secure/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/secure/api/user/**").hasRole("USER")
+                        // General rule for other secure paths
+                        .requestMatchers("/secure/api/**").authenticated()
+                        // Open up all other requests
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 .decoder(JwtDecoders.fromIssuerLocation(issuerUri))
