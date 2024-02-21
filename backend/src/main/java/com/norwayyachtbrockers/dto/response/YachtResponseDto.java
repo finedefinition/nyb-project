@@ -21,8 +21,17 @@ public class YachtResponseDto {
     @JsonProperty("yacht_vat")
     private boolean vatIncluded;
 
-    @JsonProperty("yacht_price")
-    private BigDecimal price;
+    @JsonProperty("yacht_price_EUR")
+    private String price;
+
+    @JsonProperty("yacht_price_USD")
+    private String priceUSD;
+
+    @JsonProperty("yacht_price_GBP")
+    private String priceGBP;
+
+    @JsonProperty("yacjt_price_NOK")
+    private String priceNOK;
 
     @JsonProperty("yacht_main_image_key")
     private String mainImageKey;
