@@ -30,7 +30,7 @@ public class YachtResponseDto {
     @JsonProperty("yacht_price_GBP")
     private String priceGBP;
 
-    @JsonProperty("yacjt_price_NOK")
+    @JsonProperty("yacht_price_NOK")
     private String priceNOK;
 
     @JsonProperty("yacht_main_image_key")
