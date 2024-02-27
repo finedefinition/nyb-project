@@ -27,9 +27,9 @@
 //                .cors(AbstractHttpConfigurer::disable)
 //                .authorizeHttpRequests(
 //                        auth -> auth
-////                                .requestMatchers("/api/auth/**", "/error", "/swagger-ui/**").authenticated()
-//                                .requestMatchers("/")
-//                                .permitAll()
+//                                // Explicitly permit public endpoints
+//                                .requestMatchers("/").permitAll()
+//                                .requestMatchers("/api/auth/**", "/error", "/swagger-ui/**").authenticated()
 //                                .anyRequest()
 //                                .permitAll()
 //                )
