@@ -1,5 +1,7 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.mapper.ContactFormMapper;
+import com.norwayyachtbrockers.dto.request.ContactFormRequestDto;
 import com.norwayyachtbrockers.model.ContactForm;
 import com.norwayyachtbrockers.service.EmailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,12 +22,17 @@ public class ContactController {
 
     private final EmailService emailService;
 
-    public ContactController(EmailService emailService) {
+    private final ContactFormMapper contactFormMapper;
+
+    public ContactController(EmailService emailService, ContactFormMapper contactFormMapper) {
         this.emailService = emailService;
+        this.contactFormMapper = contactFormMapper;
     }
 
     @PostMapping
-    public ResponseEntity<String> sendContactMessage(@Valid @RequestBody ContactForm contactForm) {
+    public ResponseEntity<String> sendContactMessage(@Valid @RequestBody ContactFormRequestDto dto) {
+
+        ContactForm contactForm =  contactFormMapper.createContactFormFromDto(dto);
         boolean sent = emailService.sendSimpleMessage(
                 contactForm.getUserEmail(),
                 "New contact message from: " + contactForm.getUserEmail(),

@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.exception;
 
-import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import com.norwayyachtbrockers.dto.response.ExceptionMessageDto;
 import jakarta.validation.ConstraintViolation;
@@ -71,11 +70,11 @@ public class RestExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(UsernameExistsException.class)
-    protected ResponseEntity<Object> handleUsernameExistsException(UsernameExistsException ex) {
-        ExceptionMessageDto response = new ExceptionMessageDto(ex.getErrorMessage());
-        return ResponseEntity.badRequest().body(response);
-    }
+//    @ExceptionHandler(UsernameExistsException.class)
+//    protected ResponseEntity<Object> handleUsernameExistsException(UsernameExistsException ex) {
+//        ExceptionMessageDto response = new ExceptionMessageDto(ex.getErrorMessage());
+//        return ResponseEntity.badRequest().body(response);
+//    }
 
     @ExceptionHandler(MailSendException.class)
     public ResponseEntity<AppEntityErrorResponse> handleMailSendException(MailSendException exc) {
