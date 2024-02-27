@@ -17,11 +17,8 @@ import java.math.RoundingMode;
 @Component
 public class YachtMapper {
     private final YachtModelService yachtModelService;
-
     private final TownService townService;
-
     private final CountryService countryService;
-
     private final YachtDetailService yachtDetailService;
 
     private final OwnerInfoService ownerInfoService;
@@ -42,7 +39,6 @@ public class YachtMapper {
     public void updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
         updateFields(yacht, dto);
     }
-
     public Yacht convertToYacht(YachtRequestDto dto) {
         Yacht yacht = new Yacht();
         updateFields(yacht, dto);
@@ -92,10 +88,8 @@ public class YachtMapper {
         dto.setEmail(yacht.getOwnerInfo().getEmail());
         // Created at
         dto.setCreatedAt(yacht.getCreatedAt());
-
         return dto;
     }
-
     private void updateFields(Yacht yacht, YachtRequestDto dto) {
         yacht.setFeatured(dto.isFeatured());
         yacht.setVatIncluded(dto.isVatIncluded());

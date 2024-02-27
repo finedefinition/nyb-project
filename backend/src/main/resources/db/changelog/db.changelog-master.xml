@@ -6,7 +6,7 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <preConditions>
-        <dbms type="mysql"/>
+        <dbms type="postgresql"/>
     </preConditions>
 
     <changeSet id="0" author="sergii_bezrukov">
@@ -14,10 +14,10 @@
     </changeSet>
 
     <!-- Include other changelog files if necessary -->
-    <include file="v-1.1/db.changelog-v.1.1.xml" relativeToChangelogFile="true"/>
+    <include file="v-2.0/db.changelog-v.2.0.xml" relativeToChangelogFile="true"/>
 
     <changeSet id="1" author="sergii_bezrukov">
-        <tagDatabase tag="v.1.1"/>
+        <tagDatabase tag="v.2.0"/>
     </changeSet>
 
 </databaseChangeLog>

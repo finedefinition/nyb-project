@@ -122,12 +122,10 @@
 <!--            <artifactId>aws-java-sdk-sts</artifactId>-->
 <!--            <version>1.12.656</version>-->
 <!--        </dependency>-->
-
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>8.1.0</version>
-            <scope>runtime</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

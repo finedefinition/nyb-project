@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="10-changeset-keel_types-table.xml" relativeToChangelogFile="true" />
+    <include file="20-changeset-insert_keel_types.xml" relativeToChangelogFile="true" />
+    <include file="30-changeset-fuel_types-table.xml" relativeToChangelogFile="true" />
+    <include file="40-changeset-insert_fuel_types.xml" relativeToChangelogFile="true" />
+    <include file="50-changeset-yacht_models-table.xml" relativeToChangelogFile="true" />
+    <include file="60-changeset-insert_yacht_models.xml" relativeToChangelogFile="true" />
+    <include file="70-changeset-countries-table.xml" relativeToChangelogFile="true" />
+    <include file="80-changeset-insert_countries.xml" relativeToChangelogFile="true" />
+    <include file="90-changeset-towns-table.xml" relativeToChangelogFile="true" />
+    <include file="100-changeset-insert_towns.xml" relativeToChangelogFile="true" />
+    <include file="110-changeset-owner_infos-table.xml" relativeToChangelogFile="true" />
+    <include file="120-changeset-insert-owner_infos.xml" relativeToChangelogFile="true" />
+    <include file="130-changeset-yacht_details-table.xml" relativeToChangelogFile="true" />
+    <include file="140-changeset-insert-yacht_details.xml" relativeToChangelogFile="true" />
+    <include file="150-changeset-yachts-table.xml" relativeToChangelogFile="true" />
+    <include file="160-changeset-insert-yachts.xml" relativeToChangelogFile="true" />
+    <include file="170-changeset-yacht_images-table.xml" relativeToChangelogFile="true" />
+</databaseChangeLog>
