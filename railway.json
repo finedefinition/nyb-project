@@ -5,7 +5,7 @@
   },
   "deploy": {
     "numReplicas": 1,
-    "startCommand": "java -Dserver.port=$PORT $JAVA_OPTS -jar backend/target/backend-1.0.jar",
+    "startCommand": "java -Dserver.port=$PORT $JAVA_OPTS -jar target/nyb-project-1.0.jar",
     "sleepApplication": false,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
