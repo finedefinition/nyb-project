@@ -8,14 +8,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +38,9 @@ public class Yacht extends BaseEntity {
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+
+    @Column(name = "price_old", precision = 10, scale = 2)
+    private BigDecimal priceOld;
 
     @Column(name = "main_image_key", length = 40)
     private String mainImageKey;
@@ -68,13 +72,19 @@ public class Yacht extends BaseEntity {
     @JoinColumn(name = "owner_info_id", referencedColumnName = "id")
     private OwnerInfo ownerInfo;
 
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favouriteYachts")
+    private Set<User> favouritedByUsers = new HashSet<>();
+
     public Yacht() {
     }
 
-    public Yacht(boolean featured, BigDecimal price, String mainImageKey,
-                 YachtModel yachtModel, Country country, Town town,
-                 Set<YachtImage> yachtImages, YachtDetail yachtDetail, OwnerInfo ownerInfo) {
+    public Yacht(Long id, boolean featured, boolean vatIncluded, BigDecimal price,
+                 String mainImageKey, YachtModel yachtModel, Country country,
+                 Town town, Set<YachtImage> yachtImages, YachtDetail yachtDetail,
+                 OwnerInfo ownerInfo, Set<User> favouritedByUsers) {
+        this.id = id;
         this.featured = featured;
+        this.vatIncluded = vatIncluded;
         this.price = price;
         this.mainImageKey = mainImageKey;
         this.yachtModel = yachtModel;
@@ -83,6 +93,17 @@ public class Yacht extends BaseEntity {
         this.yachtImages = yachtImages;
         this.yachtDetail = yachtDetail;
         this.ownerInfo = ownerInfo;
+        this.favouritedByUsers = favouritedByUsers;
+    }
+
+    public void addFavouritedByUser(User user) {
+        favouritedByUsers.add(user);
+        user.getFavouriteYachts().add(this);
+    }
+
+    public void removeFavouritedByUser(User user) {
+        favouritedByUsers.remove(user);
+        user.getFavouriteYachts().remove(this); // Assuming User class has a getFavouriteYachts method.
     }
 
     public void setYachtModel(YachtModel yachtModel) {
@@ -130,12 +151,5 @@ public class Yacht extends BaseEntity {
         this.country = newCountry;
     }
 
-    public void setYachtDetail(YachtDetail yachtDetail) {
-        this.yachtDetail = yachtDetail;
-    }
-
-    public void setOwnerInfo(OwnerInfo ownerInfo) {
-        this.ownerInfo = ownerInfo;
-    }
 }
 

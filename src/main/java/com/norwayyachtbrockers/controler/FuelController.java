@@ -46,7 +46,7 @@ public class FuelController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Fuel> updateKeel(@Valid @RequestBody FuelRequestDto dto,
+    public ResponseEntity<Fuel> updateFuel(@Valid @RequestBody FuelRequestDto dto,
                                                  @PathVariable Long id) {
         return ResponseEntity.ok(fuelService.updateFuel(dto, id));
     }

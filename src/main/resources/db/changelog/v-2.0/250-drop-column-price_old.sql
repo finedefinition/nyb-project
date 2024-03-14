@@ -1,0 +1,1 @@
+ALTER TABLE yachts DROP COLUMN price_old;

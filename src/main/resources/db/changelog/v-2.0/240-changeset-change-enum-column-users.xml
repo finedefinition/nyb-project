@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="240" author="sergii_bezrukov" runInTransaction="false">
+        <sql splitStatements="true" endDelimiter=";">
+            -- This will add a new temporary column to store string values of user_roles
+            ALTER TABLE users ADD COLUMN user_role_temp VARCHAR(255);
+
+            -- Copy the enum values as strings into the new column
+            UPDATE users SET user_role_temp = user_roles::text;
+
+            -- Remove the original user_role column
+            ALTER TABLE users DROP COLUMN user_roles;
+
+            -- Rename the temporary column to user_role
+            ALTER TABLE users RENAME COLUMN user_role_temp TO user_roles;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -6,35 +6,25 @@ import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import com.norwayyachtbrockers.service.TownService;
+import com.norwayyachtbrockers.service.UserService;
 import com.norwayyachtbrockers.service.YachtDetailService;
 import com.norwayyachtbrockers.service.YachtModelService;
 import com.norwayyachtbrockers.util.ExchangeRateService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Component
+@AllArgsConstructor
 public class YachtMapper {
     private final YachtModelService yachtModelService;
     private final TownService townService;
     private final CountryService countryService;
     private final YachtDetailService yachtDetailService;
-
     private final OwnerInfoService ownerInfoService;
-
-    private final ExchangeRateService exchangeRateService;
-
-    public YachtMapper(YachtModelService yachtModelService, TownService townService,
-                       CountryService countryService, YachtDetailService yachtDetailService,
-                       OwnerInfoService ownerInfoService, ExchangeRateService exchangeRateService) {
-        this.yachtModelService = yachtModelService;
-        this.townService = townService;
-        this.countryService = countryService;
-        this.yachtDetailService = yachtDetailService;
-        this.ownerInfoService = ownerInfoService;
-        this.exchangeRateService = exchangeRateService;
-    }
+    private final UserService userService;
 
     public void updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
         updateFields(yacht, dto);
@@ -47,18 +37,11 @@ public class YachtMapper {
 
     public YachtResponseDto convertToDto(Yacht yacht) {
         YachtResponseDto dto = new YachtResponseDto();
-        exchangeRateService.updateExchangeRates();
-        BigDecimal gbpRate = exchangeRateService.getRate("GBP");
-        BigDecimal usdRate = exchangeRateService.getRate("USD");
-        BigDecimal nokRate = exchangeRateService.getRate("NOK");
-
         dto.setId(yacht.getId());
         dto.setFeatured(yacht.isFeatured());
         dto.setVatIncluded(yacht.isVatIncluded());
         dto.setPrice(formatPrice(yacht.getPrice()));
-        dto.setPriceGBP(formatPrice(gbpRate.multiply(yacht.getPrice())));
-        dto.setPriceUSD(formatPrice(usdRate.multiply(yacht.getPrice())));
-        dto.setPriceNOK(formatPrice(nokRate.multiply(yacht.getPrice())));
+        dto.setPriceOld(formatPrice(yacht.getPriceOld()));
         dto.setMainImageKey(yacht.getMainImageKey());
         // Yacht Model set
         dto.setMake(yacht.getYachtModel().getMake());

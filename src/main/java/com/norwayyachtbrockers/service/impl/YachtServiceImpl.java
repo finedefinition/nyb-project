@@ -47,6 +47,7 @@ public class YachtServiceImpl implements YachtService {
             String mainImageKey = s3ImageService.uploadImageToS3(mainImageFile);
             yacht.setMainImageKey(mainImageKey);
         }
+        yacht.setPriceOld(yacht.getPrice());
 
         // Save the Yacht entity to get a generated ID
         Yacht savedYacht = yachtRepository.save(yacht);
@@ -59,6 +60,7 @@ public class YachtServiceImpl implements YachtService {
 
     @Override
     @Transactional
+    @Deprecated
     public YachtResponseDto save(YachtRequestDto dto, MultipartFile imageFile) {
 
         Yacht yacht = yachtMapper.convertToYacht(dto);
@@ -95,6 +97,7 @@ public class YachtServiceImpl implements YachtService {
     public YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
                                    List<MultipartFile> additionalImageFiles) {
         Yacht yacht = EntityUtils.findEntityOrThrow(id, yachtRepository, "Yacht");
+        yacht.setPriceOld(yacht.getPrice());
         yachtMapper.updateYachtFromDto(yacht, dto);
 
         if (mainImageFile != null && !mainImageFile.isEmpty()) {

@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-@JsonPropertyOrder({"yacht_id", "yacht_featured", "yacht_vat", "yacht_price", "yacht_main_image_key"})
+@JsonPropertyOrder({"yacht_id", "yacht_featured", "yacht_vat", "yacht_price", "yacht_price_old",
+        "yacht_main_image_key"})
 public class YachtResponseDto {
 
     @JsonProperty("yacht_id")
@@ -21,17 +22,11 @@ public class YachtResponseDto {
     @JsonProperty("yacht_vat")
     private boolean vatIncluded;
 
-    @JsonProperty("yacht_price_EUR")
+    @JsonProperty("yacht_price")
     private String price;
 
-    @JsonProperty("yacht_price_USD")
-    private String priceUSD;
-
-    @JsonProperty("yacht_price_GBP")
-    private String priceGBP;
-
-    @JsonProperty("yacht_price_NOK")
-    private String priceNOK;
+    @JsonProperty("yacht_price_old")
+    private String priceOld;
 
     @JsonProperty("yacht_main_image_key")
     private String mainImageKey;
