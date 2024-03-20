@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.dto.mapper;
 
+import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.model.User;
 import lombok.AllArgsConstructor;
@@ -20,5 +21,12 @@ public class UserMapper {
 
         return dto;
     }
-    
+
+    public User convertToUser(UserRegistrationRequestDto dto) {
+        User user = new User();
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        return user;
+    }
 }

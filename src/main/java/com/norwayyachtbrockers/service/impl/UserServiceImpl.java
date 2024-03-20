@@ -1,5 +1,10 @@
 package com.norwayyachtbrockers.service.impl;
 
+import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
+import com.amazonaws.services.cognitoidp.model.AdminAddUserToGroupRequest;
+import com.amazonaws.services.cognitoidp.model.AdminConfirmSignUpRequest;
+import com.amazonaws.services.cognitoidp.model.AttributeType;
+import com.amazonaws.services.cognitoidp.model.SignUpRequest;
 import com.norwayyachtbrockers.dto.mapper.UserMapper;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
@@ -9,61 +14,81 @@ import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
+import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.repository.UserRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.service.UserService;
-import lombok.AllArgsConstructor;
+import com.norwayyachtbrockers.util.CognitoUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final YachtRepository yachtRepository;
     private final UserMapper userMapper;
+    private final AWSCognitoIdentityProvider cognitoClient;
+    @Value("${aws.cognito.userPoolId}")
+    private String userPoolId;
+    @Value("${aws.cognito.clientId}")
+    private String clientId;
+    @Value("${aws.cognito.clientSecret}")
+    private String clientSecret;
 
-//    private final AWSCognitoIdentityProvider cognitoClient;
-//    @Value("${aws.cognito.userPoolId}")
-//    private String userPoolId;
-//    @Value("${aws.cognito.clientId}")
-//    private String clientId;
+    public UserServiceImpl(UserRepository userRepository, YachtRepository yachtRepository, UserMapper userMapper, AWSCognitoIdentityProvider cognitoClient) {
+        this.userRepository = userRepository;
+        this.yachtRepository = yachtRepository;
+        this.userMapper = userMapper;
+        this.cognitoClient = cognitoClient;
+    }
 
     @Override
     public void register(UserRegistrationRequestDto request) {
-//        // First, create the user
-//        SignUpRequest signUpRequest = new SignUpRequest()
-//                .withClientId(clientId)
-//                .withUsername(request.getEmail())
-//                .withPassword(request.getPassword())
-//                .withUserAttributes(Arrays.asList(
-//                        new AttributeType().withName("email").withValue(request.getEmail()),
-//                        new AttributeType().withName("given_name").withValue(request.getFirstName()),
-//                        new AttributeType().withName("family_name").withValue(request.getLastName())
-//                ));
-//
-//        cognitoClient.signUp(signUpRequest);
-//
-//        // Auto-confirm the user
-//        AdminConfirmSignUpRequest confirmSignUpRequest = new AdminConfirmSignUpRequest()
-//                .withUserPoolId(userPoolId)
-//                .withUsername(request.getEmail());
-//
-//        cognitoClient.adminConfirmSignUp(confirmSignUpRequest);
-//
-//        // Then, add the user to the appropriate group
-//        AdminAddUserToGroupRequest groupRequest = new AdminAddUserToGroupRequest()
-//                .withUserPoolId(userPoolId)
-//                .withUsername(request.getEmail())
-//                .withGroupName("USER");
-//
-//        cognitoClient.adminAddUserToGroup(groupRequest);
+
+        try {
+        String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
+        // First, create the user
+        SignUpRequest signUpRequest = new SignUpRequest()
+                .withClientId(clientId)
+                .withSecretHash(secretHash)
+                .withUsername(request.getEmail())
+                .withPassword(request.getPassword())
+                .withUserAttributes(Arrays.asList(
+                        new AttributeType().withName("email").withValue(request.getEmail()),
+                        new AttributeType().withName("given_name").withValue(request.getFirstName()),
+                        new AttributeType().withName("family_name").withValue(request.getLastName())
+                ));
+
+        cognitoClient.signUp(signUpRequest);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error while calculating ");
+        }
+        // Auto-confirm the user
+        AdminConfirmSignUpRequest confirmSignUpRequest = new AdminConfirmSignUpRequest()
+                .withUserPoolId(userPoolId)
+                .withUsername(request.getEmail());
+
+        cognitoClient.adminConfirmSignUp(confirmSignUpRequest);
+
+        // Then, add the user to the appropriate group
+        AdminAddUserToGroupRequest groupRequest = new AdminAddUserToGroupRequest()
+                .withUserPoolId(userPoolId)
+                .withUsername(request.getEmail())
+                .withGroupName("ROLE_USER");
+
+        cognitoClient.adminAddUserToGroup(groupRequest);
+        User user = userMapper.convertToUser(request);
+        user.setUserRoles(UserRoles.ROLE_USER);
+        userRepository.save(user);
     }
 
     @Override
@@ -89,6 +114,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User saveCognitoUser(UserRegistrationRequestDto userRegistrationRequestDto) {
+        return userRepository.save(userMapper.convertToUser(userRegistrationRequestDto));
     }
 
     @Override
