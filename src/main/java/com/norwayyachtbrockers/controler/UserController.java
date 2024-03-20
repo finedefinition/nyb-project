@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.response.UserFavouriteYachtsResponseDto;
+import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.UserService;
@@ -35,13 +36,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAll();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> users = userService.findAll();
 
         if (users.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

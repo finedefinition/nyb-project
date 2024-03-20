@@ -6,10 +6,8 @@ import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import com.norwayyachtbrockers.service.TownService;
-import com.norwayyachtbrockers.service.UserService;
 import com.norwayyachtbrockers.service.YachtDetailService;
 import com.norwayyachtbrockers.service.YachtModelService;
-import com.norwayyachtbrockers.util.ExchangeRateService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +22,6 @@ public class YachtMapper {
     private final CountryService countryService;
     private final YachtDetailService yachtDetailService;
     private final OwnerInfoService ownerInfoService;
-    private final UserService userService;
 
     public void updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
         updateFields(yacht, dto);

@@ -7,7 +7,6 @@ import com.norwayyachtbrockers.dto.request.VesselRequestDto;
 import com.norwayyachtbrockers.dto.response.VesselResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.Vessel;
-import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.VesselRepository;
 import com.norwayyachtbrockers.service.VesselService;
 import com.norwayyachtbrockers.util.EntityUtils;
@@ -15,8 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;

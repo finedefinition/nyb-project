@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserFavouriteYachtsResponseDto;
 import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
+import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.model.User;
 
 import java.util.List;
@@ -12,9 +13,9 @@ public interface UserService {
 
     User saveUser(User user);
 
-    User findId(Long id);
+    UserResponseDto findId(Long id);
 
-    List<User> findAll();
+    List<UserResponseDto> findAll();
 
     User updateUser(User user, Long id);
 

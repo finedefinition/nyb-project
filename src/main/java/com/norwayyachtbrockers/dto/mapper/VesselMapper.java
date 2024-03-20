@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.dto.mapper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.norwayyachtbrockers.dto.request.VesselRequestDto;
 import com.norwayyachtbrockers.dto.response.VesselImageDto;
 import com.norwayyachtbrockers.dto.response.VesselResponseDto;

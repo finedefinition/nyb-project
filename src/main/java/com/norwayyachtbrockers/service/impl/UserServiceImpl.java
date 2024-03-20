@@ -1,44 +1,39 @@
 package com.norwayyachtbrockers.service.impl;
 
+import com.norwayyachtbrockers.dto.mapper.UserMapper;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserFavouriteYachtsResponseDto;
 import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
+import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.UserRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.service.UserService;
-import com.norwayyachtbrockers.util.EntityUtils;
-import jakarta.persistence.EntityManager;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final YachtRepository yachtRepository;
+    private final UserMapper userMapper;
 
 //    private final AWSCognitoIdentityProvider cognitoClient;
 //    @Value("${aws.cognito.userPoolId}")
 //    private String userPoolId;
 //    @Value("${aws.cognito.clientId}")
 //    private String clientId;
-
-
-    public UserServiceImpl(UserRepository userRepository, YachtRepository yachtRepository) {
-        this.userRepository = userRepository;
-        this.yachtRepository = yachtRepository;
-    }
 
     @Override
     public void register(UserRegistrationRequestDto request) {
@@ -98,15 +93,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findId(Long id) {
-        return userRepository.findByIdAndFetchYachtsEagerly(id)
+    public UserResponseDto findId(Long id) {
+        User user = userRepository.findByIdAndFetchYachtsEagerly(id)
                 .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + id));
+        return userMapper.convertToDto(user);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return userRepository.findAllAndFetchYachtsEagerly();
+    public List<UserResponseDto> findAll() {
+        return userRepository.findAllAndFetchYachtsEagerly()
+                .stream()
+                .sorted(Comparator.comparing(User::getId))
+                .map(userMapper::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override

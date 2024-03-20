@@ -1,7 +1,5 @@
 package com.norwayyachtbrockers.constants;
 
-import java.time.LocalDateTime;
-
 public class ApplicationConstants {
     private ApplicationConstants() {
         // restrict instantiation

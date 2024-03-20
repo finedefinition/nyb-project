@@ -26,12 +26,4 @@ public class TownMapper {
         dto.setCountryName(town.getCountry().getName());
         return dto;
     }
-
-    public Town convertToTown(TownResponseDto dto) {
-        Town town = new Town();
-        town.setName(dto.getTownName());
-        town.setCountry(countryService.findId(dto.getTownId()));
-        return town;
-    }
-
 }

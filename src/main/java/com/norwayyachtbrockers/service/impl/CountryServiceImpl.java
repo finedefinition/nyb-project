@@ -6,9 +6,9 @@ import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.repository.CountryRepository;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.util.EntityUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service

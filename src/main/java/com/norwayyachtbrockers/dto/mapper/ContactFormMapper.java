@@ -1,9 +1,7 @@
 package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.ContactFormRequestDto;
-import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.ContactForm;
-import com.norwayyachtbrockers.model.Country;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
