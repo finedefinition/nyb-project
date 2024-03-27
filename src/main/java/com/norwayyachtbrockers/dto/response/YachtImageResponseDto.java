@@ -14,6 +14,9 @@ public class YachtImageResponseDto {
     @JsonProperty("yacht_image_key")
     private String imageKey;
 
+    @JsonProperty("yacht_image_index")
+    private Integer imageIndex;
+
     @JsonProperty("yacht_id")
     private Long yachtId;
 }

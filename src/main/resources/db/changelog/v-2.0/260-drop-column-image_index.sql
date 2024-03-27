@@ -1,0 +1,1 @@
+ALTER TABLE yacht_images DROP COLUMN image_index;

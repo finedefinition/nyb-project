@@ -30,6 +30,10 @@ public class YachtImage extends BaseEntity {
     @JsonProperty("yacht_image_key")
     private String imageKey;
 
+    @Column(name = "image_index")
+    @JsonProperty("yacht_image_index")
+    private Integer imageIndex;
+
     @ManyToOne
     @JoinColumn(name = "yacht_id")
     @JsonIgnore

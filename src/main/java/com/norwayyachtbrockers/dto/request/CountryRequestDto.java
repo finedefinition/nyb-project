@@ -15,7 +15,7 @@ public class CountryRequestDto {
 
     @JsonProperty("country_name")
     @NotNull(message="Country is required.")
-    @Size(min=3, max=30, message="Country must be at least 3 characters long.")
+    @Size(min=3, max=20, message="Country must be at least 3 characters long.")
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Country must start with a capital letter and can include" +
             " letters, spaces, and hyphens.")
     @JsonDeserialize(using = TrimStringDeserializer.class)

@@ -30,4 +30,5 @@
     <include file="230-changeset-insert-columns-users.xml" relativeToChangelogFile="true" />
     <include file="240-changeset-change-enum-column-users.xml" relativeToChangelogFile="true" />
     <include file="250-changeset-add-column-price_old.xml" relativeToChangelogFile="true" />
+    <include file="260-changeset-add-column-image_index.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
