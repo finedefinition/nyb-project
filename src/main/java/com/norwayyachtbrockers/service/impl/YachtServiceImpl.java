@@ -100,9 +100,25 @@ public class YachtServiceImpl implements YachtService {
 
     @Override
     public List<YachtResponseDto> findAll() {
-        return yachtRepository.findAll().stream()
-                .sorted(Comparator.comparing(Yacht::getId))
+        // Fetch all yachts, convert to DTOs
+        List<YachtResponseDto> dtos = yachtRepository.findAll().stream()
                 .map(yachtMapper::convertToDto)
+                .collect(Collectors.toList());
+
+        // Exclude yachts with 0 favourites, then sort the rest by favouritesCount in descending order
+        List<YachtResponseDto> filteredAndSortedDtos = dtos.stream()
+                .filter(dto -> dto.getFavouritesCount() != null && dto.getFavouritesCount() > 0)
+                .sorted(Comparator.comparing(YachtResponseDto::getFavouritesCount, Comparator.reverseOrder()))
+                .collect(Collectors.toList());
+
+        // Identify the top 10 yachts among those filtered and set the 'top10' flag
+        filteredAndSortedDtos.stream().limit(10).forEach(dto -> dto.setYachtTop(true));
+
+        // Merge back the filtered and unfiltered lists, if necessary, to include yachts with 0 favourites in the response
+        // This step is needed if you want yachts with 0 favourites to still be part of the final list but not marked as top 10
+        // Yachts already marked as top 10 are updated in the original DTOs list
+        return dtos.stream()
+                .sorted(Comparator.comparing(YachtResponseDto::getId))
                 .collect(Collectors.toList());
     }
 

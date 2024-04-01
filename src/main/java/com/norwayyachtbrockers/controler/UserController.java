@@ -67,7 +67,7 @@ public class UserController {
 
     @PostMapping("/{userId}/favouriteYachts/{yachtId}")
     public ResponseEntity<?> addFavouriteYacht(@PathVariable Long userId, @PathVariable Long yachtId) {
-        userService.addFavouriteYacht(userId, yachtId);
+        userService.addFavouriteYachtToUser(userId, yachtId);
         return ResponseEntity.ok().build();
     }
 

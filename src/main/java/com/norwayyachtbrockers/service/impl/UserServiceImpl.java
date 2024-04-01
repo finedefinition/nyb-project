@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addFavouriteYacht(Long userId, Long yachtId) {
+    public void addFavouriteYachtToUser(Long userId, Long yachtId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + userId));
         Yacht yacht = yachtRepository.findById(yachtId)

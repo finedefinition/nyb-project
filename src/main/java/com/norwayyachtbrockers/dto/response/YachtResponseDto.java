@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-@JsonPropertyOrder({"yacht_id", "yacht_featured", "yacht_vat", "yacht_price", "yacht_price_old",
-        "yacht_main_image_key"})
+@JsonPropertyOrder({"yacht_id", "yacht_featured", "yacht_top", "yacht_hot_price", "yacht_vat", "yacht_price",
+        "yacht_price_old", "yacht_main_image_key"})
 public class YachtResponseDto {
 
     @JsonProperty("yacht_id")
@@ -18,6 +18,12 @@ public class YachtResponseDto {
 
     @JsonProperty("yacht_featured")
     private boolean featured;
+
+    @JsonProperty("yacht_top")
+    private boolean yachtTop;
+
+    @JsonProperty("yacht_hot_price")
+    private boolean hotPrice;
 
     @JsonProperty("yacht_vat")
     private boolean vatIncluded;
@@ -93,4 +99,10 @@ public class YachtResponseDto {
 
     @JsonProperty("yacht_created_at")
     private LocalDateTime createdAt;
+
+    @JsonProperty("yacht_favourites")
+    private Set<Long> favourites;
+
+    @JsonProperty("yacht_favourites_count")
+    private Integer favouritesCount;
 }

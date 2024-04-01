@@ -26,8 +26,8 @@ public interface UserService {
 
     UserLoginResponseDto authenticate(UserLoginRequestDto request);
 
-    public void addFavouriteYacht(Long userId, Long yachtId);
+    void addFavouriteYachtToUser(Long userId, Long yachtId);
 
-    public UserFavouriteYachtsResponseDto getFavouriteYachts(Long userId);
+    UserFavouriteYachtsResponseDto getFavouriteYachts(Long userId);
 
 }
