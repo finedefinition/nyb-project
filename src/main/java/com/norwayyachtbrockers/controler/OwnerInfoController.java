@@ -28,7 +28,7 @@ public class OwnerInfoController {
 
     @PostMapping
     public ResponseEntity<OwnerInfo> create(@Valid @RequestBody OwnerInfoRequestDto dto) {
-        return ResponseEntity.ok(ownerInfoService.save(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ownerInfoService.save(dto));
     }
 
     @GetMapping("/{id}")
@@ -54,10 +54,7 @@ public class OwnerInfoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        String message = ownerInfoService.findId(id).getEmail();
         ownerInfoService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Owner info with ID:" + id +
-                        " --> \"e-mail: " + message + "\"");
+        return ResponseEntity.noContent().build();
     }
 }

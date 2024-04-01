@@ -38,7 +38,7 @@ public class YachtController {
             @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
 
         YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
-        return new ResponseEntity<>(savedYachtDto, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
     }
 //    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public ResponseEntity<YachtResponseDto> save(
@@ -85,7 +85,6 @@ public class YachtController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         yachtService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Yacht with ID:" + id);
+        return ResponseEntity.noContent().build();
     }
 }

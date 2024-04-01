@@ -27,7 +27,7 @@ public class CountryController {
 
     @PostMapping
     public ResponseEntity<Country> createCountry(@Valid @RequestBody CountryRequestDto dto) {
-        return ResponseEntity.ok(countryService.saveCountry(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(countryService.saveCountry(dto));
     }
 
     @GetMapping("/{id}")
@@ -53,10 +53,7 @@ public class CountryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        String country = countryService.findId(id).getName();
         countryService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Country with ID:" + id
-                        + " --> \"" + country + "\"");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

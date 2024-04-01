@@ -27,7 +27,7 @@ public class FuelController {
 
     @PostMapping
     public ResponseEntity<Fuel> createFuel(@Valid @RequestBody FuelRequestDto dto) {
-        return ResponseEntity.ok(fuelService.saveFuel(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(fuelService.saveFuel(dto));
     }
 
     @GetMapping("/{id}")
@@ -53,10 +53,7 @@ public class FuelController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        String fuelType = fuelService.findId(id).getName();
         fuelService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Fuel type with ID:"
-                        + id + " --> \"" + fuelType + "\"");
+        return ResponseEntity.noContent().build();
     }
 }

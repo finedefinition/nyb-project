@@ -27,7 +27,7 @@ public class TownController {
 
     @PostMapping
     public ResponseEntity<TownResponseDto> createTown(@Valid @RequestBody TownRequestDto dto) {
-        return ResponseEntity.ok(townService.saveTown(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(townService.saveTown(dto));
     }
 
     @GetMapping("/{id}")
@@ -53,11 +53,8 @@ public class TownController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        String town = townService.findId(id).getTownName();
         townService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Town with ID:" + id +
-                        " --> \"" + town + "\"");
+        return ResponseEntity.noContent().build();
     }
 }
 

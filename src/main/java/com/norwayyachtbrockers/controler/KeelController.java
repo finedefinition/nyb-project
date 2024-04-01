@@ -28,7 +28,7 @@ public class KeelController {
 
     @PostMapping
     public ResponseEntity<Keel> createKeel(@Valid @RequestBody KeelRequestDto dto) {
-        return ResponseEntity.ok(keelService.saveKeel(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(keelService.saveKeel(dto));
     }
 
     @GetMapping("/{id}")
@@ -54,10 +54,7 @@ public class KeelController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        String keelType = keelService.findId(id).getName();
         keelService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Keel type with ID:" +
-                        id + " --> \"" + keelType + "\"");
+        return ResponseEntity.noContent().build();
     }
 }

@@ -32,7 +32,7 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User user) {
         UserRoles userRole = user.getUserRoles();
         user.setUserRoles(userRole);
-        return ResponseEntity.ok(userService.saveUser(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(user));
     }
 
     @GetMapping("/{id}")
@@ -58,22 +58,19 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
-        String userEmail = userService.findId(id).getEmail();
         userService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the User with ID:"
-                        + id + " --> \"" + userEmail + "\"");
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{userId}/favouriteYachts/{yachtId}")
     public ResponseEntity<?> addFavouriteYacht(@PathVariable Long userId, @PathVariable Long yachtId) {
         userService.addFavouriteYachtToUser(userId, yachtId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{userId}/favouriteYachts")
     public ResponseEntity<UserFavouriteYachtsResponseDto> getFavouriteYachts(@PathVariable Long userId) {
         UserFavouriteYachtsResponseDto dto = userService.getFavouriteYachts(userId);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 }

@@ -68,7 +68,6 @@ public class YachtImageController {
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
 
         yachtImageService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Town with ID: " + id );
+        return ResponseEntity.noContent().build();
     }
 }

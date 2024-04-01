@@ -28,7 +28,7 @@ public class YachtDetailController {
 
     @PostMapping
     public ResponseEntity<YachtDetail> create(@Valid @RequestBody YachtDetailRequestDto dto) {
-        return ResponseEntity.ok(yachtDetailService.save(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(yachtDetailService.save(dto));
     }
 
     @GetMapping("/{id}")
@@ -54,9 +54,7 @@ public class YachtDetailController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
-
         yachtDetailService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body("Successfully deleted the Yacht Detail with ID: " + id);
+        return ResponseEntity.noContent().build();
     }
 }
