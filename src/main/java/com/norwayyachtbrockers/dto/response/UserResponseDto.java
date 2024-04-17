@@ -22,4 +22,7 @@ public class UserResponseDto {
 
     @JsonProperty("user_role")
     private String roleName;
+
+    @JsonProperty("sub")
+    private String cognitoSub;
 }

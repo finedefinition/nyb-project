@@ -43,6 +43,9 @@ public class User extends BaseEntity {
     @Column(name = "user_roles", nullable = false)
     private UserRoles userRoles;
 
+    @Column(name = "cognito_sub", nullable = false, length = 48)
+    private String cognitoSub;
+
     @ManyToMany
     @JoinTable(
             name = "user_favourite_yachts",

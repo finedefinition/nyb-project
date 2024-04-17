@@ -18,6 +18,7 @@ public class UserMapper {
         dto.setFirstName(existingUser.getFirstName());
         dto.setLastName(existingUser.getLastName());
         dto.setRoleName(existingUser.getUserRoles().name());
+        dto.setCognitoSub(existingUser.getCognitoSub());
 
         return dto;
     }
@@ -27,11 +28,6 @@ public class UserMapper {
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
-        return user;
-    }
-
-    public User updateUserWithCognito() {
-        User user = new User();
         return user;
     }
 }

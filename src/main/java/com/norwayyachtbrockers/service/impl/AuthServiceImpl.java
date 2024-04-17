@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.*;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.norwayyachtbrockers.dto.mapper.UserMapper;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
@@ -63,36 +65,50 @@ public class AuthServiceImpl implements AuthService {
                             new AttributeType().withName("family_name").withValue(request.getLastName())
                     ));
 
-            cognitoClient.signUp(signUpRequest);
+            SignUpResult signUpResult = cognitoClient.signUp(signUpRequest);
 
-    } catch (NotAuthorizedException e) {
-        // Specific handling for authorization issues
-        throw new SecurityException("Unauthorized access during registration: " + e.getErrorMessage(), e);
-        } catch (AWSCognitoIdentityProviderException e) {
-        // Other Cognito-specific exceptions
-            throw new RuntimeException("AWS Cognito error during registration: " + e.getErrorMessage(), e);
+            // Auto-confirm the user
+            AdminConfirmSignUpRequest confirmSignUpRequest = new AdminConfirmSignUpRequest()
+                    .withUserPoolId(userPoolId)
+                    .withUsername(request.getEmail());
+
+            cognitoClient.adminConfirmSignUp(confirmSignUpRequest);
+
+            // Add user to the "ROLE_USER" group
+            AdminAddUserToGroupRequest groupRequest = new AdminAddUserToGroupRequest()
+                    .withUserPoolId(userPoolId)
+                    .withUsername(request.getEmail())
+                    .withGroupName("ROLE_USER");
+
+            cognitoClient.adminAddUserToGroup(groupRequest);
+
+            // Perform automatic login to get the ID token
+            Map<String, String> authParams = new HashMap<>();
+            authParams.put("USERNAME", request.getEmail());
+            authParams.put("PASSWORD", request.getPassword());
+            authParams.put("SECRET_HASH", secretHash);
+
+            InitiateAuthRequest authRequest = new InitiateAuthRequest()
+                    .withAuthFlow(AuthFlowType.USER_PASSWORD_AUTH)
+                    .withClientId(clientId)
+                    .withAuthParameters(authParams);
+
+            InitiateAuthResult authResult = cognitoClient.initiateAuth(authRequest);
+            String idToken = authResult.getAuthenticationResult().getIdToken();
+            DecodedJWT jwt = JWT.decode(idToken);
+            String userSub = jwt.getClaim("sub").asString();
+
+            // Store user with Cognito sub
+            User user = userMapper.convertToUser(request);
+            user.setCognitoSub(userSub);
+            user.setUserRoles(UserRoles.ROLE_USER);
+
+            userService.saveUser(user);
+
         } catch (Exception e) {
-        // General exception handling
-            throw new RuntimeException("General error during registration: " + e.getMessage(), e);
+            // Handle exceptions
+            throw new RuntimeException("Error during registration or login: " + e.getMessage(), e);
         }
-
-        // Auto-confirm the user
-        AdminConfirmSignUpRequest confirmSignUpRequest = new AdminConfirmSignUpRequest()
-                .withUserPoolId(userPoolId)
-                .withUsername(request.getEmail());
-
-        cognitoClient.adminConfirmSignUp(confirmSignUpRequest);
-
-        // Then, add the user to the appropriate group
-        AdminAddUserToGroupRequest groupRequest = new AdminAddUserToGroupRequest()
-                .withUserPoolId(userPoolId)
-                .withUsername(request.getEmail())
-                .withGroupName("ROLE_USER");
-
-        cognitoClient.adminAddUserToGroup(groupRequest);
-        User user = userMapper.convertToUser(request);
-        user.setUserRoles(UserRoles.ROLE_USER);
-        userService.saveUser(user);
     }
 
 
