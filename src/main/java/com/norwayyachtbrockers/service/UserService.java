@@ -23,4 +23,6 @@ public interface UserService {
     void addFavouriteYachtToUser(Long userId, Long yachtId);
 
     UserFavouriteYachtsResponseDto getFavouriteYachts(Long userId);
+
+    void removeFavouriteYacht(Long userId, Long yachtId);
 }

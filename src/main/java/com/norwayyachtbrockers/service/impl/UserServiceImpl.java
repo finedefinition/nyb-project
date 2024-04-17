@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public UserFavouriteYachtsResponseDto getFavouriteYachts(Long userId) {
         User user = userRepository.findById(userId)
@@ -107,5 +108,15 @@ public class UserServiceImpl implements UserService {
         dto.setCount(yachtIds.size());
 
         return dto;
+    }
+
+    @Override
+    @Transactional
+    public void removeFavouriteYacht(Long userId, Long yachtId) {
+        User user = userRepository.findByIdAndFetchYachtsEagerly(userId)
+                .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + userId));
+
+        user.getFavouriteYachts().removeIf(yacht -> yacht.getId().equals(yachtId));
+        userRepository.save(user);
     }
 }

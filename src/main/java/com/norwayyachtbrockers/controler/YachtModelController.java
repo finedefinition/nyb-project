@@ -52,7 +52,7 @@ public class YachtModelController {
     }
 
     @DeleteMapping("/{yachtModelId}")
-    public ResponseEntity<String> delete(@PathVariable Long yachtModelId) {
+    public ResponseEntity<?> delete(@PathVariable Long yachtModelId) {
         yachtModelService.deleteById(yachtModelId);
         return ResponseEntity.noContent().build();
     }

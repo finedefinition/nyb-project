@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,14 +64,23 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/favouriteYachts/{yachtId}")
+//    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.claims['sub']")
     public ResponseEntity<?> addFavouriteYacht(@PathVariable Long userId, @PathVariable Long yachtId) {
         userService.addFavouriteYachtToUser(userId, yachtId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{userId}/favouriteYachts")
+//    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.claims['sub']")
     public ResponseEntity<UserFavouriteYachtsResponseDto> getFavouriteYachts(@PathVariable Long userId) {
         UserFavouriteYachtsResponseDto dto = userService.getFavouriteYachts(userId);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @DeleteMapping("/{userId}/favouriteYachts/{yachtId}")
+//    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.claims['sub']")
+    public ResponseEntity<?> deleteFavouriteYachts(@PathVariable Long userId, @PathVariable Long yachtId) {
+        userService.removeFavouriteYacht(userId, yachtId);
+        return ResponseEntity.noContent().build();
     }
 }

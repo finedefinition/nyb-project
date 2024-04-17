@@ -53,7 +53,7 @@ public class YachtDetailController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
         yachtDetailService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

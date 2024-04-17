@@ -46,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void register(UserRegistrationRequestDto request) {
 
         try {
@@ -64,9 +65,14 @@ public class AuthServiceImpl implements AuthService {
 
             cognitoClient.signUp(signUpRequest);
 
+    } catch (NotAuthorizedException e) {
+        // Specific handling for authorization issues
+        throw new SecurityException("Unauthorized access during registration: " + e.getErrorMessage(), e);
         } catch (AWSCognitoIdentityProviderException e) {
+        // Other Cognito-specific exceptions
             throw new RuntimeException("AWS Cognito error during registration: " + e.getErrorMessage(), e);
         } catch (Exception e) {
+        // General exception handling
             throw new RuntimeException("General error during registration: " + e.getMessage(), e);
         }
 

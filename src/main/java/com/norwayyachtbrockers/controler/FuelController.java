@@ -52,7 +52,7 @@ public class FuelController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
         fuelService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

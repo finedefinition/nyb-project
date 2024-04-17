@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.exception;
 
+import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import com.norwayyachtbrockers.dto.response.ExceptionMessageDto;
 import jakarta.validation.ConstraintViolation;
@@ -109,6 +110,12 @@ public class RestExceptionHandler {
         body.put("path", request.getDescription(false));
 
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UsernameExistsException.class)
+    protected ResponseEntity<Object> handleUsernameExistsException(UsernameExistsException ex) {
+        ExceptionMessageDto response = new ExceptionMessageDto("An account with the given email already exists. Please use a different email or recover your password if you forgot it.");
+        return ResponseEntity.badRequest().body(response);
     }
 
     @InitBinder

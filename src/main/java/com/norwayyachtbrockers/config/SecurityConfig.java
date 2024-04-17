@@ -3,7 +3,9 @@ package com.norwayyachtbrockers.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Value("${aws.cognito.issuerUri}")
@@ -31,6 +34,10 @@ public class SecurityConfig {
                                 // Explicitly permit public endpoints
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/api/auth/**", "/error", "/swagger-ui/**").authenticated()
+                        // Secure favourite yachts endpoints for users with USER_ROLE
+                        .requestMatchers(HttpMethod.POST, "/users/{userId}/favouriteYachts/{yachtId}").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/users/{userId}/favouriteYachts").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/users/{userId}/favouriteYachts/{yachtId}").hasRole("USER")
                                 .anyRequest().permitAll())
                 .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Use stateless session; no session will be created or used by Spring Security
@@ -50,7 +57,7 @@ public class SecurityConfig {
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("cognito:groups");
         jwtConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtConverter;
