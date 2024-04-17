@@ -18,4 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.favouriteYachts")
     List<User> findAllAndFetchYachtsEagerly();
+
+    @Query("SELECT u.id FROM User u WHERE u.email = :email")
+    Long findUserIdByEmail(String email);
 }

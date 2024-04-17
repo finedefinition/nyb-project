@@ -29,4 +29,9 @@ public class UserMapper {
         user.setEmail(dto.getEmail());
         return user;
     }
+
+    public User updateUserWithCognito() {
+        User user = new User();
+        return user;
+    }
 }

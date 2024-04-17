@@ -6,6 +6,8 @@ import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -72,13 +74,12 @@ public class YachtController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<YachtResponseDto> updateYacht(
-            @Valid
-            @PathVariable Long id,
-            @RequestPart("yachtData") YachtRequestDto dto,
+            @Valid @PathVariable Long id,
+        @RequestPart(value = "yachtData", required = false) Optional<YachtRequestDto> dto,
             @RequestParam("mainImage") MultipartFile mainImageFile,
             @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
 
-        YachtResponseDto updatedYachtDto = yachtService.update(dto, id, mainImageFile, additionalImageFiles);
+    YachtResponseDto updatedYachtDto = yachtService.update(dto.orElse(null), id, mainImageFile, additionalImageFiles);
         return new ResponseEntity<>(updatedYachtDto, HttpStatus.OK);
     }
 

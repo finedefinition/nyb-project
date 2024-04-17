@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -46,32 +48,34 @@ public class YachtImageServiceImpl implements YachtImageService {
 
         Yacht yacht = EntityUtils.findEntityOrThrow(dto.getYachtId(), yachtRepository, "Yacht");
 
-        // Loop through the provided image files
+        // Get current indexes and sort them
+        List<Integer> existingIndexes = yacht.getYachtImages().stream()
+                .map(YachtImage::getImageIndex)
+                .filter(Objects::nonNull)
+                .sorted()
+                .collect(Collectors.toList());
+
+        int nextIndex = 1; // Start with the first index
+
         for (MultipartFile file : imageFiles) {
             if (file != null && !file.isEmpty()) {
                 YachtImage yachtImage = new YachtImage();
-                // Upload the image file to S3 and get the image key
                 String imageKey = s3ImageService.uploadImageToS3(file);
                 yachtImage.setImageKey(imageKey);
-                yachtImage.setYacht(yacht); // Associate the image with the yacht
+                yachtImage.setYacht(yacht);
 
-                // Calculate the next imageIndex for the new yacht image
-                OptionalInt maxIndexOpt = yacht.getYachtImages().stream()
-                        .filter(img -> img.getImageIndex() != null) // Filter out any images without an index
-                        .mapToInt(YachtImage::getImageIndex)
-                        .max();
-                int nextIndex = maxIndexOpt.isPresent() ? maxIndexOpt.getAsInt() + 1 : 1;
+                // Find the next available index
+                while (existingIndexes.contains(nextIndex)) {
+                    nextIndex++;
+                }
+
                 yachtImage.setImageIndex(nextIndex);
-
-                // Add the new image to the list of saved images
+                // Ensure the next iteration considers this index as taken
+                existingIndexes.add(nextIndex);
                 savedImages.add(yachtImageRepository.save(yachtImage));
             }
         }
 
-        // After saving images, re-fetch the yacht to ensure consistency in the returned data
-        yacht = yachtRepository.findById(yacht.getId()).orElseThrow(() -> new RuntimeException("Yacht not found after saving images"));
-
-        // Convert the saved (and now re-fetched) YachtImage entities to YachtImageResponseDto
         return savedImages.stream()
                 .map(yachtImageMapper::convertToResponseDto)
                 .collect(Collectors.toList());

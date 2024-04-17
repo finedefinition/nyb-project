@@ -136,7 +136,10 @@ public class YachtServiceImpl implements YachtService {
                                    List<MultipartFile> additionalImageFiles) {
         Yacht yacht = EntityUtils.findEntityOrThrow(id, yachtRepository, "Yacht");
         yacht.setPriceOld(yacht.getPrice());
-        yachtMapper.updateYachtFromDto(yacht, dto);
+
+        if (dto != null) {
+            yachtMapper.updateYachtFromDto(yacht, dto);
+        }
 
         if (mainImageFile != null && !mainImageFile.isEmpty()) {
             String mainImageKey = s3ImageService.uploadImageToS3(mainImageFile);
@@ -145,8 +148,10 @@ public class YachtServiceImpl implements YachtService {
 
         // Optional: Handle removal of existing images
         // yacht.getYachtImages().clear();
-
-        saveAdditionalImages(additionalImageFiles, yacht);
+        YachtImageRequestDto yachtImageRequestDto = new YachtImageRequestDto();
+        yachtImageRequestDto.setYachtId(id);
+        yachtImageService.saveMultipleImages(yachtImageRequestDto, additionalImageFiles);
+//        saveAdditionalImages(additionalImageFiles, yacht);
 
         yachtRepository.save(yacht);
 
