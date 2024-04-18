@@ -80,11 +80,12 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    // Favourites
     @Override
     @Transactional
-    public void addFavouriteYachtToUser(Long userId, Long yachtId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + userId));
+    public void addFavouriteYachtToUser(String cognitoSub, Long yachtId) {
+        User user = userRepository.findByCognitoSub(cognitoSub)
+                .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
         Yacht yacht = yachtRepository.findById(yachtId)
                 .orElseThrow(() -> new AppEntityNotFoundException("Yacht not found with id " + yachtId));
 
@@ -94,16 +95,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserFavouriteYachtsResponseDto getFavouriteYachts(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + userId));
+    public UserFavouriteYachtsResponseDto getFavouriteYachts(String cognitoSub) {
+        User user = userRepository.findByCognitoSub(cognitoSub)
+                .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
 
         Set<Long> yachtIds = user.getFavouriteYachts().stream()
                 .map(Yacht::getId)
                 .collect(Collectors.toSet());
 
         UserFavouriteYachtsResponseDto dto = new UserFavouriteYachtsResponseDto();
-        dto.setUserId(userId);
+        dto.setUserId(user.getId());
         dto.setFavouriteYachtIds(yachtIds);
         dto.setCount(yachtIds.size());
 
@@ -112,11 +113,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void removeFavouriteYacht(Long userId, Long yachtId) {
-        User user = userRepository.findByIdAndFetchYachtsEagerly(userId)
-                .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + userId));
+    public void removeFavouriteYacht(String cognitoSub, Long yachtId) {
+        User user = userRepository.findByCognitoSub(cognitoSub)
+                .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
 
-        user.getFavouriteYachts().removeIf(yacht -> yacht.getId().equals(yachtId));
+        Yacht yacht = yachtRepository.findById(yachtId)
+                .orElseThrow(() -> new AppEntityNotFoundException("Yacht not found with id " + yachtId));
+
+        boolean removed = user.getFavouriteYachts().removeIf(y -> y.getId().equals(yachtId));
+        if (!removed) {
+            // Throw an exception if the yacht was not in the user's favourites
+            throw new AppEntityNotFoundException("Yacht not found in user's favourites");
+        }
+
         userRepository.save(user);
     }
 }

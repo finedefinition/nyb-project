@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.response.UserFavouriteYachtsResponseDto;
 import com.norwayyachtbrockers.dto.response.UserResponseDto;
+import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.UserService;
@@ -63,24 +64,28 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{userId}/favouriteYachts/{yachtId}")
-//    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.claims['sub']")
-    public ResponseEntity<?> addFavouriteYacht(@PathVariable Long userId, @PathVariable Long yachtId) {
-        userService.addFavouriteYachtToUser(userId, yachtId);
+    @PostMapping("/{cognitoSub}/favouriteYachts/{yachtId}")
+    @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
+    public ResponseEntity<?> addFavouriteYacht(@PathVariable String cognitoSub, @PathVariable Long yachtId) {
+        userService.addFavouriteYachtToUser(cognitoSub, yachtId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/{userId}/favouriteYachts")
-//    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.claims['sub']")
-    public ResponseEntity<UserFavouriteYachtsResponseDto> getFavouriteYachts(@PathVariable Long userId) {
-        UserFavouriteYachtsResponseDto dto = userService.getFavouriteYachts(userId);
+    @GetMapping("/{cognitoSub}/favouriteYachts")
+    @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
+    public ResponseEntity<UserFavouriteYachtsResponseDto> getFavouriteYachts(@PathVariable String cognitoSub) {
+        UserFavouriteYachtsResponseDto dto = userService.getFavouriteYachts(cognitoSub);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-    @DeleteMapping("/{userId}/favouriteYachts/{yachtId}")
-//    @PreAuthorize("hasRole('USER') and #userId == authentication.principal.claims['sub']")
-    public ResponseEntity<?> deleteFavouriteYachts(@PathVariable Long userId, @PathVariable Long yachtId) {
-        userService.removeFavouriteYacht(userId, yachtId);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{cognitoSub}/favouriteYachts/{yachtId}")
+    @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
+    public ResponseEntity<?> deleteFavouriteYachts(@PathVariable String cognitoSub, @PathVariable Long yachtId) {
+        try {
+            userService.removeFavouriteYacht(cognitoSub, yachtId);
+            return ResponseEntity.noContent().build();
+        } catch (AppEntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

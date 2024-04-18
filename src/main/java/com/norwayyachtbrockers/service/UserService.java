@@ -20,9 +20,10 @@ public interface UserService {
 
     void deleteById(Long id);
 
-    void addFavouriteYachtToUser(Long userId, Long yachtId);
+    //Favourites
+    void addFavouriteYachtToUser(String cognitoSub, Long yachtId);
 
-    UserFavouriteYachtsResponseDto getFavouriteYachts(Long userId);
+    UserFavouriteYachtsResponseDto getFavouriteYachts(String cognitoSub);
 
-    void removeFavouriteYacht(Long userId, Long yachtId);
+    void removeFavouriteYacht(String cognitoSub, Long yachtId);
 }
