@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class YachtController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> createYacht(
             @Valid
             @RequestPart("yachtData") YachtRequestDto dto,
@@ -73,6 +75,7 @@ public class YachtController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> updateYacht(
             @Valid @PathVariable Long id,
         @RequestPart(value = "yachtData", required = false) Optional<YachtRequestDto> dto,
@@ -84,6 +87,7 @@ public class YachtController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         yachtService.deleteById(id);
         return ResponseEntity.noContent().build();

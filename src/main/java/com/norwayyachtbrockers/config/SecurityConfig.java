@@ -33,11 +33,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 // Explicitly permit public endpoints
                                 .requestMatchers("/").permitAll()
-                                .requestMatchers("/api/auth/**", "/error", "/swagger-ui/**").authenticated()
+                                .requestMatchers( "/error", "/swagger-ui/**").authenticated()
                         // Secure favourite yachts endpoints for users with USER_ROLE
                         .requestMatchers(HttpMethod.POST, "/users/{userId}/favouriteYachts/{yachtId}").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/users/{userId}/favouriteYachts").hasRole("USER")
                         .requestMatchers(HttpMethod.DELETE, "/users/{userId}/favouriteYachts/{yachtId}").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/yachts").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/yachts/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/yachts/{id}").hasRole("ADMIN")
                                 .anyRequest().permitAll())
                 .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Use stateless session; no session will be created or used by Spring Security
