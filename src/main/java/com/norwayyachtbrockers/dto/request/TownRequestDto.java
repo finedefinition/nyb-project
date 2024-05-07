@@ -1,8 +1,6 @@
 package com.norwayyachtbrockers.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.norwayyachtbrockers.util.TrimStringDeserializer;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -19,7 +17,6 @@ public class TownRequestDto {
     @Size(min=3, max=30, message="Town must be at least 3 characters long and less than 30 characters.")
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Town must start with a capital letter and can include" +
             " letters, spaces, and hyphens.")
-    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String name;
 
     @JsonProperty("town_country_id")

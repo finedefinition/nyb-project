@@ -59,5 +59,4 @@ public class Fuel extends BaseEntity {
             yachtModel.setFuelType(null);
         }
     }
-
 }

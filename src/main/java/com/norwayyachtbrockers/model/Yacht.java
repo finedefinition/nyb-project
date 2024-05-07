@@ -96,60 +96,36 @@ public class Yacht extends BaseEntity {
         this.favouritedByUsers = favouritedByUsers;
     }
 
-    public void addFavouritedByUser(User user) {
-        favouritedByUsers.add(user);
-        user.getFavouriteYachts().add(this);
-    }
-
-    public void removeFavouritedByUser(User user) {
-        favouritedByUsers.remove(user);
-        user.getFavouriteYachts().remove(this); // Assuming User class has a getFavouriteYachts method.
-    }
-
     public void setYachtModel(YachtModel yachtModel) {
+        if (yachtModel != null && yachtModel.getYachts() == null) {
+            yachtModel.setYachts(new HashSet<>());
+        }
         this.yachtModel = yachtModel;
-        yachtModel.getYachts().add(this);
-    }
-
-    // Convenience method to add a YachtImage to the Yacht
-    public void addYachtImage(YachtImage yachtImage) {
-        yachtImages.add(yachtImage);
-        yachtImage.setYacht(this);
-    }
-
-    // Convenience method to remove a YachtImage from the Yacht
-    public void removeYachtImage(YachtImage yachtImage) {
-        yachtImages.remove(yachtImage);
-        yachtImage.setYacht(null);
-    }
-
-    public void setTown(Town newTown) {
-        // Remove yacht from the current town
-        if (this.town != null) {
-            this.town.getYachts().remove(this);
+        if (this.yachtModel != null) {
+            this.yachtModel.getYachts().add(this);
         }
-
-        // Add yacht to the new town
-        if (newTown != null) {
-            newTown.getYachts().add(this);
-        }
-
-        this.town = newTown;
     }
 
-    public void setCountry(Country newCountry) {
-        // Remove yacht from the current country
+    public void setTown(Town town) {
+        this.town = town;
+        if (town != null && town.getYachts() == null) {
+            town.setYachts(new HashSet<>());
+        }
+        if (town != null) {
+            town.getYachts().add(this);
+        }
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
         if (this.country != null) {
             this.country.getYachts().remove(this);
         }
 
         // Add yacht to the new country
-        if (newCountry != null) {
-            newCountry.getYachts().add(this);
+        if (country != null) {
+            country.getYachts().add(this);
         }
-
-        this.country = newCountry;
     }
-
 }
 

@@ -26,9 +26,7 @@ public class KeelServiceImpl implements KeelService {
     @Override
     @Transactional
     public Keel saveKeel(KeelRequestDto dto) {
-        Keel keel = new Keel();
-        keelMapper.updateKeelFromDto(keel, dto);
-        return keelRepository.save(keel);
+        return keelRepository.save(keelMapper.createKeelFromDto(dto));
     }
 
     @Override

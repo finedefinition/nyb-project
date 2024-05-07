@@ -1,0 +1,217 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > YachtMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.norwayyachtbrockers.dto.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: YachtMapper (com.norwayyachtbrockers.dto.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">YachtMapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16,7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2%
+  </span>
+  <span class="absValue">
+    (1/50)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.norwayyachtbrockers.dto.mapper;
+&nbsp;
+&nbsp;import com.norwayyachtbrockers.dto.request.YachtRequestDto;
+&nbsp;import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+&nbsp;import com.norwayyachtbrockers.model.Yacht;
+&nbsp;import com.norwayyachtbrockers.model.User;
+&nbsp;import com.norwayyachtbrockers.service.CountryService;
+&nbsp;import com.norwayyachtbrockers.service.OwnerInfoService;
+&nbsp;import com.norwayyachtbrockers.service.TownService;
+&nbsp;import com.norwayyachtbrockers.service.YachtDetailService;
+&nbsp;import com.norwayyachtbrockers.service.YachtModelService;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.math.RoundingMode;
+&nbsp;import java.util.Set;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;@AllArgsConstructor</b>
+&nbsp;public class YachtMapper {
+&nbsp;    private final YachtModelService yachtModelService;
+&nbsp;    private final TownService townService;
+&nbsp;    private final CountryService countryService;
+&nbsp;    private final YachtDetailService yachtDetailService;
+&nbsp;    private final OwnerInfoService ownerInfoService;
+&nbsp;
+&nbsp;    public void updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
+<b class="nc">&nbsp;        updateFields(yacht, dto);</b>
+&nbsp;    }
+&nbsp;    public Yacht convertToYacht(YachtRequestDto dto) {
+<b class="nc">&nbsp;        Yacht yacht = new Yacht();</b>
+<b class="nc">&nbsp;        updateFields(yacht, dto);</b>
+<b class="nc">&nbsp;        return yacht;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public YachtResponseDto convertToDto(Yacht yacht) {
+<b class="nc">&nbsp;        YachtResponseDto dto = new YachtResponseDto();</b>
+<b class="nc">&nbsp;        dto.setId(yacht.getId());</b>
+<b class="nc">&nbsp;        dto.setFeatured(yacht.isFeatured());</b>
+<b class="nc">&nbsp;        dto.setVatIncluded(yacht.isVatIncluded());</b>
+<b class="nc">&nbsp;        dto.setPrice(formatPrice(yacht.getPrice()));</b>
+<b class="nc">&nbsp;        dto.setPriceOld(formatPrice(yacht.getPriceOld()));</b>
+<b class="nc">&nbsp;        dto.setMainImageKey(yacht.getMainImageKey());</b>
+&nbsp;        // Yacht Model set
+<b class="nc">&nbsp;        dto.setMake(yacht.getYachtModel().getMake());</b>
+<b class="nc">&nbsp;        dto.setModel(yacht.getYachtModel().getModel());</b>
+<b class="nc">&nbsp;        dto.setYear(yacht.getYachtModel().getYear());</b>
+<b class="nc">&nbsp;        dto.setLengthOverall(yacht.getYachtModel().getLengthOverall());</b>
+<b class="nc">&nbsp;        dto.setBeamWidth(yacht.getYachtModel().getBeamWidth());</b>
+<b class="nc">&nbsp;        dto.setDraftDepth(yacht.getYachtModel().getDraftDepth());</b>
+<b class="nc">&nbsp;        dto.setKeelType(yacht.getYachtModel().getKeelType().getName());</b>
+<b class="nc">&nbsp;        dto.setFuelType(yacht.getYachtModel().getFuelType().getName());</b>
+&nbsp;        // Yacht Images set
+<b class="nc">&nbsp;        dto.setYachtImages(yacht.getYachtImages());</b>
+&nbsp;        // Country
+<b class="nc">&nbsp;        dto.setCountry(yacht.getCountry().getName());</b>
+&nbsp;        // Town
+<b class="nc">&nbsp;        dto.setTown(yacht.getTown().getName());</b>
+&nbsp;        // Yacht Detail set
+<b class="nc">&nbsp;        dto.setCabin(yacht.getYachtDetail().getCabin());</b>
+<b class="nc">&nbsp;        dto.setBerth(yacht.getYachtDetail().getBerth());</b>
+<b class="nc">&nbsp;        dto.setHeads(yacht.getYachtDetail().getHeads());</b>
+<b class="nc">&nbsp;        dto.setShower(yacht.getYachtDetail().getShower());</b>
+<b class="nc">&nbsp;        dto.setDescription(yacht.getYachtDetail().getDescription());</b>
+&nbsp;        // Owner info set
+<b class="nc">&nbsp;        dto.setFirstName(yacht.getOwnerInfo().getFirstName());</b>
+<b class="nc">&nbsp;        dto.setLastName(yacht.getOwnerInfo().getLastName());</b>
+<b class="nc">&nbsp;        dto.setTelephone(yacht.getOwnerInfo().getTelephone());</b>
+<b class="nc">&nbsp;        dto.setEmail(yacht.getOwnerInfo().getEmail());</b>
+&nbsp;        //User set
+&nbsp;        // Set yacht favourites as user IDs
+<b class="nc">&nbsp;        Set&lt;Long&gt; favouriteUserIds = yacht.getFavouritedByUsers().stream().map(User::getId).collect(Collectors.toSet());</b>
+<b class="nc">&nbsp;        dto.setFavourites(favouriteUserIds);</b>
+<b class="nc">&nbsp;        dto.setFavouritesCount((favouriteUserIds.size()));</b>
+&nbsp;        //Hot price
+<b class="nc">&nbsp;        if (yacht.getPriceOld().compareTo(yacht.getPrice()) &gt; 0) {</b>
+<b class="nc">&nbsp;            dto.setHotPrice(true);</b>
+&nbsp;        }
+&nbsp;        // Created at
+<b class="nc">&nbsp;        dto.setCreatedAt(yacht.getCreatedAt());</b>
+<b class="nc">&nbsp;        return dto;</b>
+&nbsp;    }
+&nbsp;    private void updateFields(Yacht yacht, YachtRequestDto dto) {
+<b class="nc">&nbsp;        yacht.setFeatured(dto.isFeatured());</b>
+<b class="nc">&nbsp;        yacht.setVatIncluded(dto.isVatIncluded());</b>
+<b class="nc">&nbsp;        yacht.setPrice(dto.getPrice());</b>
+<b class="nc">&nbsp;        yacht.setYachtModel(yachtModelService.findId(dto.getYachtModelId()));</b>
+<b class="nc">&nbsp;        yacht.setCountry(countryService.findId(dto.getCountryId()));</b>
+<b class="nc">&nbsp;        yacht.setTown(townService.findTownById(dto.getTownId()));</b>
+<b class="nc">&nbsp;        yacht.setYachtDetail(yachtDetailService.findId(dto.getYachtDetailId()));</b>
+<b class="nc">&nbsp;        yacht.setOwnerInfo(ownerInfoService.findId(dto.getOwnerInfoId()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String formatPrice(BigDecimal price) {
+<b class="nc">&nbsp;        BigDecimal rounded = price.divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP)</b>
+<b class="nc">&nbsp;                .multiply(BigDecimal.valueOf(100));</b>
+<b class="nc">&nbsp;        return rounded.toPlainString();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-30 22:07</div>
+</div>
+</body>
+</html>

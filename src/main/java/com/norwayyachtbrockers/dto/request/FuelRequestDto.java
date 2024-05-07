@@ -15,9 +15,8 @@ public class FuelRequestDto {
 
     @JsonProperty("fuel_type_name")
     @NotNull(message="Fuel type is required")
-    @Size(min=3, max=20, message="Fuel type must be at least 3 characters long and less than 20 characters.")
+    @Size(min=3, max=20, message="Fuel type must be between 3 and 20 long.")
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Fuel type must start with a capital letter and can include" +
             " letters, spaces, and hyphens.")
-    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String name;
 }

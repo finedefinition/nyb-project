@@ -27,9 +27,7 @@ public class YachtDetailServiceImpl implements YachtDetailService {
     @Override
     @Transactional
     public YachtDetail save(YachtDetailRequestDto dto) {
-        YachtDetail yachtDetail = new YachtDetail();
-        yachtDetailMapper.updateFromDto(yachtDetail, dto);
-        return yachtDetailRepository.save(yachtDetail);
+        return yachtDetailRepository.save(yachtDetailMapper.createYachtDetailFromDto(dto));
     }
 
     @Override
@@ -46,7 +44,7 @@ public class YachtDetailServiceImpl implements YachtDetailService {
     @Transactional
     public YachtDetail update(YachtDetailRequestDto dto, Long id) {
         YachtDetail yachtDetail = EntityUtils.findEntityOrThrow(id, yachtDetailRepository, "YachtDetail");
-        yachtDetailMapper.updateFromDto(yachtDetail, dto);
+        yachtDetailMapper.updateYachtDetailFromDto(yachtDetail, dto);
         return yachtDetailRepository.save(yachtDetail);
     }
 

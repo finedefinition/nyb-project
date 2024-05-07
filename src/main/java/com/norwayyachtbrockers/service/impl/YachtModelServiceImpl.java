@@ -13,6 +13,7 @@ import com.norwayyachtbrockers.util.EntityUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -36,8 +37,8 @@ public class YachtModelServiceImpl implements YachtModelService {
     public YachtModel saveYachtModel(YachtModelRequestDto dto) {
         Keel keel = EntityUtils.findEntityOrThrow(dto.getKeelTypeId(), keelRepository, "Keel");
         Fuel fuel = EntityUtils.findEntityOrThrow(dto.getFuelTypeId(), fuelRepository, "Fuel");
-        YachtModel yachtModel = new YachtModel();
-        yachtModelMapper.updateYachtModelFromDto(yachtModel, dto);
+
+        YachtModel yachtModel = yachtModelMapper.createYachtModelFromDto( dto);
 
         // Assuming Keel and Fuel entities have convenience methods to add a yacht model
         keel.addYachtModel(yachtModel);

@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > FuelServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.norwayyachtbrockers.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: FuelServiceImpl (com.norwayyachtbrockers.service.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FuelServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    16,7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (3/10)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">FuelServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    16,7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (3/10)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.norwayyachtbrockers.service.impl;
+&nbsp;
+&nbsp;import com.norwayyachtbrockers.dto.mapper.FuelMapper;
+&nbsp;import com.norwayyachtbrockers.dto.request.FuelRequestDto;
+&nbsp;import com.norwayyachtbrockers.model.Fuel;
+&nbsp;import com.norwayyachtbrockers.repository.FuelRepository;
+&nbsp;import com.norwayyachtbrockers.service.FuelService;
+&nbsp;import com.norwayyachtbrockers.util.EntityUtils;
+&nbsp;import org.springframework.data.domain.Sort;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class FuelServiceImpl implements FuelService {
+&nbsp;
+&nbsp;    private final FuelRepository fuelRepository;
+&nbsp;
+&nbsp;    private final FuelMapper fuelMapper;
+&nbsp;
+&nbsp;    public FuelServiceImpl(FuelRepository fuelRepository,
+<b class="fc">&nbsp;                           FuelMapper fuelMapper) {</b>
+<b class="fc">&nbsp;        this.fuelRepository = fuelRepository;</b>
+<b class="fc">&nbsp;        this.fuelMapper = fuelMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public Fuel saveFuel(FuelRequestDto dto) {
+<b class="nc">&nbsp;        return fuelRepository.save(fuelMapper.createFuelFromDto(dto));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Fuel findId(Long id) {
+<b class="nc">&nbsp;        return EntityUtils.findEntityOrThrow(id, fuelRepository, &quot;Fuel&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Fuel&gt; findAll() {
+<b class="nc">&nbsp;        return fuelRepository.findAll(Sort.by(Sort.Direction.ASC, &quot;id&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public Fuel updateFuel(FuelRequestDto dto, Long id) {
+<b class="nc">&nbsp;        Fuel fuel = EntityUtils.findEntityOrThrow(id, fuelRepository, &quot;Fuel&quot;);</b>
+<b class="nc">&nbsp;        return fuelRepository.save(fuelMapper.updateFuelFromDto(fuel, dto));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public void deleteById(Long id) {
+<b class="nc">&nbsp;        Fuel fuel = EntityUtils.findEntityOrThrow(id, fuelRepository, &quot;Fuel&quot;);</b>
+<b class="nc">&nbsp;        fuelRepository.delete(fuel);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-30 22:07</div>
+</div>
+</body>
+</html>

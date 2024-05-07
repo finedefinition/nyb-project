@@ -21,8 +21,9 @@ public class EmailServiceImpl implements EmailService {
             message.setFrom(userEmailAddress); // User's email address as the sender
 
             // Predefined list of recipients
-            String[] toAddresses = { "natali.kapii777@gmail.com",
-                    "antek1809@gmail.com",
+            String[] toAddresses = {
+//                    "natali.kapii777@gmail.com",
+//                    "antek1809@gmail.com",
                     "info@norseyacht.com"
             };
             message.setTo(toAddresses);

@@ -26,13 +26,12 @@ public class YachtMapper {
     private final YachtDetailService yachtDetailService;
     private final OwnerInfoService ownerInfoService;
 
-    public void updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
-        updateFields(yacht, dto);
-    }
-    public Yacht convertToYacht(YachtRequestDto dto) {
+    public Yacht createYachtFromDto(YachtRequestDto dto) {
         Yacht yacht = new Yacht();
-        updateFields(yacht, dto);
-        return yacht;
+        return setFields(yacht, dto);
+    }
+    public Yacht updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
+        return setFields(yacht, dto);
     }
 
     public YachtResponseDto convertToDto(Yacht yacht) {
@@ -82,7 +81,7 @@ public class YachtMapper {
         dto.setCreatedAt(yacht.getCreatedAt());
         return dto;
     }
-    private void updateFields(Yacht yacht, YachtRequestDto dto) {
+    private Yacht setFields(Yacht yacht, YachtRequestDto dto) {
         yacht.setFeatured(dto.isFeatured());
         yacht.setVatIncluded(dto.isVatIncluded());
         yacht.setPrice(dto.getPrice());
@@ -91,6 +90,7 @@ public class YachtMapper {
         yacht.setTown(townService.findTownById(dto.getTownId()));
         yacht.setYachtDetail(yachtDetailService.findId(dto.getYachtDetailId()));
         yacht.setOwnerInfo(ownerInfoService.findId(dto.getOwnerInfoId()));
+        return yacht;
     }
 
     private String formatPrice(BigDecimal price) {

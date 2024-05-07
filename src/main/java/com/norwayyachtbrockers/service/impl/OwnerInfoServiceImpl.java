@@ -27,9 +27,7 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
     @Override
     @Transactional
     public OwnerInfo save(OwnerInfoRequestDto dto) {
-        OwnerInfo ownerInfo = new OwnerInfo();
-        ownerInfoMapper.updateOwnerInfoFromDto(ownerInfo, dto);
-        return ownerInfoRepository.save(ownerInfo);
+        return ownerInfoRepository.save(ownerInfoMapper.createOwnerInfoFromDto(dto));
     }
 
     @Override

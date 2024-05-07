@@ -1,0 +1,174 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CountryServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.norwayyachtbrockers.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: CountryServiceImpl (com.norwayyachtbrockers.service.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CountryServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    16,7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (3/15)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CountryServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    16,7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (3/15)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.norwayyachtbrockers.service.impl;
+&nbsp;
+&nbsp;import com.norwayyachtbrockers.dto.mapper.CountryMapper;
+&nbsp;import com.norwayyachtbrockers.dto.request.CountryRequestDto;
+&nbsp;import com.norwayyachtbrockers.model.Country;
+&nbsp;import com.norwayyachtbrockers.repository.CountryRepository;
+&nbsp;import com.norwayyachtbrockers.service.CountryService;
+&nbsp;import com.norwayyachtbrockers.util.EntityUtils;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import org.springframework.data.domain.Sort;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class CountryServiceImpl implements CountryService {
+&nbsp;
+&nbsp;    private  final CountryRepository countryRepository;
+&nbsp;    private final CountryMapper countryMapper;
+&nbsp;
+&nbsp;    public CountryServiceImpl(CountryRepository countryRepository,
+<b class="fc">&nbsp;                              CountryMapper countryMapper) {</b>
+<b class="fc">&nbsp;        this.countryRepository = countryRepository;</b>
+<b class="fc">&nbsp;        this.countryMapper = countryMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public Country saveCountry(CountryRequestDto dto) {
+<b class="nc">&nbsp;        return countryRepository.save(countryMapper.createCountryFromDto(dto));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Country findId(Long id) {
+<b class="nc">&nbsp;        return EntityUtils.findEntityOrThrow(id, countryRepository, &quot;Country&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Country&gt; findAll() {
+<b class="nc">&nbsp;        return countryRepository.findAll(Sort.by(Sort.Direction.ASC, &quot;id&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public Country updateCountry(CountryRequestDto dto, Long id) {
+<b class="nc">&nbsp;        Country country = EntityUtils</b>
+<b class="nc">&nbsp;                .findEntityOrThrow(id, countryRepository, &quot;Country&quot;);</b>
+<b class="nc">&nbsp;        countryMapper.updateCountryFromDto(country, dto);</b>
+<b class="nc">&nbsp;        return countryRepository.save(country);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public void deleteById(Long id) {
+<b class="nc">&nbsp;        Country country = EntityUtils</b>
+<b class="nc">&nbsp;                .findEntityOrThrow(id, countryRepository, &quot;Country&quot;);</b>
+<b class="nc">&nbsp;        country.getTowns().forEach(town -&gt; town.setCountry(null));</b>
+<b class="nc">&nbsp;        country.getYachts().forEach(yacht -&gt; yacht.setCountry(null));</b>
+<b class="nc">&nbsp;        countryRepository.delete(country);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-30 22:07</div>
+</div>
+</body>
+</html>

@@ -15,10 +15,9 @@ public class KeelRequestDto {
 
     @JsonProperty("keel_type_name")
     @NotNull(message="Keel type is required")
-    @Size(min=3, max=20, message="Keel type must be at least 3 characters long and less than 20 characters.")
+    @Size(min=3, max=20, message="Fuel type must be between 3 and 20 long.")
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Keel type must start with a capital letter and can include" +
             " letters, spaces, and hyphens.")
-    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String name;
 
 }

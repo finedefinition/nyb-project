@@ -43,7 +43,7 @@ public class YachtServiceImpl implements YachtService {
     public YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
                                  List<MultipartFile> additionalImageFiles) {
         // Convert DTO to Yacht entity
-        Yacht yacht = yachtMapper.convertToYacht(dto);
+        Yacht yacht = yachtMapper.createYachtFromDto(dto);
 
         // Set the old price from the DTO
         yacht.setPriceOld(yacht.getPrice());
@@ -85,7 +85,7 @@ public class YachtServiceImpl implements YachtService {
     @Deprecated
     public YachtResponseDto save(YachtRequestDto dto, MultipartFile imageFile) {
 
-        Yacht yacht = yachtMapper.convertToYacht(dto);
+        Yacht yacht = yachtMapper.createYachtFromDto(dto);
         setImageKeyForVessel(yacht, imageFile);
         yachtRepository.save(yacht);
 

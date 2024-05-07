@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
             String userSub = jwt.getClaim("sub").asString();
 
             // Store user with Cognito sub
-            User user = userMapper.convertToUser(request);
+            User user = userMapper.createUserFromDto(request);
             user.setCognitoSub(userSub);
             user.setUserRoles(UserRoles.ROLE_USER);
 

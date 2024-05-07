@@ -27,9 +27,7 @@ public class FuelServiceImpl implements FuelService {
     @Override
     @Transactional
     public Fuel saveFuel(FuelRequestDto dto) {
-        Fuel fuel = new Fuel();
-        fuelMapper.updateFuelFromDto(fuel, dto);
-        return fuelRepository.save(fuel);
+        return fuelRepository.save(fuelMapper.createFuelFromDto(dto));
     }
 
     @Override
@@ -46,8 +44,7 @@ public class FuelServiceImpl implements FuelService {
     @Transactional
     public Fuel updateFuel(FuelRequestDto dto, Long id) {
         Fuel fuel = EntityUtils.findEntityOrThrow(id, fuelRepository, "Fuel");
-        fuelMapper.updateFuelFromDto(fuel, dto);
-        return fuelRepository.save(fuel);
+        return fuelRepository.save(fuelMapper.updateFuelFromDto(fuel, dto));
     }
 
     @Override

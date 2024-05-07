@@ -34,8 +34,7 @@ public class TownServiceImpl implements TownService {
     public TownResponseDto saveTown(TownRequestDto dto) {
         Country country = EntityUtils
                 .findEntityOrThrow(dto.getCountryId(), countryRepository, "Country");
-        Town town = new Town();
-        townMapper.updateTownFromDto(town, dto);
+        Town town = townMapper.createTownFromDto(dto);
         town.setCountry(country);
         townRepository.save(town);
         return townMapper.convertToDto(town);

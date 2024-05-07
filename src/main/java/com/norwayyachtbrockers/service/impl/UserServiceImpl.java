@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto findId(Long id) {
         User user = userRepository.findByIdAndFetchYachtsEagerly(id)
                 .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + id));
-        return userMapper.convertToDto(user);
+        return userMapper.convertUserToDto(user);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllAndFetchYachtsEagerly()
                 .stream()
                 .sorted(Comparator.comparing(User::getId))
-                .map(userMapper::convertToDto)
+                .map(userMapper::convertUserToDto)
                 .collect(Collectors.toList());
     }
 

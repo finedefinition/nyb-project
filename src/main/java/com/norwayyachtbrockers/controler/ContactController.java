@@ -35,9 +35,9 @@ public class ContactController {
         ContactForm contactForm =  contactFormMapper.createContactFormFromDto(dto);
         boolean sent = emailService.sendSimpleMessage(
                 contactForm.getUserEmail(),
-                "New contact message from: " + contactForm.getUserEmail(),
+                "New contact message from: " + contactForm.getName(),
                 contactForm.getName(),
-                contactForm.getMessage() + "\n" + "From user: " + contactForm.getName()
+                contactForm.getMessage() + "\n\n" + "From user: " + contactForm.getName()
         );
 
         if (sent) {

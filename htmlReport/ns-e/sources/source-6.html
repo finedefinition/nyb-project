@@ -1,0 +1,171 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > OwnerInfoServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.norwayyachtbrockers.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: OwnerInfoServiceImpl (com.norwayyachtbrockers.service.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OwnerInfoServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    16,7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23,1%
+  </span>
+  <span class="absValue">
+    (3/13)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">OwnerInfoServiceImpl$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    16,7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    23,1%
+  </span>
+  <span class="absValue">
+    (3/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.norwayyachtbrockers.service.impl;
+&nbsp;
+&nbsp;import com.norwayyachtbrockers.dto.mapper.OwnerInfoMapper;
+&nbsp;import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
+&nbsp;import com.norwayyachtbrockers.model.OwnerInfo;
+&nbsp;import com.norwayyachtbrockers.repository.OwnerInfoRepository;
+&nbsp;import com.norwayyachtbrockers.service.OwnerInfoService;
+&nbsp;import com.norwayyachtbrockers.util.EntityUtils;
+&nbsp;import org.springframework.data.domain.Sort;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class OwnerInfoServiceImpl implements OwnerInfoService {
+&nbsp;
+&nbsp;    private final OwnerInfoRepository ownerInfoRepository;
+&nbsp;
+&nbsp;    private final OwnerInfoMapper ownerInfoMapper;
+&nbsp;
+&nbsp;    public OwnerInfoServiceImpl(OwnerInfoRepository ownerInfoRepository,
+<b class="fc">&nbsp;                                OwnerInfoMapper ownerInfoMapper) {</b>
+<b class="fc">&nbsp;        this.ownerInfoRepository = ownerInfoRepository;</b>
+<b class="fc">&nbsp;        this.ownerInfoMapper = ownerInfoMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public OwnerInfo save(OwnerInfoRequestDto dto) {
+<b class="nc">&nbsp;        OwnerInfo ownerInfo = new OwnerInfo();</b>
+<b class="nc">&nbsp;        ownerInfoMapper.updateOwnerInfoFromDto(ownerInfo, dto);</b>
+<b class="nc">&nbsp;        return ownerInfoRepository.save(ownerInfo);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public OwnerInfo findId(Long id) {
+<b class="nc">&nbsp;        return EntityUtils.findEntityOrThrow(id, ownerInfoRepository, &quot;OwnerInfo&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;OwnerInfo&gt; findAll() {
+<b class="nc">&nbsp;        return ownerInfoRepository.findAll(Sort.by(Sort.Direction.ASC, &quot;id&quot;));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public OwnerInfo update(OwnerInfoRequestDto dto, Long id) {
+<b class="nc">&nbsp;        OwnerInfo ownerInfo = EntityUtils.findEntityOrThrow(id, ownerInfoRepository, &quot;OwnerInfo&quot;);</b>
+<b class="nc">&nbsp;        ownerInfoMapper.updateOwnerInfoFromDto(ownerInfo, dto);</b>
+<b class="nc">&nbsp;        return ownerInfo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void deleteById(Long id) {
+<b class="nc">&nbsp;        OwnerInfo ownerInfo = EntityUtils.findEntityOrThrow(id, ownerInfoRepository, &quot;OwnerInfo&quot;);</b>
+<b class="nc">&nbsp;        ownerInfoRepository.delete(ownerInfo);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-30 22:07</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > YachtSpecificationUtil</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.norwayyachtbrockers.util</a>
+</div>
+
+<h1>Coverage Summary for Class: YachtSpecificationUtil (com.norwayyachtbrockers.util)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">YachtSpecificationUtil</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.norwayyachtbrockers.util;
+&nbsp;
+&nbsp;import com.norwayyachtbrockers.model.Yacht;
+&nbsp;import org.springframework.data.jpa.domain.Specification;
+&nbsp;
+<b class="nc">&nbsp;public class YachtSpecificationUtil {</b>
+&nbsp;
+&nbsp;    public static &lt;T&gt; Specification&lt;Yacht&gt; getSpecificationOrElseThrow(T value, String key, String keyParam) {
+<b class="nc">&nbsp;        if (value != null) {</b>
+<b class="nc">&nbsp;            return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                    criteriaBuilder.equal(root.get(key).get(keyParam), value);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            throw new IllegalArgumentException(String.format(&quot;Invalid parameter type for %s&quot;, key));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static &lt;T&gt; Specification&lt;Yacht&gt; getSpecificationOrElseThrow(T value, String model, String key, String keyParam) {
+<b class="nc">&nbsp;        if (value != null) {</b>
+<b class="nc">&nbsp;            return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                    criteriaBuilder.equal(root.get(model).get(key).get(keyParam), value);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            throw new IllegalArgumentException(String.format(&quot;Invalid parameter type for %s&quot;, key));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static &lt;T extends Comparable&lt;? super T&gt;&gt; Specification&lt;Yacht&gt;
+&nbsp;    getSpecificationInRangeOrElseThrow(T[] range, String key, String keyParam) {
+<b class="nc">&nbsp;        if (range != null &amp;&amp; range.length == 2) {</b>
+<b class="nc">&nbsp;            if (range[1] == null) {</b>
+<b class="nc">&nbsp;                return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                        criteriaBuilder.greaterThanOrEqualTo(root.get(key).get(keyParam), range[0]);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            else if (range[0] == null) {</b>
+<b class="nc">&nbsp;                return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                        criteriaBuilder.lessThanOrEqualTo(root.get(key).get(keyParam), range[1]);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                    criteriaBuilder.between(root.get(key).get(keyParam), range[0], range[1]);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            throw new IllegalArgumentException(String.format(&quot;Invalid parameter type for %s range&quot;, key));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public static &lt;T extends Comparable&lt;? super T&gt;&gt; Specification&lt;Yacht&gt;
+&nbsp;    getSpecificationInRangeOrElseThrow(T[] range, String key) {
+<b class="nc">&nbsp;        if (range != null &amp;&amp; range.length == 2) {</b>
+<b class="nc">&nbsp;            if (range[1] == null) {</b>
+<b class="nc">&nbsp;                return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                        criteriaBuilder.greaterThanOrEqualTo(root.get(key), range[0]);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            else if (range[0] == null) {</b>
+<b class="nc">&nbsp;                return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                        criteriaBuilder.lessThanOrEqualTo(root.get(key), range[1]);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return (root, query, criteriaBuilder) -&gt;</b>
+<b class="nc">&nbsp;                    criteriaBuilder.between(root.get(key), range[0], range[1]);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            throw new IllegalArgumentException(String.format(&quot;Invalid parameter type for %s range&quot;, key));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-30 22:07</div>
+</div>
+</body>
+</html>

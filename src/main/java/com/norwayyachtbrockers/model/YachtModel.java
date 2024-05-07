@@ -170,4 +170,12 @@ public class YachtModel extends BaseEntity {
         yacht.setYachtModel(null);
     }
 
+    public String getSafeKeelTypeName() {
+        if (this.keelType != null) {
+            return this.keelType.getName();
+        } else {
+            return "Unknown Keel Type"; // Default value when keelType is null
+        }
+    }
+
 }

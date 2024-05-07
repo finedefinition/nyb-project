@@ -26,9 +26,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     @Transactional
     public Country saveCountry(CountryRequestDto dto) {
-        Country country = new Country();
-        countryMapper.updateCountryFromDto(country, dto);
-        return countryRepository.save(country);
+        return countryRepository.save(countryMapper.createCountryFromDto(dto));
     }
 
     @Override
