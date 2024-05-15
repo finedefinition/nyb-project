@@ -127,7 +127,8 @@ public class YachtServiceImpl implements YachtService {
         Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
         return yachtRepository.findAll(yachtSpecification).stream()
                 .map(yachtMapper::convertToDto)
-                .toList();
+                .sorted(Comparator.comparing(YachtResponseDto::getId))
+                .collect(Collectors.toList());
     }
 
     @Override
