@@ -11,14 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "yacht_images")
-@Getter
-@Setter
 @JsonPropertyOrder({"yacht_image_id"})
+@Data
 public class YachtImage extends BaseEntity {
 
     @Id
@@ -38,14 +38,6 @@ public class YachtImage extends BaseEntity {
     @JoinColumn(name = "yacht_id")
     @JsonIgnore
     private Yacht yacht;
-
-
-    public YachtImage() {
-    }
-
-    public YachtImage(String imageKey) {
-        this.imageKey = imageKey;
-    }
 
     public void setYacht(Yacht yacht) {
         if (this.yacht != null) {

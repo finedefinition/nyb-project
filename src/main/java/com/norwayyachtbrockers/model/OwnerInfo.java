@@ -9,14 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "owner_infos", uniqueConstraints = { @UniqueConstraint(columnNames = {"email", "telephone" })})
-@Getter
-@Setter
 @JsonPropertyOrder({"owner_info_id"})
+@Data
 public class OwnerInfo extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,15 +35,4 @@ public class OwnerInfo extends BaseEntity {
 
     @Column(name = "email", nullable = false)
     private String email;
-
-
-    public OwnerInfo() {
-    }
-
-    public OwnerInfo(String firstName, String lastName, String telephone, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.telephone = telephone;
-        this.email = email;
-    }
 }

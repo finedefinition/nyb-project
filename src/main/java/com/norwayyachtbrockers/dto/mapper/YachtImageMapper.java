@@ -3,7 +3,6 @@ package com.norwayyachtbrockers.dto.mapper;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.model.YachtImage;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 @Component
 public class YachtImageMapper {

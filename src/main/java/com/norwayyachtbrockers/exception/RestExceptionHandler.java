@@ -114,7 +114,8 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(UsernameExistsException.class)
     protected ResponseEntity<Object> handleUsernameExistsException(UsernameExistsException ex) {
-        ExceptionMessageDto response = new ExceptionMessageDto("An account with the given email already exists. Please use a different email or recover your password if you forgot it.");
+        ExceptionMessageDto response = new ExceptionMessageDto("An account with the given email already exists." +
+                " Please use a different email or recover your password if you forgot it.");
         return ResponseEntity.badRequest().body(response);
     }
 
@@ -134,11 +135,4 @@ public class RestExceptionHandler {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
-    private Map<String, Object> getConflictResponseBody(Exception ex) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.CONFLICT);
-        body.put("message", ex.getMessage());
-        return body;
-    }
 }

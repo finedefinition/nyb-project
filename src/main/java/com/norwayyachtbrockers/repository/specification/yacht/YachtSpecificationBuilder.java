@@ -17,84 +17,85 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
     @Override
     public Specification<Yacht> build(YahctSearchParametersDto searchParametersDto) {
         Specification<Yacht> specification = Specification.where(null);
-        if (searchParametersDto.minPrice() != null || searchParametersDto.maxPrice() != null) {
+
+        if (searchParametersDto.getMinPrice() != null || searchParametersDto.getMaxPrice() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("price")
-                    .getSpecification(new BigDecimal[]{searchParametersDto.minPrice(),
-                            searchParametersDto.maxPrice()}));
+                    .getSpecification(new BigDecimal[]{searchParametersDto.getMinPrice(),
+                            searchParametersDto.getMaxPrice()}));
         }
-        if (searchParametersDto.model() != null && !searchParametersDto.model().isEmpty()) {
+        if (searchParametersDto.getModel() != null && !searchParametersDto.getModel().isEmpty()) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("yachtModel")
-                    .getSpecification(searchParametersDto.model()));
+                    .getSpecification(searchParametersDto.getModel()));
         }
-        if (searchParametersDto.country() != null && !searchParametersDto.country().isEmpty()) {
+        if (searchParametersDto.getCountry() != null && !searchParametersDto.getCountry().isEmpty()) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("country")
-                    .getSpecification(searchParametersDto.country()));
+                    .getSpecification(searchParametersDto.getCountry()));
         }
-        if (searchParametersDto.town() != null && !searchParametersDto.town().isEmpty()) {
+        if (searchParametersDto.getTown() != null && !searchParametersDto.getTown().isEmpty()) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("town")
-                    .getSpecification(searchParametersDto.town()));
+                    .getSpecification(searchParametersDto.getTown()));
         }
-        if (searchParametersDto.keelType() != null && !searchParametersDto.keelType().isEmpty()) {
+        if (searchParametersDto.getKeelType() != null && !searchParametersDto.getKeelType().isEmpty()) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("keelType")
-                    .getSpecification(searchParametersDto.keelType()));
+                    .getSpecification(searchParametersDto.getKeelType()));
         }
-        if (searchParametersDto.fuelType() != null && !searchParametersDto.fuelType().isEmpty()) {
+        if (searchParametersDto.getFuelType() != null && !searchParametersDto.getFuelType().isEmpty()) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("fuelType")
-                    .getSpecification(searchParametersDto.fuelType()));
+                    .getSpecification(searchParametersDto.getFuelType()));
         }
-        if (searchParametersDto.minYear() != null || searchParametersDto.maxYear() != null) {
+        if (searchParametersDto.getMinYear() != null || searchParametersDto.getMaxYear() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("year")
-                    .getSpecification(new Integer[]{searchParametersDto.minYear(),
-                            searchParametersDto.maxYear()}));
+                    .getSpecification(new Integer[]{searchParametersDto.getMinYear(),
+                            searchParametersDto.getMaxYear()}));
         }
-        if (searchParametersDto.minLengthOverall() != null || searchParametersDto.maxLengthOverall() != null) {
+        if (searchParametersDto.getMinLengthOverall() != null || searchParametersDto.getMaxLengthOverall() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("lengthOverall")
-                    .getSpecification(new BigDecimal[]{searchParametersDto.minLengthOverall(),
-                            searchParametersDto.maxLengthOverall()}));
+                    .getSpecification(new BigDecimal[]{searchParametersDto.getMinLengthOverall(),
+                            searchParametersDto.getMaxLengthOverall()}));
         }
-        if (searchParametersDto.minBeamWidth() != null || searchParametersDto.maxBeamWidth() != null) {
+        if (searchParametersDto.getMinBeamWidth() != null || searchParametersDto.getMaxBeamWidth() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("beamWidth")
-                    .getSpecification(new BigDecimal[]{searchParametersDto.minBeamWidth(),
-                            searchParametersDto.maxBeamWidth()}));
+                    .getSpecification(new BigDecimal[]{searchParametersDto.getMinBeamWidth(),
+                            searchParametersDto.getMaxBeamWidth()}));
         }
-        if (searchParametersDto.minDraftDepth() != null || searchParametersDto.maxDraftDepth() != null) {
+        if (searchParametersDto.getMinDraftDepth() != null || searchParametersDto.getMaxDraftDepth() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("draftDepth")
-                    .getSpecification(new BigDecimal[]{searchParametersDto.minDraftDepth(),
-                            searchParametersDto.maxDraftDepth()}));
+                    .getSpecification(new BigDecimal[]{searchParametersDto.getMinDraftDepth(),
+                            searchParametersDto.getMaxDraftDepth()}));
         }
-        if (searchParametersDto.minCabinNumber() != null || searchParametersDto.maxCabinNumber() != null) {
+        if (searchParametersDto.getMinCabinNumber() != null || searchParametersDto.getMaxCabinNumber() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("cabin")
-                    .getSpecification(new Integer[]{searchParametersDto.minCabinNumber(),
-                            searchParametersDto.maxCabinNumber()}));
+                    .getSpecification(new Integer[]{searchParametersDto.getMinCabinNumber(),
+                            searchParametersDto.getMaxCabinNumber()}));
         }
-        if (searchParametersDto.minBerthNumber() != null || searchParametersDto.maxBerthNumber() != null) {
+        if (searchParametersDto.getMinBerthNumber() != null || searchParametersDto.getMaxBerthNumber() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("berth")
-                    .getSpecification(new Integer[]{searchParametersDto.minBerthNumber(),
-                            searchParametersDto.maxBerthNumber()}));
+                    .getSpecification(new Integer[]{searchParametersDto.getMinBerthNumber(),
+                            searchParametersDto.getMaxBerthNumber()}));
         }
-        if (searchParametersDto.minHeadsNumber() != null || searchParametersDto.maxHeadsNumber() != null) {
+        if (searchParametersDto.getMinHeadsNumber() != null || searchParametersDto.getMaxHeadsNumber() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("heads")
-                    .getSpecification(new Integer[]{searchParametersDto.minHeadsNumber(),
-                            searchParametersDto.maxHeadsNumber()}));
+                    .getSpecification(new Integer[]{searchParametersDto.getMinHeadsNumber(),
+                            searchParametersDto.getMaxHeadsNumber()}));
         }
-        if (searchParametersDto.minShowerNumber() != null || searchParametersDto.maxShowerNumber() != null) {
+        if (searchParametersDto.getMinShowerNumber() != null || searchParametersDto.getMaxShowerNumber() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("shower")
-                    .getSpecification(new Integer[]{searchParametersDto.minShowerNumber(),
-                            searchParametersDto.maxShowerNumber()}));
+                    .getSpecification(new Integer[]{searchParametersDto.getMinShowerNumber(),
+                            searchParametersDto.getMaxShowerNumber()}));
         }
         return specification;
     }

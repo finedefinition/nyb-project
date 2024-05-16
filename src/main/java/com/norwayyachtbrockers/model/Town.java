@@ -13,16 +13,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "towns", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "country_id"})})
-@Getter
-@Setter
+@Data
 public class Town extends BaseEntity {
 
     @Id
@@ -41,24 +41,4 @@ public class Town extends BaseEntity {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     private Set<Yacht> yachts = new HashSet<>();
-
-    public Town() {
-    }
-
-    public Town(String name, Country country) {
-        this.name = name;
-        this.country = country;
-    }
-
-    public void addYacht(Yacht yacht) {
-        yachts.add(yacht);
-        yacht.setTown(this);
-    }
-
-    public void removeYacht(Yacht yacht) {
-        yachts.remove(yacht);
-        if (yacht.getTown() == this) {
-            yacht.setTown(null);
-        }
-    }
 }

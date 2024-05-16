@@ -13,16 +13,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "fuel_types", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 @JsonPropertyOrder({ "fuel_type_id", "fuel_type_name"})
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 public class Fuel extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,9 +40,6 @@ public class Fuel extends BaseEntity {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     private Set<YachtModel> yachtModels;
-
-    public Fuel() {
-    }
 
     public Fuel(String name) {
         this.name = name;

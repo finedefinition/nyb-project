@@ -8,14 +8,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "yacht_details")
-@Getter
-@Setter
 @JsonPropertyOrder({"yacht_detail_id"})
+@Data
 public class YachtDetail extends BaseEntity {
 
     @Id
@@ -37,16 +37,4 @@ public class YachtDetail extends BaseEntity {
 
     @Column(name = "description", length = 5000)
     private String description;
-
-    public YachtDetail() {
-    }
-
-    public YachtDetail(Integer cabin, Integer berth,
-                       Integer heads, Integer shower, String description) {
-        this.cabin = cabin;
-        this.berth = berth;
-        this.heads = heads;
-        this.shower = shower;
-        this.description = description;
-    }
 }

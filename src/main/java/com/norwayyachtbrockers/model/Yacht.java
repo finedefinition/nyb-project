@@ -13,17 +13,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true, exclude = {"yachtModel", "country", "town", "yachtImages", "yachtDetail", "ownerInfo", "favouritedByUsers"})
 @Entity
 @Table(name = "yachts")
-@Getter
-@Setter
+@Data
 public class Yacht extends BaseEntity {
 
     @Id
@@ -58,8 +58,7 @@ public class Yacht extends BaseEntity {
     private Town town;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "yacht",
-            cascade = CascadeType.ALL, orphanRemoval = true
-    )
+            cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<YachtImage> yachtImages = new HashSet<>();
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL,
@@ -74,27 +73,6 @@ public class Yacht extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favouriteYachts")
     private Set<User> favouritedByUsers = new HashSet<>();
-
-    public Yacht() {
-    }
-
-    public Yacht(Long id, boolean featured, boolean vatIncluded, BigDecimal price,
-                 String mainImageKey, YachtModel yachtModel, Country country,
-                 Town town, Set<YachtImage> yachtImages, YachtDetail yachtDetail,
-                 OwnerInfo ownerInfo, Set<User> favouritedByUsers) {
-        this.id = id;
-        this.featured = featured;
-        this.vatIncluded = vatIncluded;
-        this.price = price;
-        this.mainImageKey = mainImageKey;
-        this.yachtModel = yachtModel;
-        this.country = country;
-        this.town = town;
-        this.yachtImages = yachtImages;
-        this.yachtDetail = yachtDetail;
-        this.ownerInfo = ownerInfo;
-        this.favouritedByUsers = favouritedByUsers;
-    }
 
     public void setYachtModel(YachtModel yachtModel) {
         if (yachtModel != null && yachtModel.getYachts() == null) {

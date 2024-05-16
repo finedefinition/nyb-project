@@ -14,17 +14,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "countries", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 @JsonPropertyOrder({ "country_id", "country_name" })
-@Getter
-@Setter
+@Data
 public class Country extends BaseEntity {
 
     @Id
@@ -48,42 +48,4 @@ public class Country extends BaseEntity {
     @JsonIgnore
     private Set<Yacht> yachts = new HashSet<>();
 
-    public Country() {
-    }
-
-    public Country(String name) {
-        this.name = name;
-    }
-
-    public void addYacht(Yacht yacht) {
-        yachts.add(yacht);
-        yacht.setCountry(this);
-    }
-
-    public void removeYacht(Yacht yacht) {
-        yachts.remove(yacht);
-        if (yacht.getCountry() == this) {
-            yacht.setCountry(null);
-        }
-    }
-
-    public Set<Yacht> getYachts() {
-        return yachts;
-    }
-
-    public void setYachts(Set<Yacht> yachts) {
-        this.yachts = yachts;
-    }
-
-    public void addTown(Town town) {
-        towns.add(town);
-        town.setCountry(this);
-    }
-
-    public void removeTown(Town town) {
-        towns.remove(town);
-        if (town.getCountry() == this) {
-            town.setCountry(null);
-        }
-    }
 }

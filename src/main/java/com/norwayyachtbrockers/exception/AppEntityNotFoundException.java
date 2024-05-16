@@ -5,11 +5,4 @@ public class AppEntityNotFoundException extends RuntimeException {
         super(message);
     }
 
-    public AppEntityNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AppEntityNotFoundException(Throwable cause) {
-        super(cause);
-    }
 }

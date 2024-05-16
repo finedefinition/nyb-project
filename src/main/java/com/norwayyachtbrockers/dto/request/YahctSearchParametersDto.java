@@ -1,30 +1,32 @@
 package com.norwayyachtbrockers.dto.request;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 
-public record YahctSearchParametersDto(
-        BigDecimal minPrice,
-        BigDecimal maxPrice,
-        String model,
-        String country,
-        String town,
-        String keelType,
-        String fuelType,
-        Integer minYear,
-        Integer maxYear,
-        BigDecimal minLengthOverall,
-        BigDecimal maxLengthOverall,
-        BigDecimal minBeamWidth,
-        BigDecimal maxBeamWidth,
-        BigDecimal minDraftDepth,
-        BigDecimal maxDraftDepth,
-        Integer minCabinNumber,
-        Integer maxCabinNumber,
-        Integer minBerthNumber,
-        Integer maxBerthNumber,
-        Integer minHeadsNumber,
-        Integer maxHeadsNumber,
-        Integer minShowerNumber,
-        Integer maxShowerNumber
-) {
+@Data
+public class YahctSearchParametersDto {
+    private BigDecimal minPrice;
+    private BigDecimal maxPrice;
+    private String model;
+    private String country;
+    private String town;
+    private String keelType;
+    private String fuelType;
+    private Integer minYear;
+    private Integer maxYear;
+    private BigDecimal minLengthOverall;
+    private BigDecimal maxLengthOverall;
+    private BigDecimal minBeamWidth;
+    private BigDecimal maxBeamWidth;
+    private BigDecimal minDraftDepth;
+    private BigDecimal maxDraftDepth;
+    private Integer minCabinNumber;
+    private Integer maxCabinNumber;
+    private Integer minBerthNumber;
+    private Integer maxBerthNumber;
+    private Integer minHeadsNumber;
+    private Integer maxHeadsNumber;
+    private Integer minShowerNumber;
+    private Integer maxShowerNumber;
 }
