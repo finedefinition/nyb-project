@@ -81,20 +81,9 @@ public class AuthServiceImpl implements AuthService {
                     .withGroupName("ROLE_USER");
 
             cognitoClient.adminAddUserToGroup(groupRequest);
-
+            String idToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
             // Perform automatic login to get the ID token
-            Map<String, String> authParams = new HashMap<>();
-            authParams.put("USERNAME", request.getEmail());
-            authParams.put("PASSWORD", request.getPassword());
-            authParams.put("SECRET_HASH", secretHash);
 
-            InitiateAuthRequest authRequest = new InitiateAuthRequest()
-                    .withAuthFlow(AuthFlowType.USER_PASSWORD_AUTH)
-                    .withClientId(clientId)
-                    .withAuthParameters(authParams);
-
-            InitiateAuthResult authResult = cognitoClient.initiateAuth(authRequest);
-            String idToken = authResult.getAuthenticationResult().getIdToken();
             DecodedJWT jwt = JWT.decode(idToken);
             String userSub = jwt.getClaim("sub").asString();
 
@@ -116,18 +105,7 @@ public class AuthServiceImpl implements AuthService {
     public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
         try {
             String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
-            Map<String, String> authParams = new HashMap<>();
-            authParams.put("USERNAME", request.getEmail());
-            authParams.put("PASSWORD", request.getPassword());
-            authParams.put("SECRET_HASH", secretHash);
-
-            InitiateAuthRequest initiateAuthRequest = new InitiateAuthRequest()
-                    .withAuthFlow(AuthFlowType.USER_PASSWORD_AUTH)
-                    .withClientId(clientId)
-                    .withAuthParameters(authParams);
-
-            InitiateAuthResult initiateAuthResult = cognitoClient.initiateAuth(initiateAuthRequest);
-            String jwtToken = initiateAuthResult.getAuthenticationResult().getIdToken();
+            String jwtToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
             return new UserLoginResponseDto(jwtToken);
         } catch (Exception e) {
             System.err.println("Failed to authenticate: " + e.getMessage());
@@ -240,5 +218,20 @@ public class AuthServiceImpl implements AuthService {
                 .findFirst()
                 .map(AttributeType::getValue)
                 .orElse(null);
+    }
+
+    private String initiateAuthenticationAndGetToken(String email, String password, String secretHash) {
+        Map<String, String> authParams = new HashMap<>();
+        authParams.put("USERNAME", email);
+        authParams.put("PASSWORD", password);
+        authParams.put("SECRET_HASH", secretHash);
+
+        InitiateAuthRequest authRequest = new InitiateAuthRequest()
+                .withAuthFlow(AuthFlowType.USER_PASSWORD_AUTH)
+                .withClientId(clientId)
+                .withAuthParameters(authParams);
+
+        InitiateAuthResult authResult = cognitoClient.initiateAuth(authRequest);
+        return authResult.getAuthenticationResult().getIdToken();
     }
 }
