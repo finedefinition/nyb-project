@@ -16,15 +16,17 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "countries", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 @JsonPropertyOrder({ "country_id", "country_name" })
 @Data
+@EqualsAndHashCode(callSuper = true, exclude = {"towns", "yachts"})
+@ToString(exclude = {"towns", "yachts"})
 public class Country extends BaseEntity {
 
     @Id
@@ -47,5 +49,4 @@ public class Country extends BaseEntity {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     private Set<Yacht> yachts = new HashSet<>();
-
 }

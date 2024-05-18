@@ -15,14 +15,17 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+
 @Entity
 @Table(name = "towns", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "country_id"})})
 @Data
+@EqualsAndHashCode(callSuper = true, exclude = {"country", "yachts"})
+@ToString(exclude = {"country", "yachts"})
 public class Town extends BaseEntity {
 
     @Id

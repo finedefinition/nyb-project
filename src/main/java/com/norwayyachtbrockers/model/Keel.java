@@ -17,12 +17,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "keel_types", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
-@JsonPropertyOrder({ "keel_type_id", "keel_type_name" })
+@JsonPropertyOrder({"keel_type_id", "keel_type_name"})
 @Data
 @NoArgsConstructor
 public class Keel extends BaseEntity {
@@ -39,7 +40,7 @@ public class Keel extends BaseEntity {
             fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
-    private Set<YachtModel> yachtModels;
+    private Set<YachtModel> yachtModels = new HashSet<>();
 
     public Keel(String name) {
         this.name = name;
@@ -54,8 +55,6 @@ public class Keel extends BaseEntity {
     // Convenience method to remove a YachtModel from the Keel type
     public void removeYachtModel(YachtModel yachtModel) {
         yachtModels.remove(yachtModel);
-        if (yachtModel.getKeelType() == this) {
-            yachtModel.setKeelType(null);
-        }
+        yachtModel.setKeelType(null);
     }
 }

@@ -80,13 +80,11 @@ public class YachtModelServiceImpl implements YachtModelService {
             }
             newFuel.addYachtModel(existingModel);
         }
-
         // Update other fields
         yachtModelMapper.updateYachtModelFromDto(existingModel, dto);
 
         return yachtModelRepository.save(existingModel);
     }
-
 
     @Override
     @Transactional
@@ -104,7 +102,6 @@ public class YachtModelServiceImpl implements YachtModelService {
         yachtModelRepository.delete(yachtModel);
     }
 
-
     @Override
     public List<YachtModel> findByKeelType_Id(Long keelTypeId) {
         EntityUtils.findEntityOrThrow(keelTypeId, keelRepository, "Keel");
@@ -116,5 +113,4 @@ public class YachtModelServiceImpl implements YachtModelService {
         EntityUtils.findEntityOrThrow(fuelTypeId, fuelRepository, "Fuel");
         return yachtModelRepository.findByFuelType_Id(fuelTypeId);
     }
-
 }

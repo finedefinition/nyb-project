@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Order(20)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CountryMapperTest {
 
@@ -34,7 +35,7 @@ class CountryMapperTest {
     private static final String INVALID_NAME_TOO_SHORT = "Ab";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         country = new Country();
         dto = new CountryRequestDto();
     }
@@ -44,7 +45,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on creation")
     @Order(10)
-    public void testCreateCountryFromDto_NullDto() {
+    void testCreateCountryFromDto_NullDto() {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> countryMapper.createCountryFromDto(null),
                 "Should throw IllegalArgumentException when the DTO is null.");
@@ -53,7 +54,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name is null on creation")
     @Order(20)
-    public void testCreateCountryFromDto_NameNull() {
+    void testCreateCountryFromDto_NameNull() {
         // Arrange
         dto.setName(null);  // Setting null as Name
 
@@ -66,7 +67,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name shorter than 3 characters")
     @Order(30)
-    public void testNameTooShort() {
+    void testNameTooShort() {
         // Arrange
         dto.setName(INVALID_NAME_TOO_SHORT);  // Setting Name shorter than the minimum length
 
@@ -79,7 +80,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name longer than 20 characters")
     @Order(40)
-    public void testNameTooLong() {
+    void testNameTooLong() {
         // Arrange
         dto.setName(INVALID_NAME_TOO_LONG);  // Setting Name longer than the maximum length
 
@@ -92,7 +93,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name with invalid characters")
     @Order(50)
-    public void testNameInvalidCharacters() {
+    void testNameInvalidCharacters() {
         // Arrange
         dto.setName(INVALID_NAME_WITH_DIGITS);  // Setting Name with numbers, which are invalid
 
@@ -105,7 +106,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name not starting with capital letter")
     @Order(60)
-    public void testNameDoesNotStartWithCapital() {
+    void testNameDoesNotStartWithCapital() {
         // Arrange
         dto.setName(INVALID_NAME_LOWERCASE);  // Starting with a lowercase letter
 
@@ -118,7 +119,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Country name is trimmed correctly")
     @Order(70)
-    public void testTrimString() {
+    void testTrimString() {
         // Arrange
         dto.setName(COUNTRY_NAME + "     ");  // Name with trailing spaces
 
@@ -132,7 +133,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Successfully create Country from valid DTO")
     @Order(80)
-    public void testCreateCountryFromDto_ValidDto() {
+    void testCreateCountryFromDto_ValidDto() {
         // Arrange
         dto.setName(COUNTRY_NAME);
 
@@ -150,7 +151,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException for null Country on update")
     @Order(90)
-    public void testUpdateCountryFromDto_NullCountry() {
+    void testUpdateCountryFromDto_NullCountry() {
         // Assert
         assertThrows(ConstraintViolationException.class,
                 () -> countryMapper.updateCountryFromDto(null, dto),
@@ -160,7 +161,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on update")
     @Order(100)
-    public void testUpdateCountryFromDto_NullDto() {
+    void testUpdateCountryFromDto_NullDto() {
         // Assert
         assertThrows(IllegalArgumentException.class,
                 () -> countryMapper.updateCountryFromDto(country, null),
@@ -170,7 +171,7 @@ class CountryMapperTest {
     @Test
     @DisplayName("Update Country name using valid Country and DTO")
     @Order(110)
-    public void testUpdateCountryFromDto_ValidArguments() {
+    void testUpdateCountryFromDto_ValidArguments() {
         // Arrange
         country.setName(COUNTRY_NAME);
         dto.setName(UPDATED_COUNTRY_NAME);

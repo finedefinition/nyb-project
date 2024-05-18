@@ -13,9 +13,7 @@ import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.CountryService;
-import com.norwayyachtbrockers.service.OwnerInfoService;
 import com.norwayyachtbrockers.service.TownService;
-import com.norwayyachtbrockers.service.YachtDetailService;
 import com.norwayyachtbrockers.service.YachtModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,8 +37,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Order(100)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class YachtMapperTest {
+class YachtMapperTest {
 
     @MockBean
     private YachtModelService yachtModelService;
@@ -48,10 +47,6 @@ public class YachtMapperTest {
     private TownService townService;
     @MockBean
     private CountryService countryService;
-    @MockBean
-    private YachtDetailService yachtDetailService;
-    @MockBean
-    private OwnerInfoService ownerInfoService;
 
     @Autowired
     private YachtMapper yachtMapper;

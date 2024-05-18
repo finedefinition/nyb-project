@@ -88,5 +88,4 @@ public class TownServiceImpl implements TownService {
         // Delete the town
         townRepository.delete(town);
     }
-
 }

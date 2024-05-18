@@ -17,8 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Order(50)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class OwnerInfoMapperTest {
+public class OwnerInfoMapperTest {
 
     @Autowired
     private OwnerInfoMapper ownerInfoMapper;
@@ -44,7 +45,7 @@ class OwnerInfoMapperTest {
     private static final String INVALID_EMAIL = "@emailcom";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         ownerInfo = new OwnerInfo();
         dto = new OwnerInfoRequestDto();
     }
@@ -54,7 +55,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on creation")
     @Order(10)
-    public void testCreateOwnerInfoFromDto_NullDto() {
+    void testCreateOwnerInfoFromDto_NullDto() {
         // Assert
         assertThrows(IllegalArgumentException.class, () -> ownerInfoMapper.createOwnerInfoFromDto(null),
                 "Should throw IllegalArgumentException for null DTO");
@@ -63,7 +64,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName is null on creation")
     @Order(20)
-    public void testCreateOwnerInfoFromDto_FirstNameNull() {
+    void testCreateOwnerInfoFromDto_FirstNameNull() {
         // Arrange
         dto.setFirstName(null);  // Setting null as firsName
         dto.setLastName(LAST_NAME);
@@ -79,7 +80,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName shorter than 1 character")
     @Order(30)
-    public void testFirstNameTooShort() {
+    void testFirstNameTooShort() {
         // Arrange
         dto.setFirstName(INVALID_NAME_TOO_SHORT);  // Setting empty string as firsName
         dto.setLastName(LAST_NAME);
@@ -95,7 +96,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name longer than 30 characters")
     @Order(40)
-    public void testFirstNameTooLong() {
+    void testFirstNameTooLong() {
         // Arrange
 
         dto.setFirstName(INVALID_NAME_TOO_LONG); // Setting firstName longer than the maximum length
@@ -112,7 +113,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName with invalid characters")
     @Order(50)
-    public void testFirstNameInvalidCharacters() {
+    void testFirstNameInvalidCharacters() {
 
         // Arrange
         dto.setFirstName(INVALID_NAME_WITH_DIGITS); // Setting firstName with numbers, which are invalid
@@ -129,7 +130,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName not starting with capital letter")
     @Order(60)
-    public void testFirstNameDoesNotStartWithCapital() {
+    void testFirstNameDoesNotStartWithCapital() {
         // Arrange
         dto.setFirstName(INVALID_NAME_LOWERCASE);  // Starting with a lowercase letter
         dto.setLastName(LAST_NAME);
@@ -145,7 +146,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("FirstName is trimmed correctly")
     @Order(70)
-    public void testFirstNameTrimString() {
+    void testFirstNameTrimString() {
         // Arrange
         dto.setFirstName(FIRST_NAME + "     ");  // firstName with trailing spaces
         dto.setLastName(LAST_NAME);
@@ -162,7 +163,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName is null on creation")
     @Order(80)
-    public void testCreateOwnerInfoFromDto_LastNameNull() {
+    void testCreateOwnerInfoFromDto_LastNameNull() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(null); // Setting null as lastName
@@ -178,7 +179,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName shorter than 1 character")
     @Order(90)
-    public void testLastNameTooShort() {
+    void testLastNameTooShort() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(INVALID_NAME_TOO_SHORT);  // Setting empty string as lastName
@@ -194,7 +195,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName longer than 30 characters")
     @Order(100)
-    public void testLastNameTooLong() {
+    void testLastNameTooLong() {
         // Arrange
 
         dto.setFirstName(FIRST_NAME);
@@ -211,7 +212,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName with invalid characters")
     @Order(110)
-    public void testLastNameInvalidCharacters() {
+    void testLastNameInvalidCharacters() {
 
         // Arrange
         dto.setFirstName(FIRST_NAME);
@@ -228,7 +229,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName not starting with capital letter")
     @Order(120)
-    public void testLastNameDoesNotStartWithCapital() {
+    void testLastNameDoesNotStartWithCapital() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(INVALID_NAME_LOWERCASE);  // Starting with a lowercase letter
@@ -244,7 +245,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("LastName is trimmed correctly")
     @Order(130)
-    public void testLastNameTrimString() {
+    void testLastNameTrimString() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(LAST_NAME + "     "); // lastName with trailing spaces
@@ -261,7 +262,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains PhoneNumber is null on creation")
     @Order(140)
-    public void testCreateOwnerInfoFromDto_PhoneNumberNull() {
+    void testCreateOwnerInfoFromDto_PhoneNumberNull() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(LAST_NAME);
@@ -277,7 +278,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains PhoneNumber shorter than 7 character")
     @Order(150)
-    public void testPhoneNumberTooShort() {
+    void testPhoneNumberTooShort() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(LAST_NAME);
@@ -293,7 +294,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains PhoneNumber longer than 15 characters")
     @Order(160)
-    public void testPhoneNumberTooLong() {
+    void testPhoneNumberTooLong() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(LAST_NAME);
@@ -309,7 +310,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains PhoneNumber with invalid characters")
     @Order(170)
-    public void testPhoneNumberInvalidCharacters() {
+    void testPhoneNumberInvalidCharacters() {
 
         // Arrange
         dto.setFirstName(FIRST_NAME);
@@ -326,7 +327,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Email is null on creation")
     @Order(171)
-    public void testCreateOwnerInfoFromDto_EmailNull() {
+    void testCreateOwnerInfoFromDto_EmailNull() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(LAST_NAME);
@@ -342,7 +343,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Email with invalid characters")
     @Order(180)
-    public void testEmailInvalidCharacters() {
+    void testEmailInvalidCharacters() {
 
         // Arrange
         dto.setFirstName(FIRST_NAME);
@@ -359,7 +360,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Successfully create OwnerInfo from valid DTO")
     @Order(190)
-    public void testCreateOwnerInfoFromDto_ValidDto() {
+    void testCreateOwnerInfoFromDto_ValidDto() {
         // Arrange
         dto.setFirstName(FIRST_NAME);
         dto.setLastName(LAST_NAME);
@@ -390,7 +391,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException for null OwnerInfo on update")
     @Order(200)
-    public void testUpdateOwnerInfoFromDto_NullOwnerInfo() {
+    void testUpdateOwnerInfoFromDto_NullOwnerInfo() {
         // Assert
         assertThrows(ConstraintViolationException.class, () -> ownerInfoMapper.updateOwnerInfoFromDto(null, dto),
                 "Should throw ConstraintViolationException when the Country is null.");
@@ -399,7 +400,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on update")
     @Order(210)
-    public void testUpdateOwnerInfoFromDto_NullDto() {
+    void testUpdateOwnerInfoFromDto_NullDto() {
         // Assert
         assertThrows(IllegalArgumentException.class, () -> ownerInfoMapper.updateOwnerInfoFromDto(ownerInfo, null),
                 "Should throw ConstraintViolationException when the DTO is null.");
@@ -408,7 +409,7 @@ class OwnerInfoMapperTest {
     @Test
     @DisplayName("Update OwnerInfo using valid OwnerInfo and DTO")
     @Order(220)
-    public void testUpdateOwnerInfoFromDto_ValidArguments() {
+    void testUpdateOwnerInfoFromDto_ValidArguments() {
         // Arrange
         ownerInfo.setFirstName(FIRST_NAME);
         ownerInfo.setLastName(LAST_NAME);

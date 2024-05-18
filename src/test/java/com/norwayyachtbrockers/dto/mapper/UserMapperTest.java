@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Order(70)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserMapperTest {
 
@@ -45,7 +46,7 @@ class UserMapperTest {
     private static final String INVALID_PASSWORD_NO_SPECIAL_CHAR = "John1234";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         user = new User();
         requestDto = new UserRegistrationRequestDto();
     }
@@ -55,7 +56,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on creation")
     @Order(10)
-    public void testCreateUserFromDto_NullDto() {
+    void testCreateUserFromDto_NullDto() {
         // Assert
         assertThrows(IllegalArgumentException.class, () -> userMapper.createUserFromDto(null),
                 "Should throw IllegalArgumentException for null DTO");
@@ -64,7 +65,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName is null on creation")
     @Order(20)
-    public void testCreateUserFromDto_FirstNameNull() {
+    void testCreateUserFromDto_FirstNameNull() {
         // Arrange
         requestDto.setFirstName(null);  // Setting null as firsName
         requestDto.setLastName(LAST_NAME);
@@ -80,7 +81,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName shorter than 1 character")
     @Order(30)
-    public void testFirstNameTooShort() {
+    void testFirstNameTooShort() {
         // Arrange
         requestDto.setFirstName(INVALID_NAME_TOO_SHORT);  /// Setting empty string as firsName
         requestDto.setLastName(LAST_NAME);
@@ -96,9 +97,8 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name longer than 30 characters")
     @Order(40)
-    public void testFirstNameTooLong() {
+    void testFirstNameTooLong() {
         // Arrange
-
         requestDto.setFirstName(INVALID_NAME_TOO_LONG); // Setting firstName longer than the maximum length
         requestDto.setLastName(LAST_NAME);
         requestDto.setEmail(EMAIL);
@@ -113,8 +113,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName with invalid characters")
     @Order(50)
-    public void testFirstNameInvalidCharacters() {
-
+    void testFirstNameInvalidCharacters() {
         // Arrange
         requestDto.setFirstName(INVALID_NAME_WITH_DIGITS); // Setting firstName with numbers, which are invalid
         requestDto.setLastName(LAST_NAME);
@@ -130,7 +129,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName not starting with capital letter")
     @Order(60)
-    public void testFirstNameDoesNotStartWithCapital() {
+    void testFirstNameDoesNotStartWithCapital() {
         // Arrange
         requestDto.setFirstName(INVALID_NAME_LOWERCASE);  // Starting with a lowercase letter
         requestDto.setLastName(LAST_NAME);
@@ -146,7 +145,7 @@ class UserMapperTest {
     @Test
     @DisplayName("FirstName is trimmed correctly")
     @Order(70)
-    public void testFirstNameTrimString() {
+    void testFirstNameTrimString() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME + "     ");  // firstName with trailing spaces
         requestDto.setLastName(LAST_NAME);
@@ -163,7 +162,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName is null on creation")
     @Order(80)
-    public void testCreateUserFromDto_LastNameNull() {
+    void testCreateUserFromDto_LastNameNull() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(null); // Setting null as lastName
@@ -179,7 +178,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName shorter than 1 character")
     @Order(90)
-    public void testLastNameTooShort() {
+    void testLastNameTooShort() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(INVALID_NAME_TOO_SHORT);  // Setting empty string as lastName
@@ -195,9 +194,8 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName longer than 30 characters")
     @Order(100)
-    public void testLastNameTooLong() {
+    void testLastNameTooLong() {
         // Arrange
-
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(INVALID_NAME_TOO_LONG); // Setting LastName longer than the maximum length
         requestDto.setEmail(EMAIL);
@@ -212,8 +210,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName with invalid characters")
     @Order(110)
-    public void testLastNameInvalidCharacters() {
-
+    void testLastNameInvalidCharacters() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(INVALID_NAME_WITH_DIGITS); // Setting lastName with numbers, which are invalid
@@ -229,7 +226,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains LastName not starting with capital letter")
     @Order(120)
-    public void testLastNameDoesNotStartWithCapital() {
+    void testLastNameDoesNotStartWithCapital() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(INVALID_NAME_LOWERCASE);  // Starting with a lowercase letter
@@ -245,7 +242,7 @@ class UserMapperTest {
     @Test
     @DisplayName("LastName is trimmed correctly")
     @Order(130)
-    public void testLastNameTrimString() {
+    void testLastNameTrimString() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME + "     "); // lastName with trailing spaces
@@ -262,13 +259,12 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Email is null on creation")
     @Order(131)
-    public void testCreateUserFromDto_EmailNull() {
+    void testCreateUserFromDto_EmailNull() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME);
         requestDto.setEmail(null); // Setting null as email
         requestDto.setPassword(PASSWORD);
-
 
         // Act & Assert
         assertThrows(ConstraintViolationException.class,
@@ -279,8 +275,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Email with invalid characters")
     @Order(140)
-    public void testEmailInvalidCharacters() {
-
+    void testEmailInvalidCharacters() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME);
@@ -296,7 +291,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains PhoneNumber is null on creation")
     @Order(150)
-    public void testCreateUserFromDto_PasswordNull() {
+    void testCreateUserFromDto_PasswordNull() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME);
@@ -312,7 +307,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Password shorter than 8 character")
     @Order(160)
-    public void testPasswordTooShort() {
+    void testPasswordTooShort() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME);
@@ -328,7 +323,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Password longer than 20 characters")
     @Order(170)
-    public void testPasswordTooLong() {
+    void testPasswordTooLong() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME);
@@ -344,8 +339,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Password with invalid characters")
     @Order(180)
-    public void testPasswordInvalidCharacters() {
-
+    void testPasswordInvalidCharacters() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME);
@@ -358,11 +352,10 @@ class UserMapperTest {
                 "Should throw ConstraintViolationException when the Password contains invalid characters.");
     }
 
-
     @Test
     @DisplayName("Successfully create User from valid DTO")
     @Order(190)
-    public void testCreateUserFromDto_ValidDto() {
+    void testCreateUserFromDto_ValidDto() {
         // Arrange
         requestDto.setFirstName(FIRST_NAME);
         requestDto.setLastName(LAST_NAME);
@@ -386,11 +379,10 @@ class UserMapperTest {
     }
 
     // Test cases for convertToDto(User existingUser)
-
     @Test
     @DisplayName("Throw IllegalArgumentException for null User")
     @Order(200)
-    public void testConvertUserToDto_NullUser() {
+    void testConvertUserToDto_NullUser() {
         // Assert
         assertThrows(IllegalArgumentException.class, () -> userMapper.convertUserToDto(null),
                 "Should throw IllegalArgumentException for null DTO");
@@ -399,7 +391,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Convert User to UserResponseDto with null fields")
     @Order(210)
-    public void testConvertToDto_WithNullFields() {
+    void testConvertToDto_WithNullFields() {
         // Arrange
         user.setFirstName(null);
         user.setLastName(null);
@@ -414,7 +406,7 @@ class UserMapperTest {
     @Test
     @DisplayName("Ensure UserResponseDto handles special characters in names")
     @Order(220)
-    public void testConvertToDto_SpecialCharacters() {
+    void testConvertToDto_SpecialCharacters() {
         // Arrange
         user.setFirstName("Jo-hn");
         user.setLastName("Len-non");
@@ -430,11 +422,10 @@ class UserMapperTest {
         assertEquals("Len-non", dto.getLastName(), "Last name should handle apostrophes");
     }
 
-
     @Test
     @DisplayName("Convert User to UserResponseDto successfully")
     @Order(300)
-    public void testConvertToDto_Success() {
+    void testConvertToDto_Success() {
         // Arrange
         user.setId(USER_ID);
         user.setEmail(EMAIL);
@@ -455,5 +446,4 @@ class UserMapperTest {
         assertEquals(user.getUserRoles().name(), dto.getRoleName());
         assertEquals(user.getCognitoSub(), dto.getCognitoSub());
     }
-
 }

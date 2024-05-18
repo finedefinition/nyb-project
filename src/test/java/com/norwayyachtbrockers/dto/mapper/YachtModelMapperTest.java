@@ -6,15 +6,12 @@ import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.FuelService;
 import com.norwayyachtbrockers.service.KeelService;
-import com.norwayyachtbrockers.service.YachtModelService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,11 +26,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Order(110)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class YachtModelMapperTest {
+public class YachtModelMapperTest {
 
-    @MockBean
-    private YachtModelService yachtModelService;
     @MockBean
     private KeelService keelService;
     @MockBean
@@ -94,12 +90,11 @@ class YachtModelMapperTest {
     @DisplayName("Update YachtModel from DTO")
     @Order(20)
     void testUpdateYachtModelFromDto() {
-        // Arrange (done in setUp)
-
         // Act
         YachtModel updatedYachtModel = yachtModelMapper.updateYachtModelFromDto(yachtModel, dto);
 
         // Assert
-        assertSame(yachtModel, updatedYachtModel, "The updated yacht should be the same instance as the input yacht");
+        assertSame(yachtModel, updatedYachtModel,
+                "The updated yacht should be the same instance as the input yacht");
     }
 }

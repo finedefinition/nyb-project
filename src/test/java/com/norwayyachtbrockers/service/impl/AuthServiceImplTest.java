@@ -36,20 +36,22 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Order(120)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuthServiceImplTest {
+
+    @MockBean
+    private UserService userService;
+    @MockBean
+    private UserMapper userMapper;
+    @MockBean
+    private AWSCognitoIdentityProvider cognitoClient;
 
     @Autowired
     private AuthServiceImpl authService;
 
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private UserMapper userMapper;
-
-    @MockBean
-    private AWSCognitoIdentityProvider cognitoClient;
+    private UserRegistrationRequestDto registrationRequestDto;
+    private UserLoginRequestDto loginRequestDto;
 
     private static final Long USER_ID = 1L;
     private static final String USER_EMAIL = "test@example.com";
@@ -62,9 +64,6 @@ class AuthServiceImplTest {
     private static final String CLIENT_SECRET = "testclientsecret";
     private static final String VALID_JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlcnN1YiIsI" +
             "m5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-    private UserRegistrationRequestDto registrationRequestDto;
-    private UserLoginRequestDto loginRequestDto;
 
     @BeforeEach
     void setUp() {

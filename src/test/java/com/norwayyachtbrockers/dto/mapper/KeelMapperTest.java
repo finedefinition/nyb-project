@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Order(40)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class KeelMapperTest {
 
@@ -44,7 +45,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on creation")
     @Order(10)
-    public void testCreateKeelFromDto_NullDto() {
+    void testCreateKeelFromDto_NullDto() {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> keelMapper.createKeelFromDto(null),
                 "Should throw IllegalArgumentException when the DTO is null.");
@@ -53,7 +54,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name is null on creation")
     @Order(20)
-    public void testCreateKeelFromDto_NameNull() {
+    void testCreateKeelFromDto_NameNull() {
         // Arrange
         dto.setName(null);  // Setting null as Name
 
@@ -66,7 +67,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name shorter than 3 characters")
     @Order(30)
-    public void testNameTooShort() {
+    void testNameTooShort() {
         // Arrange
         dto.setName(INVALID_NAME_TOO_SHORT);  // Setting Name shorter than the minimum length
 
@@ -79,7 +80,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name longer than 20 characters")
     @Order(40)
-    public void testNameTooLong() {
+    void testNameTooLong() {
         // Arrange
         dto.setName(INVALID_NAME_TOO_LONG);  // Setting Name longer than the maximum length
 
@@ -92,7 +93,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name with invalid characters")
     @Order(50)
-    public void testNameInvalidCharacters() {
+    void testNameInvalidCharacters() {
         // Arrange
         dto.setName(INVALID_NAME_WITH_DIGITS);  // Setting Name with numbers, which are invalid
 
@@ -105,7 +106,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name not starting with capital letter")
     @Order(60)
-    public void testNameDoesNotStartWithCapital() {
+    void testNameDoesNotStartWithCapital() {
         // Arrange
         dto.setName(INVALID_NAME_LOWERCASE);  // Starting with a lowercase letter
 
@@ -118,7 +119,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Keel name is trimmed correctly")
     @Order(70)
-    public void testTrimString() {
+    void testTrimString() {
         // Arrange
         dto.setName(KEEL_NAME + "     ");  // Name with trailing spaces
 
@@ -132,7 +133,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Successfully create Keel from valid DTO")
     @Order(80)
-    public void testCreateKeelFromDto_ValidDto() {
+    void testCreateKeelFromDto_ValidDto() {
         // Arrange
         dto.setName(KEEL_NAME);
 
@@ -150,7 +151,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException for null Keel on update")
     @Order(90)
-    public void testUpdateKeelFromDto_NullKeel() {
+    void testUpdateKeelFromDto_NullKeel() {
         // Asserts that ConstraintViolationException is thrown when keel is null
         assertThrows(ConstraintViolationException.class, () -> keelMapper.updateKeelFromDto(null, dto),
                 "Should throw ConstraintViolationException when the Keel is null.");
@@ -159,7 +160,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on update")
     @Order(100)
-    public void testUpdateKeelFromDto_NullDto() {
+    void testUpdateKeelFromDto_NullDto() {
         // Assert
         assertThrows(IllegalArgumentException.class, () -> keelMapper.updateKeelFromDto(keel, null),
                 "Should throw IllegalArgumentException when the DTO is null.");
@@ -168,7 +169,7 @@ class KeelMapperTest {
     @Test
     @DisplayName("Update Keel name using valid Keel and DTO")
     @Order(110)
-    public void testUpdateKeelFromDto_ValidArguments() {
+    void testUpdateKeelFromDto_ValidArguments() {
         // Arrange
         keel.setName(KEEL_NAME);
         dto.setName(UPDATED_KEEL_NAME);

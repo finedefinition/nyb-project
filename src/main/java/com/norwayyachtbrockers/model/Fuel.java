@@ -17,6 +17,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -39,7 +40,7 @@ public class Fuel extends BaseEntity {
             fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
-    private Set<YachtModel> yachtModels;
+    private Set<YachtModel> yachtModels = new HashSet<>();
 
     public Fuel(String name) {
         this.name = name;
@@ -54,8 +55,7 @@ public class Fuel extends BaseEntity {
     // Convenience method to remove a YachtModel from the Fuel type
     public void removeYachtModel(YachtModel yachtModel) {
         yachtModels.remove(yachtModel);
-        if (yachtModel.getFuelType() == this) {
-            yachtModel.setFuelType(null);
-        }
+
+        yachtModel.setFuelType(null);
     }
 }

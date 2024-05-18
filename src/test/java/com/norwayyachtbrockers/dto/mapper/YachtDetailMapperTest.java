@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Order(80)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class YachtDetailMapperTest {
 
@@ -27,7 +28,7 @@ class YachtDetailMapperTest {
     private YachtDetailRequestDto dto;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         yachtDetail = new YachtDetail();
         dto = new YachtDetailRequestDto();
         dto.setId(1L);
@@ -40,16 +41,16 @@ class YachtDetailMapperTest {
 
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on creation")
-    @Order(1)
-    public void testCreateYachtDetailFromDto_NullDto() {
+    @Order(10)
+    void testCreateYachtDetailFromDto_NullDto() {
         assertThrows(IllegalArgumentException.class, () -> yachtDetailMapper.createYachtDetailFromDto(null),
                 "Should throw IllegalArgumentException for null DTO");
     }
 
     @Test
     @DisplayName("Create YachtDetail from valid DTO")
-    @Order(2)
-    public void testCreateYachtDetailFromDto_ValidDto() {
+    @Order(20)
+    void testCreateYachtDetailFromDto_ValidDto() {
         YachtDetail createdYachtDetail = yachtDetailMapper.createYachtDetailFromDto(dto);
         assertAll(
                 () -> assertNotNull(createdYachtDetail, "YachtDetail should not be null"),
@@ -63,8 +64,8 @@ class YachtDetailMapperTest {
 
     @Test
     @DisplayName("Update YachtDetail from valid DTO")
-    @Order(3)
-    public void testUpdateYachtDetailFromDto_ValidDto() {
+    @Order(30)
+    void testUpdateYachtDetailFromDto_ValidDto() {
         YachtDetail updatedYachtDetail = yachtDetailMapper.updateYachtDetailFromDto(yachtDetail, dto);
         assertAll(
                 () -> assertNotNull(updatedYachtDetail, "Updated YachtDetail should not be null"),
@@ -78,8 +79,8 @@ class YachtDetailMapperTest {
 
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO or YachtDetail on update")
-    @Order(4)
-    public void testUpdateYachtDetailFromDto_NullInput() {
+    @Order(40)
+    void testUpdateYachtDetailFromDto_NullInput() {
         assertThrows(IllegalArgumentException.class,
                 () -> yachtDetailMapper.updateYachtDetailFromDto(null, dto),
                 "Should throw IllegalArgumentException when YachtDetail is null");
@@ -87,5 +88,4 @@ class YachtDetailMapperTest {
                 () -> yachtDetailMapper.updateYachtDetailFromDto(yachtDetail, null),
                 "Should throw IllegalArgumentException when DTO is null");
     }
-
 }

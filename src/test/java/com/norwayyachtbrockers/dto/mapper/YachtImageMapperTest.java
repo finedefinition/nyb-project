@@ -5,13 +5,19 @@ import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.model.YachtImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Order(90)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class YachtImageMapperTest {
 
     @Autowired
@@ -21,7 +27,7 @@ class YachtImageMapperTest {
     private Yacht yacht;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         yacht = new Yacht();
         yacht.setId(1L);  // Assuming there's a setter for ID in Yacht
 
@@ -34,6 +40,7 @@ class YachtImageMapperTest {
 
     @Test
     @DisplayName("Convert YachtImage to YachtImageResponseDto")
+    @Order(10)
     void testConvertToResponseDto() {
         // Act
         YachtImageResponseDto dto = yachtImageMapper.convertToResponseDto(yachtImage);

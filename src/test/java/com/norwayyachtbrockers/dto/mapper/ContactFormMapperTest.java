@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Order(10)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ContactFormMapperTest {
 
@@ -37,7 +38,7 @@ class ContactFormMapperTest {
     private static final String INVALID_NAME_TOO_SHORT = "";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         contactForm = new ContactForm();
         dto = new ContactFormRequestDto();
     }
@@ -45,7 +46,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw IllegalArgumentException for null DTO on creation")
     @Order(10)
-    public void testCreateContactFormFromDto_NullDto() {
+    void testCreateContactFormFromDto_NullDto() {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> contactFormMapper.createContactFormFromDto(null),
                 "Should throw IllegalArgumentException when the DTO is null.");
@@ -54,7 +55,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when Email is null")
     @Order(20)
-    public void testCreateContactFormFromDto_EmailNull() {
+    void testCreateContactFormFromDto_EmailNull() {
         // Arrange
         dto.setUserEmail(null); // Setting Email null
         dto.setName(NAME);
@@ -69,7 +70,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when Email is empty")
     @Order(30)
-    public void testCreateContactFormFromDto_EmailEmpty() {
+    void testCreateContactFormFromDto_EmailEmpty() {
         // Arrange
         dto.setUserEmail(""); // Setting Email empty
         dto.setName(NAME);
@@ -84,7 +85,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains not valid Email on creation")
     @Order(40)
-    public void testCreateContactFormFromDto_EmailNotValid() {
+    void testCreateContactFormFromDto_EmailNotValid() {
         // Arrange
         dto.setUserEmail(INVALID_EMAIL); // Setting not valid Email
         dto.setName(NAME);
@@ -99,7 +100,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name is null on creation")
     @Order(50)
-    public void testCreateContactFormFromDto_NameNull() {
+    void testCreateContactFormFromDto_NameNull() {
         // Arrange
         dto.setUserEmail(USER_EMAIL);
         dto.setName(null);  // Setting null as Name
@@ -114,7 +115,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains FirstName shorter than 1 character")
     @Order(60)
-    public void testCreateContactFormFromDto_NameTooShort() {
+    void testCreateContactFormFromDto_NameTooShort() {
         // Arrange
         dto.setUserEmail(USER_EMAIL);
         dto.setName(INVALID_NAME_TOO_SHORT);  // Setting empty string as Name
@@ -129,7 +130,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when Name over 30 signs on creation")
     @Order(70)
-    public void testCreateContactFormFromDto_NameTooLong() {
+    void testCreateContactFormFromDto_NameTooLong() {
         // Arrange
         dto.setUserEmail(USER_EMAIL);
         dto.setName(INVALID_NAME_TOO_LONG);  // Setting invalid Name
@@ -144,7 +145,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name with invalid characters")
     @Order(71)
-    public void testNameInvalidCharacters() {
+    void testNameInvalidCharacters() {
 
         // Arrange
         dto.setUserEmail(USER_EMAIL);
@@ -160,7 +161,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Name not starting with capital letter")
     @Order(72)
-    public void testNameDoesNotStartWithCapital() {
+    void testNameDoesNotStartWithCapital() {
         // Arrange
         // Arrange
         dto.setUserEmail(USER_EMAIL);
@@ -176,7 +177,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Name is trimmed correctly")
     @Order(79)
-    public void testTrimString() {
+    void testTrimString() {
         // Arrange
         ContactFormRequestDto dto = new ContactFormRequestDto();
 
@@ -194,7 +195,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains Message is null on creation")
     @Order(80)
-    public void testCreateContactFormFromDto_MessageNull() {
+    void testCreateContactFormFromDto_MessageNull() {
         // Arrange
         dto.setUserEmail(USER_EMAIL);
         dto.setName(NAME);
@@ -209,7 +210,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when DTO contains empty Message on creation")
     @Order(90)
-    public void testCreateContactFormFromDto_MessageEmpty() {
+    void testCreateContactFormFromDto_MessageEmpty() {
         // Arrange
         dto.setUserEmail(USER_EMAIL);
         dto.setName(NAME);
@@ -224,7 +225,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Throw ConstraintViolationException when Message over 5000 signs on creation")
     @Order(100)
-    public void testCreateContactFormFromDto_MessageOver5000() {
+    void testCreateContactFormFromDto_MessageOver5000() {
         // Arrange
         dto.setUserEmail(USER_EMAIL);
         dto.setName(NAME);  // Setting Long string as Name
@@ -239,7 +240,7 @@ class ContactFormMapperTest {
     @Test
     @DisplayName("Successfully create ContactForm from valid DTO")
     @Order(110)
-    public void testCreateContactFormFromDto_ValidDto() {
+    void testCreateContactFormFromDto_ValidDto() {
         dto.setUserEmail(USER_EMAIL);
         dto.setName(NAME);
         dto.setMessage(MESSAGE);
