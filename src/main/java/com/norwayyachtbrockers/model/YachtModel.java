@@ -67,24 +67,4 @@ public class YachtModel extends BaseEntity {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JsonIgnore
     private Set<Yacht> yachts = new HashSet<>();
-
-    // Convenience method to add a Yacht to the YachtModel
-    public void addYacht(Yacht yacht) {
-        yachts.add(yacht);
-        yacht.setYachtModel(this);
-    }
-
-    // Convenience method to remove a Yacht from the YachtModel
-    public void removeYacht(Yacht yacht) {
-        yachts.remove(yacht);
-        yacht.setYachtModel(null);
-    }
-
-    public String getSafeKeelTypeName() {
-        if (this.keelType != null) {
-            return this.keelType.getName();
-        } else {
-            return "Unknown Keel Type"; // Default value when keelType is null
-        }
-    }
 }

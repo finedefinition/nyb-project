@@ -70,17 +70,4 @@ public class User extends BaseEntity {
     )
     @JsonIgnore
     private Set<Yacht> favouriteYachts = new HashSet<>();
-
-    // Convenience method to add a Yacht to the User's list of favourite yachts
-    public void addFavouriteYacht(Yacht yacht) {
-        this.favouriteYachts.add(yacht);
-        yacht.getFavouritedByUsers().add(this);
-    }
-
-    // Convenience method to remove a Yacht from the User's list of favourite yachts
-    public void removeFavouriteYacht(Yacht yacht) {
-        this.favouriteYachts.remove(yacht);
-        yacht.getFavouritedByUsers().remove(this);
-    }
-
 }
