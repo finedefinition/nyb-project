@@ -5,15 +5,18 @@ import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.OwnerInfo;
 import com.norwayyachtbrockers.repository.OwnerInfoRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +33,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(160)
+@Order(650)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class OwnerInfoServiceImplTest {
 
     @MockBean
@@ -74,6 +78,11 @@ class OwnerInfoServiceImplTest {
         existingOwnerInfo.setLastName(OWNER_LAST_NAME);
         existingOwnerInfo.setTelephone(OWNER_PHONE_NUMBER);
         existingOwnerInfo.setEmail(OWNER_EMAIL);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(ownerInfoMapper, ownerInfoRepository);
     }
 
     @Test

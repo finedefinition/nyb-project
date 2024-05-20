@@ -3,7 +3,7 @@ package com.norwayyachtbrockers.service.impl;
 import com.norwayyachtbrockers.dto.mapper.YachtMapper;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
-import com.norwayyachtbrockers.dto.request.YahctSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
@@ -11,6 +11,7 @@ import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.repository.specification.yacht.YachtSpecificationBuilder;
 import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.util.S3ImageService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -42,8 +44,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(220)
+@Order(710)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtServiceImplTest {
 
     @MockBean
@@ -68,7 +71,6 @@ class YachtServiceImplTest {
 
     private static final Long YACHT_ID = 1L;
     private static final String MAIN_IMAGE_KEY = "mainImageKey";
-    private static final String ADDITIONAL_IMAGE_KEY = "additionalImageKey";
     private static final BigDecimal YACHT_PRICE = new BigDecimal("10000.00");
 
     @BeforeEach
@@ -85,6 +87,11 @@ class YachtServiceImplTest {
 
         mainImageFile = Mockito.mock(MultipartFile.class);
         additionalImageFiles = Arrays.asList(Mockito.mock(MultipartFile.class), Mockito.mock(MultipartFile.class));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(yachtRepository, yachtImageService, yachtMapper, yachtSpecificationBuilder, s3ImageService);
     }
 
     @Test
@@ -206,7 +213,7 @@ class YachtServiceImplTest {
     @DisplayName("search - Successfully searches yachts based on search parameters")
     void testSearch_Success() {
         // Arrange
-        YahctSearchParametersDto searchParametersDto = new YahctSearchParametersDto();
+        YachtSearchParametersDto searchParametersDto = new YachtSearchParametersDto();
         // set properties for searchParametersDto as necessary
 
         Yacht yacht1 = new Yacht();

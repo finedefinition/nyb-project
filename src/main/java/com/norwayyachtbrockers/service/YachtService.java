@@ -1,7 +1,7 @@
 package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
-import com.norwayyachtbrockers.dto.request.YahctSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +17,7 @@ public interface YachtService {
 
     List<YachtResponseDto> findAll();
 
-    List<YachtResponseDto> search(YahctSearchParametersDto searchParametersDto);
+    List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto);
 
 //    YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile imageFile);
 

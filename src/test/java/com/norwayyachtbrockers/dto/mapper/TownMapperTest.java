@@ -5,16 +5,19 @@ import com.norwayyachtbrockers.dto.response.TownResponseDto;
 import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.service.CountryService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,8 +28,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(60)
+@Order(210)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class TownMapperTest {
 
     @MockBean
@@ -53,6 +57,11 @@ class TownMapperTest {
         country = new Country();
         country.setId(dto.getCountryId());
         country.setName("CountryName");
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(countryService);
     }
 
     @Test

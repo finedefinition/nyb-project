@@ -4,6 +4,7 @@ import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -12,12 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSendException;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,8 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(240)
+@Order(270)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class RestExceptionHandlerTest {
 
     @Mock
@@ -54,6 +58,11 @@ class RestExceptionHandlerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         restExceptionHandler = new RestExceptionHandler();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(bindingResult, constraintViolation);
     }
 
     @Test

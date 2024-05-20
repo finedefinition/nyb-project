@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Optional;
 
@@ -14,7 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-@Order(230)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Order(10)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuditAwareImplTest {
 

@@ -6,16 +6,19 @@ import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.FuelService;
 import com.norwayyachtbrockers.service.KeelService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.math.BigDecimal;
 
@@ -26,8 +29,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(110)
+@Order(260)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class YachtModelMapperTest {
 
     @MockBean
@@ -70,6 +74,11 @@ public class YachtModelMapperTest {
 
         when(keelService.findId(eq(KEEL_TYPE_ID))).thenReturn(YACHT_MODEL_KEEL);
         when(fuelService.findId(eq(FUEL_TYPE_ID))).thenReturn(YACHT_MODEL_FUEL);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(keelService, fuelService);
     }
 
     @Test

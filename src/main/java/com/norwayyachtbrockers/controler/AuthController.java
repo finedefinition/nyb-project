@@ -6,6 +6,7 @@ import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
 import com.norwayyachtbrockers.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Data
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
+
     @Value("${aws.cognito.userPoolId}")
     private String userPoolId;
 

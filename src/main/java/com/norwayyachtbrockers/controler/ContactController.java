@@ -4,7 +4,6 @@ import com.norwayyachtbrockers.dto.mapper.ContactFormMapper;
 import com.norwayyachtbrockers.dto.request.ContactFormRequestDto;
 import com.norwayyachtbrockers.model.ContactForm;
 import com.norwayyachtbrockers.service.EmailService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-@Tag(
-        name = "Contact form API",
-        description = "Contact form service to send message using 3rd party Application MAILGUN"
-)
+
 @RestController
 @RequestMapping("/contact")
 public class ContactController {

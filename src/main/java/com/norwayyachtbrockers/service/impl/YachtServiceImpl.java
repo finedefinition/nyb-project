@@ -3,7 +3,7 @@ package com.norwayyachtbrockers.service.impl;
 import com.norwayyachtbrockers.dto.mapper.YachtMapper;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
-import com.norwayyachtbrockers.dto.request.YahctSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
@@ -108,7 +108,7 @@ public class YachtServiceImpl implements YachtService {
     }
 
     @Override
-    public List<YachtResponseDto> search(YahctSearchParametersDto searchParametersDto) {
+    public List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto) {
         Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
         return yachtRepository.findAll(yachtSpecification).stream()
                 .map(yachtMapper::convertToDto)

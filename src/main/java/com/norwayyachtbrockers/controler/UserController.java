@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -71,7 +72,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/{cognitoSub}/favouriteYachts")
+    @GetMapping(value = "/{cognitoSub}/favouriteYachts", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
     public ResponseEntity<UserFavouriteYachtsResponseDto> getFavouriteYachts(@PathVariable String cognitoSub) {
         UserFavouriteYachtsResponseDto dto = userService.getFavouriteYachts(cognitoSub);

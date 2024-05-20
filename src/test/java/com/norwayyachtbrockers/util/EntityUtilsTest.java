@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.util;
 
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -8,9 +9,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Optional;
 
@@ -19,8 +22,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(499)
+@Order(730)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class EntityUtilsTest {
 
     @Mock
@@ -36,6 +40,11 @@ class EntityUtilsTest {
         MockitoAnnotations.openMocks(this);
         entity = new TestEntity();
         entity.setId(ENTITY_ID);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(repository);
     }
 
     @Test

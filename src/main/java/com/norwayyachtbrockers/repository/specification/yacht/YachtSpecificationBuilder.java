@@ -1,6 +1,6 @@
 package com.norwayyachtbrockers.repository.specification.yacht;
 
-import com.norwayyachtbrockers.dto.request.YahctSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationBuilder;
 import com.norwayyachtbrockers.repository.specification.SpecificationProviderManager;
@@ -15,7 +15,7 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
     private final SpecificationProviderManager<Yacht> specificationProviderManager;
 
     @Override
-    public Specification<Yacht> build(YahctSearchParametersDto searchParametersDto) {
+    public Specification<Yacht> build(YachtSearchParametersDto searchParametersDto) {
         Specification<Yacht> specification = Specification.where(null);
 
         if (searchParametersDto.getMinPrice() != null || searchParametersDto.getMaxPrice() != null) {

@@ -15,16 +15,19 @@ import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.service.TownService;
 import com.norwayyachtbrockers.service.YachtModelService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -37,8 +40,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(100)
+@Order(250)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtMapperTest {
 
     @MockBean
@@ -101,6 +105,11 @@ class YachtMapperTest {
         when(townService.findTownById(eq(TOWN_ID))).thenReturn(town);
         yachtDetail = new YachtDetail();
         ownerInfo = new OwnerInfo();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(yachtModelService, townService, countryService);
     }
 
     @Test

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class YahctSearchParametersDto {
+public class YachtSearchParametersDto {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private String model;

@@ -4,17 +4,20 @@ import com.norwayyachtbrockers.dto.mapper.YachtDetailMapper;
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
 import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.repository.YachtDetailRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,8 +31,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(190)
+@Order(680)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtDetailServiceImplTest {
 
     @MockBean
@@ -56,6 +60,11 @@ class YachtDetailServiceImplTest {
 
         yachtDetailRequestDto = new YachtDetailRequestDto();
         yachtDetailRequestDto.setDescription(DTO_DESCRIPTION);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(yachtDetailRepository, yachtDetailMapper);
     }
 
     @Test

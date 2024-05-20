@@ -8,17 +8,20 @@ import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,8 +36,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(210)
+@Order(700)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtModelServiceImplTest {
 
     @MockBean
@@ -78,6 +82,11 @@ class YachtModelServiceImplTest {
         yachtModelRequestDto = new YachtModelRequestDto();
         yachtModelRequestDto.setKeelTypeId(KEEL_TYPE_ID);
         yachtModelRequestDto.setFuelTypeId(FUEL_TYPE_ID);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(yachtModelMapper, yachtModelRepository, keelRepository, fuelRepository);
     }
 
     @Test

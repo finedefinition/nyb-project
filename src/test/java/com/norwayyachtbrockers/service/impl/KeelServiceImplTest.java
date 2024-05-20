@@ -4,17 +4,20 @@ import com.norwayyachtbrockers.dto.mapper.KeelMapper;
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +34,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(150)
+@Order(640)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class KeelServiceImplTest {
 
     @MockBean
@@ -60,6 +64,11 @@ class KeelServiceImplTest {
         keel = new Keel();
         keel.setId(KEEL_ID);
         keel.setName(KEEL_NAME);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(keelRepository, keelMapper);
     }
 
     @Test

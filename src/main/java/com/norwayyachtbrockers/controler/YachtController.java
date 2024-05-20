@@ -1,7 +1,7 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
-import com.norwayyachtbrockers.dto.request.YahctSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
@@ -44,15 +44,6 @@ public class YachtController {
         YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
     }
-//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<YachtResponseDto> save(
-//            @RequestPart("yachtData") YachtRequestDto dto,
-//            @RequestPart("imageFile") MultipartFile imageFile
-//    ) {
-//
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(yachtService.save(dto, imageFile));
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<YachtResponseDto> getById(@PathVariable Long id) {
@@ -70,7 +61,7 @@ public class YachtController {
     }
 
     @GetMapping("/search")
-    public List<YachtResponseDto> searchYachts(YahctSearchParametersDto searchParameters) {
+    public List<YachtResponseDto> searchYachts(YachtSearchParametersDto searchParameters) {
         return yachtService.search(searchParameters);
     }
 

@@ -8,18 +8,21 @@ import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.repository.YachtImageRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.util.S3ImageService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -36,8 +39,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(200)
+@Order(690)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtImageServiceImplTest {
 
     @MockBean
@@ -74,6 +78,11 @@ class YachtImageServiceImplTest {
 
         yachtImageRequestDto = new YachtImageRequestDto();
         yachtImageRequestDto.setYachtId(YACHT_ID);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(yachtImageRepository, yachtImageMapper, yachtRepository, s3ImageService);
     }
 
     @Test

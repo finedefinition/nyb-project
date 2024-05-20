@@ -9,16 +9,19 @@ import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
@@ -36,8 +39,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(120)
+@Order(600)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class AuthServiceImplTest {
 
     @MockBean
@@ -83,6 +87,11 @@ class AuthServiceImplTest {
         loginRequestDto = new UserLoginRequestDto();
         loginRequestDto.setEmail(USER_EMAIL);
         loginRequestDto.setPassword(USER_PASSWORD);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(userService, userMapper, cognitoClient);
     }
 
     @Test

@@ -4,17 +4,21 @@ import com.norwayyachtbrockers.dto.mapper.FuelMapper;
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.repository.FuelRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,8 +35,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Order(140)
+@Order(630)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class FuelServiceImplTest {
 
     @MockBean
@@ -60,6 +65,11 @@ class FuelServiceImplTest {
         fuel = new Fuel();
         fuel.setId(FUEL_ID);
         fuel.setName(FUEL_NAME);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(fuelRepository, fuelMapper);
     }
 
     @Test
