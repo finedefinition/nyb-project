@@ -103,7 +103,7 @@ public class YachtServiceImpl implements YachtService {
         // This step is needed if you want yachts with 0 favourites to still be part of the final list but not marked as top 10
         // Yachts already marked as top 10 are updated in the original DTOs list
         return dtos.stream()
-                .sorted(Comparator.comparing(YachtResponseDto::getId))
+                .sorted(Comparator.comparing(YachtResponseDto::getId).reversed())
                 .collect(Collectors.toList());
     }
 
