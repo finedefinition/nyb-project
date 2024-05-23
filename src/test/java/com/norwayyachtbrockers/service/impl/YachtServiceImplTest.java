@@ -11,6 +11,7 @@ import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.repository.specification.yacht.YachtSpecificationBuilder;
 import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.util.S3ImageService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -97,6 +98,7 @@ class YachtServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("save - Successfully saves a yacht from DTO with main image")
+    @Transactional
     void testSave_Success_WithMainImage() {
         // Arrange
         when(yachtMapper.createYachtFromDto(yachtRequestDto)).thenReturn(yacht);
@@ -117,6 +119,7 @@ class YachtServiceImplTest {
     @Test
     @Order(20)
     @DisplayName("save - Successfully saves a yacht from DTO without main image")
+    @Transactional
     void testSave_Success_WithoutMainImage() {
         // Arrange
         when(yachtMapper.createYachtFromDto(yachtRequestDto)).thenReturn(yacht);
@@ -177,6 +180,7 @@ class YachtServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("update - Successfully updates a yacht")
+    @Transactional
     void testUpdate_Success() {
         // Arrange
         when(yachtRepository.findById(YACHT_ID)).thenReturn(Optional.of(yacht));
@@ -196,6 +200,7 @@ class YachtServiceImplTest {
     @Test
     @Order(60)
     @DisplayName("deleteById - Successfully deletes a yacht by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(yachtRepository.findById(YACHT_ID)).thenReturn(Optional.of(yacht));

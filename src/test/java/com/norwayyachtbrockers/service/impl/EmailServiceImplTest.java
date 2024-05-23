@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,6 +56,7 @@ class EmailServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("sendSimpleMessage - toAddresses is null")
+    @Transactional
     void testSendSimpleMessage_ToAddressesIsNull() throws Exception {
         // Arrange
         Field toAddressesField = EmailServiceImpl.class.getDeclaredField("toAddresses");
@@ -72,6 +74,7 @@ class EmailServiceImplTest {
     @Test
     @Order(20)
     @DisplayName("sendSimpleMessage - Successful email send")
+    @Transactional
     void testSendSimpleMessage_Success() {
         // Arrange
         doNothing().when(emailSender).send(any(SimpleMailMessage.class));

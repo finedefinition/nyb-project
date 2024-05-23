@@ -8,6 +8,7 @@ import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.UserRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -80,6 +81,7 @@ class UserServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveUser - Successfully saves a user")
+    @Transactional
     void testSaveUser_Success() {
         // Arrange
         when(userRepository.save(user)).thenReturn(user);
@@ -151,6 +153,7 @@ class UserServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("updateUser - Successfully updates a user")
+    @Transactional
     void testUpdateUser_Success() {
         // Arrange
         when(userRepository.findByIdAndFetchYachtsEagerly(USER_ID)).thenReturn(Optional.of(user));
@@ -169,6 +172,7 @@ class UserServiceImplTest {
     @Test
     @Order(60)
     @DisplayName("deleteById - Successfully deletes a user by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(userRepository.findByIdAndFetchYachtsEagerly(USER_ID)).thenReturn(Optional.of(user));
@@ -184,6 +188,7 @@ class UserServiceImplTest {
     @Test
     @Order(70)
     @DisplayName("addFavouriteYachtToUser - Successfully adds a favourite yacht to user")
+    @Transactional
     void testAddFavouriteYachtToUser_Success() {
         // Arrange
         when(userRepository.findByCognitoSub(COGNITO_SUB)).thenReturn(Optional.of(user));
@@ -219,6 +224,7 @@ class UserServiceImplTest {
     @Test
     @Order(90)
     @DisplayName("removeFavouriteYacht - Successfully removes a favourite yacht from user")
+    @Transactional
     void testRemoveFavouriteYacht_Success() {
         // Arrange
         user.getFavouriteYachts().add(yacht);
@@ -237,6 +243,7 @@ class UserServiceImplTest {
     @Test
     @Order(100)
     @DisplayName("removeFavouriteYacht - Throws exception when yacht not in user's favourites")
+    @Transactional
     void testRemoveFavouriteYacht_NotInFavourites() {
         // Arrange
         when(userRepository.findByCognitoSub(COGNITO_SUB)).thenReturn(Optional.of(user));

@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.mapper.YachtDetailMapper;
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
 import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.repository.YachtDetailRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,6 +71,7 @@ class YachtDetailServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveYachtDetail - Successfully saves a yacht detail from DTO")
+    @Transactional
     void testSaveYachtDetail_Success() {
         // Arrange
         when(yachtDetailMapper.createYachtDetailFromDto(yachtDetailRequestDto)).thenReturn(yachtDetail);
@@ -131,6 +133,7 @@ class YachtDetailServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("updateYachtDetail - Successfully updates a yacht detail from DTO")
+    @Transactional
     void testUpdateYachtDetail_Success() {
         // Arrange
         when(yachtDetailRepository.findById(YACHT_DETAIL_ID)).thenReturn(Optional.of(yachtDetail));
@@ -154,6 +157,7 @@ class YachtDetailServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteById - Successfully deletes a yacht detail by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(yachtDetailRepository.findById(YACHT_DETAIL_ID)).thenReturn(Optional.of(yachtDetail));

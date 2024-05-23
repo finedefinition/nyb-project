@@ -8,6 +8,7 @@ import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.CountryRepository;
 import com.norwayyachtbrockers.repository.TownRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -95,6 +96,7 @@ class TownServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveTown - Successfully saves a town from DTO")
+    @Transactional
     void testSaveTown_Success() {
         // Arrange
         when(countryRepository.findById(COUNTRY_ID)).thenReturn(Optional.of(country));
@@ -181,6 +183,7 @@ class TownServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("updateTown - Successfully updates a town from DTO")
+    @Transactional
     void testUpdateTown_Success() {
         // Arrange
         when(townRepository.findById(TOWN_ID)).thenReturn(Optional.of(town));
@@ -215,6 +218,7 @@ class TownServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteById - Successfully deletes a town by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(townRepository.findById(TOWN_ID)).thenReturn(Optional.of(town));
@@ -230,6 +234,7 @@ class TownServiceImplTest {
     @Test
     @Order(60)
     @DisplayName("deleteById - Detach town from its country when country is not null")
+    @Transactional
     void testDeleteById_DetachFromCountry_NotNull() {
         // Arrange
         Country mockCountry = mock(Country.class);
@@ -250,6 +255,7 @@ class TownServiceImplTest {
     @Test
     @Order(70)
     @DisplayName("deleteById - Do nothing when country is null")
+    @Transactional
     void testDeleteById_DetachFromCountry_Null() {
         // Arrange
         Town mockTown = mock(Town.class);
@@ -267,6 +273,7 @@ class TownServiceImplTest {
     @Test
     @Order(80)
     @DisplayName("deleteById - Remove yachts associated with the town when yachts is not null")
+    @Transactional
     void testDeleteById_RemoveYachts_NotNull() {
         // Arrange
         Yacht mockYacht = mock(Yacht.class);
@@ -286,6 +293,7 @@ class TownServiceImplTest {
     @Test
     @Order(90)
     @DisplayName("deleteById - Do nothing when yachts is null")
+    @Transactional
     void testDeleteById_RemoveYachts_Null() {
         // Arrange
         Town mockTown = mock(Town.class);

@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.mapper.FuelMapper;
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.repository.FuelRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,6 +76,7 @@ class FuelServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveFuel - Successfully saves a Fuel")
+    @Transactional
     void testSaveFuel_Success() {
         // Arrange
         when(fuelMapper.createFuelFromDto(requestDto)).thenReturn(fuel);
@@ -134,6 +136,7 @@ class FuelServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("updateFuel - Successfully updates fuel")
+    @Transactional
     void testUpdateFuel_Success() {
         // Arrange
         Fuel updatedFuel = new Fuel();
@@ -160,6 +163,7 @@ class FuelServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteById - Successfully deletes fuel by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(fuelRepository.findById(FUEL_ID)).thenReturn(Optional.of(fuel));

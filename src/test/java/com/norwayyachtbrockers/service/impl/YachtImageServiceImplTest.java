@@ -8,6 +8,7 @@ import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.repository.YachtImageRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.util.S3ImageService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -88,6 +89,7 @@ class YachtImageServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveMultipleImages - Successfully saves multiple images")
+    @Transactional
     void testSaveMultipleImages_Success() {
         // Arrange
         MultipartFile file1 = new MockMultipartFile("image1", "image1.jpg",
@@ -158,6 +160,7 @@ class YachtImageServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("update - Successfully updates a yacht image")
+    @Transactional
     void testUpdate_Success() {
         // Arrange
         MultipartFile newFile = new MockMultipartFile("image", "image.jpg",
@@ -183,6 +186,7 @@ class YachtImageServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("delete - Successfully deletes a yacht image by ID")
+    @Transactional
     void testDelete_Success() {
         // Arrange
         when(yachtImageRepository.findById(YACHT_IMAGE_ID)).thenReturn(Optional.of(yachtImage));

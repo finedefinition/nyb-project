@@ -9,6 +9,7 @@ import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.UserService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -97,6 +98,7 @@ class AuthServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("register - Successfully registers a new user")
+    @Transactional
     void testRegister_Success() {
         // Arrange
         SignUpResult signUpResult = new SignUpResult();
@@ -168,6 +170,7 @@ class AuthServiceImplTest {
     @Test
     @Order(30)
     @DisplayName("updateUserAttributesAndManageGroups - Successfully updates user attributes and manages groups")
+    @Transactional
     void testUpdateUserAttributesAndManageGroups_Success() {
         // Arrange
         AdminGetUserResult userResult = new AdminGetUserResult().withUserAttributes(Arrays.asList(
@@ -200,6 +203,7 @@ class AuthServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("deleteUser - Successfully deletes a user")
+    @Transactional
     void testDeleteUser_Success() {
         // Arrange
 
@@ -217,6 +221,7 @@ class AuthServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteUser - Handles exception and rethrows as RuntimeException")
+    @Transactional
     void testDeleteUser_ExceptionHandling() {
         // Arrange: Setup the scenario to throw an exception when deleteUserFromCognito is called
         doThrow(new RuntimeException("Cognito deletion failed")).when(cognitoClient).adminDeleteUser(any(AdminDeleteUserRequest.class));

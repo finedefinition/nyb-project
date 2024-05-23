@@ -6,6 +6,7 @@ import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.CountryRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,6 +74,7 @@ class CountryServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveCountry - Successfully saves a country from DTO")
+    @Transactional
     void testSaveCountry_Success() {
         // Arrange
         when(countryMapper.createCountryFromDto(countryRequestDto)).thenReturn(country);
@@ -131,6 +133,7 @@ class CountryServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("updateCountry - Successfully updates a country from DTO")
+    @Transactional
     void testUpdateCountry_Success() {
         // Arrange
         when(countryRepository.findById(COUNTRY_ID)).thenReturn(Optional.of(country));
@@ -151,6 +154,7 @@ class CountryServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteById - Successfully deletes a country by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(countryRepository.findById(COUNTRY_ID)).thenReturn(Optional.of(country));

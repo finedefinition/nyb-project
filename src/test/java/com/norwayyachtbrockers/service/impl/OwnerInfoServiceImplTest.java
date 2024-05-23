@@ -5,6 +5,7 @@ import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.OwnerInfo;
 import com.norwayyachtbrockers.repository.OwnerInfoRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -88,6 +89,7 @@ class OwnerInfoServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("save - Successfully saves OwnerInfo")
+    @Transactional
     void testSave_Success() {
         // Arrange
         when(ownerInfoMapper.createOwnerInfoFromDto(any(OwnerInfoRequestDto.class))).thenReturn(existingOwnerInfo);
@@ -142,6 +144,7 @@ class OwnerInfoServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("update - Successfully updates OwnerInfo")
+    @Transactional
     void testUpdate_Success() {
         // Arrange
         OwnerInfoRequestDto updateDto = new OwnerInfoRequestDto();
@@ -181,6 +184,7 @@ class OwnerInfoServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteById - Successfully deletes OwnerInfo by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(ownerInfoRepository.findById(EXISTING_ID)).thenReturn(Optional.of(existingOwnerInfo));

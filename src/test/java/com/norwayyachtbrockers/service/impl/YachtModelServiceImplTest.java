@@ -8,6 +8,7 @@ import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -92,6 +93,7 @@ class YachtModelServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveYachtModel - Successfully saves a yacht model from DTO")
+    @Transactional
     void testSaveYachtModel_Success() {
         // Arrange
         when(keelRepository.findById(KEEL_TYPE_ID)).thenReturn(Optional.of(keel));
@@ -155,6 +157,7 @@ class YachtModelServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("updateYachtModel - Successfully updates a yacht model from DTO")
+    @Transactional
     void testUpdateYachtModel_Success() {
         // Arrange
         when(yachtModelRepository.findById(YACHT_MODEL_ID)).thenReturn(Optional.of(yachtModel));
@@ -177,6 +180,7 @@ class YachtModelServiceImplTest {
     @Test
     @Order(41)
     @DisplayName("updateYachtModel - Successfully updates the keel type of a yacht model")
+    @Transactional
     void testUpdateYachtModel_KeelTypeChanged() {
         // Arrange
         when(yachtModelRepository.findById(YACHT_MODEL_ID)).thenReturn(Optional.of(yachtModel));
@@ -199,6 +203,7 @@ class YachtModelServiceImplTest {
     @Test
     @Order(42)
     @DisplayName("updateYachtModel - Successfully updates the fuel type of a yacht model")
+    @Transactional
     void testUpdateYachtModel_FuelTypeChanged() {
         // Arrange
         when(yachtModelRepository.findById(YACHT_MODEL_ID)).thenReturn(Optional.of(yachtModel));
@@ -221,6 +226,7 @@ class YachtModelServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteById - Successfully deletes a yacht model by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(yachtModelRepository.findById(YACHT_MODEL_ID)).thenReturn(Optional.of(yachtModel));

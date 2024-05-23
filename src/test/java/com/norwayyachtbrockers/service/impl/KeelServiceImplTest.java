@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.mapper.KeelMapper;
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -74,6 +75,7 @@ class KeelServiceImplTest {
     @Test
     @Order(10)
     @DisplayName("saveKeel - Successfully saves a Keel")
+    @Transactional
     void testSaveKeel_Success() {
         // Arrange
         when(keelMapper.createKeelFromDto(requestDto)).thenReturn(keel);
@@ -133,6 +135,7 @@ class KeelServiceImplTest {
     @Test
     @Order(40)
     @DisplayName("updateKeel - Successfully updates a Keel")
+    @Transactional
     void testUpdateKeel_Success() {
         // Arrange
         Keel updatedKeel = new Keel();
@@ -159,6 +162,7 @@ class KeelServiceImplTest {
     @Test
     @Order(50)
     @DisplayName("deleteById - Successfully deletes a Keel by ID")
+    @Transactional
     void testDeleteById_Success() {
         // Arrange
         when(keelRepository.findById(KEEL_ID)).thenReturn(Optional.of(keel));
