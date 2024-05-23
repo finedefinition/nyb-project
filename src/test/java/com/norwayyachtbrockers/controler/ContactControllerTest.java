@@ -27,9 +27,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Order(40)
 @SpringBootTest
 @AutoConfigureMockMvc
-@Order(30)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ContactControllerTest {

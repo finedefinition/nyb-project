@@ -32,9 +32,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Order(110)
 @SpringBootTest
 @AutoConfigureMockMvc
-@Order(80)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ContextConfiguration(classes = {UserController.class, TestSecurityConfig.class})

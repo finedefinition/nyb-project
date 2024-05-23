@@ -14,9 +14,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Order(20)
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@Order(10)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuditAwareImplTest {
 

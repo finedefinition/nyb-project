@@ -43,8 +43,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 @Order(710)
+@SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtServiceImplTest {
@@ -244,5 +244,4 @@ class YachtServiceImplTest {
         assertEquals(1L, foundYachts.get(0).getId(), "First yacht ID should match");
         assertEquals(2L, foundYachts.get(1).getId(), "Second yacht ID should match");
     }
-
 }

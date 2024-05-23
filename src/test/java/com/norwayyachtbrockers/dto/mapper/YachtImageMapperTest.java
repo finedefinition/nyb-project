@@ -16,8 +16,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 @Order(240)
+@SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtImageMapperTest {
