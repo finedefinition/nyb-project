@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/fuels")
 public class FuelController {
-    private final FuelService fuelService;
+    private FuelService fuelService;
 
     public FuelController(FuelService fuelService) {
         this.fuelService = fuelService;

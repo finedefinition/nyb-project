@@ -23,6 +23,14 @@ import java.util.Set;
 @ControllerAdvice
 public class RestExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+
+    public ResponseEntity<AppEntityErrorResponse> handleGlobalException(Exception exception) {
+        AppEntityErrorResponse error = createErrorResponse(exception,
+                HttpStatus.NOT_FOUND, List.of(exception.getMessage()));
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(AppEntityNotFoundException.class)
     public ResponseEntity<AppEntityErrorResponse> handleNotFoundException(AppEntityNotFoundException exc) {
         AppEntityErrorResponse error = createErrorResponse(exc, HttpStatus.NOT_FOUND, List.of(exc.getMessage()));
