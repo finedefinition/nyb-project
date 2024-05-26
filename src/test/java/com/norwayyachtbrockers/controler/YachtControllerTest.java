@@ -78,7 +78,6 @@ class YachtControllerTest {
 
 
         yachtRequestDto = new YachtRequestDto();
-        yachtRequestDto.setFeatured(IS_FEATURED);
         yachtRequestDto.setVatIncluded(VAT_INCLUDED);
         yachtRequestDto.setPrice(PRICE);
         yachtRequestDto.setYachtModelId(YACHT_MODEL_ID);

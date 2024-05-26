@@ -40,17 +40,17 @@ public class AuthController {
         return authService.authenticate(request);
     }
 
-    @PutMapping("/updateUser")
-    public ResponseEntity<String> updateUser(@RequestBody UpdateUserRequestDto request) {
-        authService.updateUserAttributesAndManageGroups(
-                request.getUsername(),
-                request.getFirstName(),
-                request.getLastName(),
-                request.getRole(),
-                userPoolId);
-
-        return ResponseEntity.ok("User updated successfully");
-    }
+//    @PutMapping("/updateUser")
+//    public ResponseEntity<String> updateUser(@RequestBody UpdateUserRequestDto request) {
+//        authService.updateUserAttributesAndManageGroups(
+//                request.getUsername(),
+//                request.getFirstName(),
+//                request.getLastName(),
+//                request.getRole(),
+//                userPoolId);
+//
+//        return ResponseEntity.ok("User updated successfully");
+//    }
 
     @DeleteMapping("/{email}")
     public ResponseEntity<String> deleteUserByEmail(@PathVariable String email) {

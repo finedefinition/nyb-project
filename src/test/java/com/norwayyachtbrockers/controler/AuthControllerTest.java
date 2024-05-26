@@ -72,26 +72,26 @@ class AuthControllerTest {
         assertEquals(REGISTRATION_SUCCESS, response.getBody(), "Response body should match");
     }
 
-    @Test
-    @Order(30)
-    @DisplayName("updateUser - Successfully updates a user")
-    void testUpdateUser_Success() {
-        // Arrange
-        UpdateUserRequestDto request = new UpdateUserRequestDto();
-        request.setUsername(USERNAME);
-        request.setFirstName(FIRST_NAME);
-        request.setLastName(LAST_NAME);
-        request.setRole(ROLE);
-        doNothing().when(authService).updateUserAttributesAndManageGroups(
-                USERNAME, FIRST_NAME, LAST_NAME, ROLE, USER_POOL_ID);
-
-        // Act
-        ResponseEntity<String> response = authController.updateUser(request);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response status should be 200");
-        assertEquals(UPDATE_SUCCESS, response.getBody(), "Response body should match");
-    }
+//    @Test
+//    @Order(30)
+//    @DisplayName("updateUser - Successfully updates a user")
+//    void testUpdateUser_Success() {
+//        // Arrange
+//        UpdateUserRequestDto request = new UpdateUserRequestDto();
+//        request.setUsername(USERNAME);
+//        request.setFirstName(FIRST_NAME);
+//        request.setLastName(LAST_NAME);
+//        request.setRole(ROLE);
+//        doNothing().when(authService).updateUserAttributesAndManageGroups(
+//                USERNAME, FIRST_NAME, LAST_NAME, ROLE, USER_POOL_ID);
+//
+//        // Act
+//        ResponseEntity<String> response = authController.updateUser(request);
+//
+//        // Assert
+//        assertEquals(HttpStatus.OK, response.getStatusCode(), "Response status should be 200");
+//        assertEquals(UPDATE_SUCCESS, response.getBody(), "Response body should match");
+//    }
 
     @Test
     @Order(40)

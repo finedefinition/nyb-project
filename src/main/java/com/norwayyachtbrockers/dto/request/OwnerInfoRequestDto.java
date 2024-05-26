@@ -16,15 +16,15 @@ public class OwnerInfoRequestDto {
     @JsonProperty("first_name")
     @NotBlank(message="First name is required.")
     @Size(max = 30, message="First name must be no longer than 30 characters.")
-    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "First name must start with a capital "
-            + "letter and can include letters, spaces, and hyphens.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-'.,0-9]*$", message = "First name must start with a capital letter and" +
+            " can include letters, spaces, hyphens, apostrophes, periods, and numerals.")
     private String firstName;
 
     @JsonProperty("last_name")
     @NotBlank(message="Last name is required.")
     @Size(max = 30, message="Last name must be no longer than 30 characters.")
-    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Last name must start with a capital "
-            + "letter and can include letters, spaces, and hyphens.")
+    @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-'.,0-9]*$", message = "Last name must start with a capital letter and" +
+            " can include letters, spaces, hyphens, apostrophes, periods, and numerals.")
     private String lastName;
 
     @JsonProperty("phone_number")

@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,10 +10,12 @@ import lombok.Data;
 @Data
 public class UserLoginRequestDto {
 
+    @JsonProperty("user_email")
     @NotBlank(message = "User email is required.")
     @Email(message = "Please provide a valid email format.")
     private String email;
 
+    @JsonProperty("user_password")
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters long")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,}$",

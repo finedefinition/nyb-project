@@ -82,7 +82,6 @@ public class YachtMapper {
         return dto;
     }
     private Yacht setFields(Yacht yacht, YachtRequestDto dto) {
-        yacht.setFeatured(dto.isFeatured());
         yacht.setVatIncluded(dto.isVatIncluded());
         yacht.setPrice(dto.getPrice());
         yacht.setYachtModel(yachtModelService.findId(dto.getYachtModelId()));

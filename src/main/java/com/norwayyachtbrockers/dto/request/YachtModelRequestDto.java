@@ -1,8 +1,6 @@
 package com.norwayyachtbrockers.dto.request;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.norwayyachtbrockers.constants.ApplicationConstants;
-import com.norwayyachtbrockers.util.TrimStringDeserializer;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -13,6 +11,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import java.math.BigDecimal;
 
 @Data
@@ -24,12 +23,10 @@ public class YachtModelRequestDto {
     @Size(min = 3,max = 30, message = "Make must be at least 3 characters long and less than 30 characters.")
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Make must start with a capital letter and can include" +
             " letters, spaces, and hyphens.")
-    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String make;
 
     @NotNull(message="Model is required.")
     @Size(min=1, max = 30, message="Model must be at least 1 characters long and less than 30 characters.")
-    @JsonDeserialize(using = TrimStringDeserializer.class)
     private String model;
 
     @NotNull(message = "Year is required")

@@ -88,7 +88,6 @@ class YachtMapperTest {
         MockitoAnnotations.openMocks(this);
         yacht = new Yacht();
         dto = new YachtRequestDto();
-        dto.setFeatured(IS_FEATURED);
         dto.setVatIncluded(VAT_INCLUDED);
         dto.setPrice(PRICE);
         dto.setYachtModelId(YACHT_MODEL_ID);
@@ -121,7 +120,6 @@ class YachtMapperTest {
 
         // Assert
         assertNotNull(createdYacht, "The created yacht should not be null");
-        assertTrue(createdYacht.isFeatured(), "The yacht should be featured");
         assertTrue(createdYacht.isVatIncluded(), "The yacht should have VAT included");
         assertEquals(0, createdYacht.getPrice().compareTo(PRICE),
                 "The price should match the input DTO");
@@ -139,7 +137,6 @@ class YachtMapperTest {
 
         // Assert
         assertSame(yacht, updatedYacht, "The updated yacht should be the same instance as the input yacht");
-        assertTrue(updatedYacht.isFeatured(), "The yacht should be featured after update");
         assertTrue(updatedYacht.isVatIncluded(), "The yacht should have VAT included after update");
     }
 

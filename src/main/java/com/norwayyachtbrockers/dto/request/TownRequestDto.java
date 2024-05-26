@@ -14,7 +14,7 @@ public class TownRequestDto {
 
     @JsonProperty("town_name")
     @NotNull(message="Town is required.")
-    @Size(min=3, max=30, message="Town must be at least 3 characters long and less than 30 characters.")
+    @Size(min=3, max=30, message="Town name must be between 3 and 30 characters long.")
     @Pattern(regexp = "^[A-Z][a-zA-Z\\s\\-]*$", message = "Town must start with a capital letter and can include" +
             " letters, spaces, and hyphens.")
     private String name;
