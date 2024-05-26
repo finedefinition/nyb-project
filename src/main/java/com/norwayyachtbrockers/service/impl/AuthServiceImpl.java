@@ -2,8 +2,6 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.*;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.norwayyachtbrockers.dto.mapper.UserMapper;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
@@ -92,42 +90,37 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void confirmUser(String email, String confirmationCode) {
         try {
-        String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
+            String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
 
-        ConfirmSignUpRequest confirmSignUpRequest = new ConfirmSignUpRequest()
-                .withClientId(clientId)
-                .withUsername(email)
-                .withConfirmationCode(confirmationCode)
-                .withSecretHash(secretHash);
+            ConfirmSignUpRequest confirmSignUpRequest = new ConfirmSignUpRequest()
+                    .withClientId(clientId)
+                    .withUsername(email)
+                    .withConfirmationCode(confirmationCode)
+                    .withSecretHash(secretHash);
 
-        cognitoClient.confirmSignUp(confirmSignUpRequest);
+            cognitoClient.confirmSignUp(confirmSignUpRequest);
 
-        // Optionally, you can fetch the user and update their status in your local database
+            // Optionally, you can fetch the user and update their status in your local database
 //        User user = userService.findByEmail(email)
 //                .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
 //        user.setConfirmed(true);
 //        userService.saveUser(user);
 
-    } catch (Exception e) {
-        throw new RuntimeException("Error during user confirmation: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during user confirmation: " + e.getMessage(), e);
+        }
     }
-}
 
     @Override
-   public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
+    public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
         try {
-    String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
-    String jwtToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
-    return new UserLoginResponseDto(jwtToken);
-    } catch (UserNotConfirmedException e) {
-        // Directly rethrow the UserNotConfirmedException to be caught by the exception handler
-        throw e;
-    } catch (Exception e) {
-        System.err.println("Failed to authenticate: " + e.getMessage());
-        return new UserLoginResponseDto("Error during login, please check logs.");
+            String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
+            String jwtToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
+            return new UserLoginResponseDto(jwtToken);
+        } catch (NotAuthorizedException | UserNotConfirmedException e) {
+            throw e;
+        }
     }
-}
-
 
     @Override
     @Transactional
@@ -201,6 +194,42 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             // Log the error and handle it, possibly rethrowing if the operation should be known to fail
             throw new AppEntityNotFoundException("Failed to delete user: " + username + ". User doesn't exist.");
+        }
+    }
+
+    @Override
+    public void initiatePasswordRecovery(String email) {
+        try {
+            String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
+
+            ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest()
+                    .withClientId(clientId)
+                    .withSecretHash(secretHash)
+                    .withUsername(email);
+
+            cognitoClient.forgotPassword(forgotPasswordRequest);
+
+        } catch (Exception e) {
+            throw new UserNotFoundException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void confirmPasswordRecovery(String email, String confirmationCode, String newPassword) {
+        try {
+            String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
+
+            ConfirmForgotPasswordRequest confirmForgotPasswordRequest = new ConfirmForgotPasswordRequest()
+                    .withClientId(clientId)
+                    .withSecretHash(secretHash)
+                    .withUsername(email)
+                    .withConfirmationCode(confirmationCode)
+                    .withPassword(newPassword);
+
+            cognitoClient.confirmForgotPassword(confirmForgotPasswordRequest);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error confirming password recovery: " + e.getMessage(), e);
         }
     }
 

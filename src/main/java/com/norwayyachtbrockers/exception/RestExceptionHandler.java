@@ -1,8 +1,11 @@
 package com.norwayyachtbrockers.exception;
 
 import com.amazonaws.services.cognitoidp.model.CodeMismatchException;
+import com.amazonaws.services.cognitoidp.model.ExpiredCodeException;
+import com.amazonaws.services.cognitoidp.model.InvalidParameterException;
 import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
 import com.amazonaws.services.cognitoidp.model.UserNotConfirmedException;
+import com.amazonaws.services.cognitoidp.model.UserNotFoundException;
 import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import com.norwayyachtbrockers.util.ErrorResponseUtil;
@@ -106,5 +109,26 @@ public class RestExceptionHandler {
         AppEntityErrorResponse error = ErrorResponseUtil.createErrorResponse(ex, HttpStatus.BAD_REQUEST,
                 List.of("Invalid verification code provided, please try again."));
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<AppEntityErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+        AppEntityErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(ex, HttpStatus.NOT_FOUND,
+                List.of("User does not exist."));
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<AppEntityErrorResponse> handleInvalidParameterException(InvalidParameterException ex) {
+        AppEntityErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(ex, HttpStatus.BAD_REQUEST,
+                List.of("Error confirming password recovery."));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExpiredCodeException.class)
+    public ResponseEntity<AppEntityErrorResponse> handleExpiredCodeException(ExpiredCodeException ex) {
+        AppEntityErrorResponse errorResponse = ErrorResponseUtil.createErrorResponse(ex, HttpStatus.BAD_REQUEST,
+                List.of("Code has expired."));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

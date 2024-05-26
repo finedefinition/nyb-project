@@ -64,4 +64,20 @@ public class AuthController {
         authService.deleteUser(email);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        authService.initiatePasswordRecovery(email);
+        return ResponseEntity.ok("Password recovery initiated." +
+                " Please check your email for the confirmation code.");
+    }
+
+    @PostMapping("/confirmForgotPassword")
+    public ResponseEntity<String> confirmForgotPassword(@RequestParam String email,
+                                                        @RequestParam String confirmationCode,
+                                                        @RequestParam String newPassword) {
+        authService.confirmPasswordRecovery(email, confirmationCode, newPassword);
+        return ResponseEntity.ok("Password has been reset successfully.");
+    }
+
 }

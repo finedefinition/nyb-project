@@ -12,6 +12,11 @@ public interface AuthService {
 
     UserLoginResponseDto authenticate(UserLoginRequestDto request);
 
+    void initiatePasswordRecovery(String email);
+
+    void confirmPasswordRecovery(String email, String confirmationCode, String newPassword);
+
+
     void updateUserAttributesAndManageGroups(String username, String firstName, String lastName,
                                              String newRole, String userPoolId);
 
