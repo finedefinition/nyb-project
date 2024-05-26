@@ -51,8 +51,9 @@ class RestExceptionHandlerTest {
 
     private static final String EXCEPTION_MESSAGE = "Exception message";
     private static final String EMAIL_ERROR_MESSAGE = "Error sending email: " + EXCEPTION_MESSAGE;
-    private static final String DATA_INTEGRITY_MESSAGE = "A record with the same key already exists. Please use a unique key.";
-    private static final String USERNAME_EXISTS_MESSAGE = "An account with the given email already exists. Please use a different email or recover your password if you forgot it.";
+    private static final String DATA_INTEGRITY_MESSAGE = "A record with the same key already exists." +
+            " Please use a unique key.";
+    private static final String USERNAME_EXISTS_MESSAGE = "An account with the given email already exists.";
 
     @BeforeEach
     void setUp() {
@@ -113,8 +114,10 @@ class RestExceptionHandlerTest {
 
         // Assert
         assertNotNull(response, "Response should not be null");
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "HTTP status should be 400 BAD REQUEST");
-        assertEquals(EXCEPTION_MESSAGE, response.getBody().getMessage().get(0), "Constraint violation message should match");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
+                "HTTP status should be 400 BAD REQUEST");
+        assertEquals(EXCEPTION_MESSAGE, response.getBody().getMessage().get(0),
+                "Constraint violation message should match");
     }
 
     @Test
@@ -129,8 +132,10 @@ class RestExceptionHandlerTest {
 
         // Assert
         assertNotNull(response, "Response should not be null");
-        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode(), "HTTP status should be 503 SERVICE UNAVAILABLE");
-        assertEquals(EMAIL_ERROR_MESSAGE, response.getBody().getMessage().get(0), "Email error message should match");
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode(),
+                "HTTP status should be 503 SERVICE UNAVAILABLE");
+        assertEquals(EMAIL_ERROR_MESSAGE, response.getBody().getMessage().get(0),
+                "Email error message should match");
     }
 
     @Test
@@ -141,12 +146,15 @@ class RestExceptionHandlerTest {
         DataIntegrityViolationException ex = new DataIntegrityViolationException(EXCEPTION_MESSAGE);
 
         // Act
-        ResponseEntity<AppEntityErrorResponse> response = restExceptionHandler.handleDataIntegrityViolation(ex, null);
+        ResponseEntity<AppEntityErrorResponse> response = restExceptionHandler.handleDataIntegrityViolation(ex,
+                null);
 
         // Assert
         assertNotNull(response, "Response should not be null");
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode(), "HTTP status should be 409 CONFLICT");
-        assertEquals(DATA_INTEGRITY_MESSAGE, response.getBody().getMessage().get(0), "Data integrity violation message should match");
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode(),
+                "HTTP status should be 409 CONFLICT");
+        assertEquals(DATA_INTEGRITY_MESSAGE, response.getBody().getMessage().get(0),
+                "Data integrity violation message should match");
     }
 
     @Test
@@ -161,8 +169,10 @@ class RestExceptionHandlerTest {
 
         // Assert
         assertNotNull(response, "Response should not be null");
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "HTTP status should be 400 BAD REQUEST");
-        assertEquals(USERNAME_EXISTS_MESSAGE, response.getBody().getMessage().get(0), "Username exists message should match");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
+                "HTTP status should be 400 BAD REQUEST");
+        assertEquals(USERNAME_EXISTS_MESSAGE, response.getBody().getMessage().get(0),
+                "Username exists message should match");
     }
 
     @Test
@@ -177,7 +187,9 @@ class RestExceptionHandlerTest {
 
         // Assert
         assertNotNull(response, "Response should not be null");
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(), "HTTP status should be 400 BAD REQUEST");
-        assertEquals(EXCEPTION_MESSAGE, response.getBody().getMessage().get(0), "Illegal argument message should match");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode(),
+                "HTTP status should be 400 BAD REQUEST");
+        assertEquals(EXCEPTION_MESSAGE, response.getBody().getMessage().get(0),
+                "Illegal argument message should match");
     }
 }
