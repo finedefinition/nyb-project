@@ -30,7 +30,7 @@ public class AuthController {
     private String userPoolId;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationRequestDto userDto) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegistrationRequestDto userDto) {
         authService.register(userDto);
         return ResponseEntity.status(201).body("User registered successfully");
     }

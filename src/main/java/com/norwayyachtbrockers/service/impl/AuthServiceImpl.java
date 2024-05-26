@@ -8,6 +8,7 @@ import com.norwayyachtbrockers.dto.mapper.UserMapper;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
+import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.AuthService;
@@ -102,11 +103,11 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
+   public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
         try {
-            String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
-            String jwtToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
-            return new UserLoginResponseDto(jwtToken);
+    String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
+    String jwtToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
+    return new UserLoginResponseDto(jwtToken);
         } catch (Exception e) {
             System.err.println("Failed to authenticate: " + e.getMessage());
             return new UserLoginResponseDto("Error during login, please check logs.");
@@ -184,7 +185,7 @@ public class AuthServiceImpl implements AuthService {
             userService.deleteById(id);
         } catch (Exception e) {
             // Log the error and handle it, possibly rethrowing if the operation should be known to fail
-            throw new RuntimeException("Failed to delete user: " + username, e);
+            throw new AppEntityNotFoundException("Failed to delete user: " + username + ". User doesn't exist.");
         }
     }
 
