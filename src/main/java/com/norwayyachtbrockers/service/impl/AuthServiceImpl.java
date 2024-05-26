@@ -51,7 +51,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void register(UserRegistrationRequestDto request) {
-
         try {
             String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
             // First, create the user
@@ -68,13 +67,6 @@ public class AuthServiceImpl implements AuthService {
 
             SignUpResult signUpResult = cognitoClient.signUp(signUpRequest);
 
-            // Auto-confirm the user
-            AdminConfirmSignUpRequest confirmSignUpRequest = new AdminConfirmSignUpRequest()
-                    .withUserPoolId(userPoolId)
-                    .withUsername(request.getEmail());
-
-            cognitoClient.adminConfirmSignUp(confirmSignUpRequest);
-
             // Add user to the "ROLE_USER" group
             AdminAddUserToGroupRequest groupRequest = new AdminAddUserToGroupRequest()
                     .withUserPoolId(userPoolId)
@@ -82,25 +74,44 @@ public class AuthServiceImpl implements AuthService {
                     .withGroupName("ROLE_USER");
 
             cognitoClient.adminAddUserToGroup(groupRequest);
-            String idToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
-            // Perform automatic login to get the ID token
-
-            DecodedJWT jwt = JWT.decode(idToken);
-            String userSub = jwt.getClaim("sub").asString();
-
-            // Store user with Cognito sub
+            //String idToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
+            // Store user with Cognito sub (User won't be confirmed yet)
+            // You can choose to store the user immediately or wait until email confirmation
+            // DecodedJWT jwt = JWT.decode(signUpResult.getUserSub());
             User user = userMapper.createUserFromDto(request);
-            user.setCognitoSub(userSub);
+            user.setCognitoSub(signUpResult.getUserSub());
             user.setUserRoles(UserRoles.ROLE_USER);
 
             userService.saveUser(user);
 
         } catch (Exception e) {
-            // Handle exceptions
-            throw new RuntimeException("Error during registration or login: " + e.getMessage(), e);
+            throw new RuntimeException("Error during registration: " + e.getMessage(), e);
         }
     }
 
+    @Override
+    public void confirmUser(String email, String confirmationCode) {
+        try {
+        String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
+
+        ConfirmSignUpRequest confirmSignUpRequest = new ConfirmSignUpRequest()
+                .withClientId(clientId)
+                .withUsername(email)
+                .withConfirmationCode(confirmationCode)
+                .withSecretHash(secretHash);
+
+        cognitoClient.confirmSignUp(confirmSignUpRequest);
+
+        // Optionally, you can fetch the user and update their status in your local database
+//        User user = userService.findByEmail(email)
+//                .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
+//        user.setConfirmed(true);
+//        userService.saveUser(user);
+
+    } catch (Exception e) {
+        throw new RuntimeException("Error during user confirmation: " + e.getMessage(), e);
+    }
+}
 
     @Override
    public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
@@ -108,11 +119,15 @@ public class AuthServiceImpl implements AuthService {
     String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
     String jwtToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
     return new UserLoginResponseDto(jwtToken);
-        } catch (Exception e) {
-            System.err.println("Failed to authenticate: " + e.getMessage());
-            return new UserLoginResponseDto("Error during login, please check logs.");
-        }
+    } catch (UserNotConfirmedException e) {
+        // Directly rethrow the UserNotConfirmedException to be caught by the exception handler
+        throw e;
+    } catch (Exception e) {
+        System.err.println("Failed to authenticate: " + e.getMessage());
+        return new UserLoginResponseDto("Error during login, please check logs.");
     }
+}
+
 
     @Override
     @Transactional

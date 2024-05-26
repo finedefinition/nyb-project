@@ -8,6 +8,8 @@ public interface AuthService {
 
     void register(UserRegistrationRequestDto request);
 
+    void confirmUser(String email, String confirmationCode);
+
     UserLoginResponseDto authenticate(UserLoginRequestDto request);
 
     void updateUserAttributesAndManageGroups(String username, String firstName, String lastName,

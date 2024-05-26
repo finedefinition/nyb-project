@@ -1,6 +1,8 @@
 package com.norwayyachtbrockers.exception;
 
+import com.amazonaws.services.cognitoidp.model.CodeMismatchException;
 import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
+import com.amazonaws.services.cognitoidp.model.UserNotConfirmedException;
 import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
 import com.norwayyachtbrockers.dto.response.AppEntityErrorResponse;
 import com.norwayyachtbrockers.util.ErrorResponseUtil;
@@ -90,5 +92,19 @@ public class RestExceptionHandler {
         AppEntityErrorResponse error = ErrorResponseUtil.createErrorResponse(ex, HttpStatus.UNAUTHORIZED,
                 List.of("Failed to authenticate: Incorrect username or password."));
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserNotConfirmedException.class)
+    public ResponseEntity<AppEntityErrorResponse> handleUserNotConfirmedException(UserNotConfirmedException ex) {
+        AppEntityErrorResponse error = ErrorResponseUtil.createErrorResponse(ex, HttpStatus.FORBIDDEN,
+                List.of("User is not confirmed. Please check your email for the confirmation link."));
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(CodeMismatchException.class)
+    public ResponseEntity<AppEntityErrorResponse> handleCodeMismatchException(CodeMismatchException ex) {
+        AppEntityErrorResponse error = ErrorResponseUtil.createErrorResponse(ex, HttpStatus.BAD_REQUEST,
+                List.of("Invalid verification code provided, please try again."));
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

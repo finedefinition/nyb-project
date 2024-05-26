@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,6 +34,12 @@ public class AuthController {
     public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegistrationRequestDto userDto) {
         authService.register(userDto);
         return ResponseEntity.status(201).body("User registered successfully");
+    }
+
+    @PostMapping("/confirm")
+    public ResponseEntity<String> confirmUser(@RequestParam String email, @RequestParam String confirmationCode) {
+        authService.confirmUser(email, confirmationCode);
+        return ResponseEntity.ok("User confirmed successfully");
     }
 
     @PostMapping("/login")
