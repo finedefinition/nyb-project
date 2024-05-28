@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.dto.request.UpdateUserRequestDto;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
@@ -9,11 +8,11 @@ import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,9 +30,9 @@ public class AuthController {
     private String userPoolId;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegistrationRequestDto userDto) {
+    public ResponseEntity<Void> registerUser(@Valid @RequestBody UserRegistrationRequestDto userDto) {
         authService.register(userDto);
-        return ResponseEntity.status(200).body("User registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/confirm")

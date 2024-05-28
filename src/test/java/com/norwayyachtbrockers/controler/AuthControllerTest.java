@@ -65,7 +65,7 @@ class AuthControllerTest {
         doNothing().when(authService).register(userDto);
 
         // Act
-        ResponseEntity<String> response = authController.registerUser(userDto);
+        ResponseEntity<?> response = authController.registerUser(userDto);
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Response status should be 201");
