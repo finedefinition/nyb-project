@@ -1,7 +1,9 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.constants.ApplicationConstants;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
+import com.norwayyachtbrockers.dto.response.ResponseDto;
 import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
 import com.norwayyachtbrockers.service.AuthService;
 import jakarta.validation.Valid;
@@ -30,9 +32,11 @@ public class AuthController {
     private String userPoolId;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@Valid @RequestBody UserRegistrationRequestDto userDto) {
+    public ResponseEntity<ResponseDto> registerUser(@Valid @RequestBody UserRegistrationRequestDto userDto) {
         authService.register(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ResponseDto(ApplicationConstants.STATUS_201, ApplicationConstants.MESSAGE_201));
     }
 
     @PostMapping("/confirm")
