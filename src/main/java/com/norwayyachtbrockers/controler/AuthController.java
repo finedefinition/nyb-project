@@ -89,5 +89,4 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(new ResponseDto(ApplicationConstants.STATUS_200, ApplicationConstants.MESSAGE_200));
     }
-
 }
