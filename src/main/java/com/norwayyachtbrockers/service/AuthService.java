@@ -8,7 +8,7 @@ public interface AuthService {
 
     void register(UserRegistrationRequestDto request);
 
-    void confirmUser(String email, String confirmationCode);
+    UserLoginResponseDto confirmUser(String email, String confirmationCode, String password);
 
     UserLoginResponseDto authenticate(UserLoginRequestDto request);
 

@@ -40,9 +40,13 @@ public class AuthController {
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity<String> confirmUser(@RequestParam String email, @RequestParam String confirmationCode) {
-        authService.confirmUser(email, confirmationCode);
-        return ResponseEntity.ok("User confirmed successfully");
+    public ResponseEntity<UserLoginResponseDto> confirmUser(@RequestParam String email,
+                                                            @RequestParam String confirmationCode,
+                                                            @RequestParam String password) {
+        UserLoginResponseDto userLoginResponseDto = authService.confirmUser(email, confirmationCode, password);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userLoginResponseDto);
     }
 
     @PostMapping("/login")
@@ -69,18 +73,21 @@ public class AuthController {
     }
 
     @PostMapping("/forgotPassword")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<ResponseDto> forgotPassword(@RequestParam String email) {
         authService.initiatePasswordRecovery(email);
-        return ResponseEntity.ok("Password recovery initiated." +
-                " Please check your email for the confirmation code.");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(ApplicationConstants.STATUS_200, ApplicationConstants.MESSAGE_200));
     }
 
     @PostMapping("/confirmForgotPassword")
-    public ResponseEntity<String> confirmForgotPassword(@RequestParam String email,
+    public ResponseEntity<ResponseDto> confirmForgotPassword(@RequestParam String email,
                                                         @RequestParam String confirmationCode,
                                                         @RequestParam String newPassword) {
         authService.confirmPasswordRecovery(email, confirmationCode, newPassword);
-        return ResponseEntity.ok("Password has been reset successfully.");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(ApplicationConstants.STATUS_200, ApplicationConstants.MESSAGE_200));
     }
 
 }

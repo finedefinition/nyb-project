@@ -50,8 +50,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void register(UserRegistrationRequestDto request) {
         try {
-            String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
-            // First, create the user
+            String secretHash = generateSecretHash(request.getEmail());
             SignUpRequest signUpRequest = new SignUpRequest()
                     .withClientId(clientId)
                     .withSecretHash(secretHash)
@@ -72,10 +71,7 @@ public class AuthServiceImpl implements AuthService {
                     .withGroupName("ROLE_USER");
 
             cognitoClient.adminAddUserToGroup(groupRequest);
-            //String idToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
-            // Store user with Cognito sub (User won't be confirmed yet)
-            // You can choose to store the user immediately or wait until email confirmation
-            // DecodedJWT jwt = JWT.decode(signUpResult.getUserSub());
+
             User user = userMapper.createUserFromDto(request);
             user.setCognitoSub(signUpResult.getUserSub());
             user.setUserRoles(UserRoles.ROLE_USER);
@@ -88,9 +84,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void confirmUser(String email, String confirmationCode) {
+    public UserLoginResponseDto confirmUser(String email, String confirmationCode, String password) {
         try {
-            String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
+            String secretHash = generateSecretHash(email);
 
             ConfirmSignUpRequest confirmSignUpRequest = new ConfirmSignUpRequest()
                     .withClientId(clientId)
@@ -100,11 +96,8 @@ public class AuthServiceImpl implements AuthService {
 
             cognitoClient.confirmSignUp(confirmSignUpRequest);
 
-            // Optionally, you can fetch the user and update their status in your local database
-//        User user = userService.findByEmail(email)
-//                .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
-//        user.setConfirmed(true);
-//        userService.saveUser(user);
+            String jwtToken = initiateAuthenticationAndGetToken(email, password, secretHash);
+            return new UserLoginResponseDto(jwtToken);
 
         } catch (Exception e) {
             throw new RuntimeException("Error during user confirmation: " + e.getMessage(), e);
@@ -114,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserLoginResponseDto authenticate(UserLoginRequestDto request) {
         try {
-            String secretHash = CognitoUtils.generateSecretHash(request.getEmail(), clientId, clientSecret);
+            String secretHash = generateSecretHash(request.getEmail());
             String jwtToken = initiateAuthenticationAndGetToken(request.getEmail(), request.getPassword(), secretHash);
             return new UserLoginResponseDto(jwtToken);
         } catch (NotAuthorizedException | UserNotConfirmedException e) {
@@ -200,7 +193,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void initiatePasswordRecovery(String email) {
         try {
-            String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
+            String secretHash = generateSecretHash(email);
 
             ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest()
                     .withClientId(clientId)
@@ -217,7 +210,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void confirmPasswordRecovery(String email, String confirmationCode, String newPassword) {
         try {
-            String secretHash = CognitoUtils.generateSecretHash(email, clientId, clientSecret);
+            String secretHash = generateSecretHash(email);
 
             ConfirmForgotPasswordRequest confirmForgotPasswordRequest = new ConfirmForgotPasswordRequest()
                     .withClientId(clientId)
@@ -263,6 +256,10 @@ public class AuthServiceImpl implements AuthService {
                 .findFirst()
                 .map(AttributeType::getValue)
                 .orElse(null);
+    }
+
+    private String generateSecretHash(String email) {
+        return CognitoUtils.generateSecretHash(email, clientId, clientSecret);
     }
 
     private String initiateAuthenticationAndGetToken(String email, String password, String secretHash) {
