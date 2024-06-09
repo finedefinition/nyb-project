@@ -43,7 +43,7 @@ class AuthControllerTest {
     private static final String LAST_NAME = "User";
     private static final String ROLE = "ROLE_USER";
     private static final String EMAIL = "testUser@example.com";
-    private static final String REGISTRATION_SUCCESS = "User registered successfully";
+    private static final String REGISTRATION_SUCCESS = "ResponseDto(statusCode=201, statusMsg=Account created successfully)";
     private static final String UPDATE_SUCCESS = "User updated successfully";
 
     @BeforeEach

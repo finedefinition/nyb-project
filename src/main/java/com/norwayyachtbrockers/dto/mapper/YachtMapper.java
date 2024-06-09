@@ -37,7 +37,6 @@ public class YachtMapper {
     public YachtResponseDto convertToDto(Yacht yacht) {
         YachtResponseDto dto = new YachtResponseDto();
         dto.setId(yacht.getId());
-        dto.setFeatured(yacht.isFeatured());
         dto.setVatIncluded(yacht.isVatIncluded());
         dto.setPrice(formatPrice(yacht.getPrice()));
         dto.setPriceOld(formatPrice(yacht.getPriceOld()));

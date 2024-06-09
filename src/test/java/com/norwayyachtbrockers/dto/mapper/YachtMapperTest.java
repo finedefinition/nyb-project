@@ -181,7 +181,6 @@ class YachtMapperTest {
         // Assert
         assertNotNull(yachtDto, "The converted DTO should not be null");
         assertEquals(yacht.getId(), yachtDto.getId(), "DTO ID should match yacht ID");
-        assertTrue(yachtDto.isFeatured(), "DTO should be featured");
         assertTrue(yachtDto.isVatIncluded(), "DTO should have VAT included");
         assertEquals(PRICE, new BigDecimal(yachtDto.getPrice()), "DTO price should match yacht price");
         assertEquals(PRICE_OLD, new BigDecimal(yachtDto.getPriceOld()), "DTO old price should match yacht old price");

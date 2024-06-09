@@ -16,9 +16,6 @@ public class YachtResponseDto {
     @JsonProperty("yacht_id")
     private Long id;
 
-    @JsonProperty("yacht_featured")
-    private boolean featured;
-
     @JsonProperty("yacht_top")
     private boolean yachtTop;
 
@@ -55,10 +52,10 @@ public class YachtResponseDto {
     @JsonProperty("yacht_draft")
     private BigDecimal draftDepth;
 
-    @JsonProperty("yacht_keel")
+    @JsonProperty("yacht_keel_type")
     private String keelType;
 
-    @JsonProperty("yacht_fuel")
+    @JsonProperty("yacht_fuel_type")
     private String fuelType;
 
     @JsonProperty("yacht_country")

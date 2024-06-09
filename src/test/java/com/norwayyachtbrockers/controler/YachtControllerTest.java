@@ -73,7 +73,6 @@ class YachtControllerTest {
     void setUp() {
         yachtResponseDto = new YachtResponseDto();
         yachtResponseDto.setId(YACHT_ID);
-        yachtResponseDto.setFeatured(IS_FEATURED);
         yachtResponseDto.setPrice("150000");
 
 
