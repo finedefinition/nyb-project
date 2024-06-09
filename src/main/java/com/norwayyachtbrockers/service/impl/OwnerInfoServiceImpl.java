@@ -52,4 +52,9 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
         OwnerInfo ownerInfo = EntityUtils.findEntityOrThrow(id, ownerInfoRepository, "OwnerInfo");
         ownerInfoRepository.delete(ownerInfo);
     }
+
+    @Override
+    public Long getOwnerInfoIdByEmailAndTelephone(String email, String telephone) {
+        return ownerInfoRepository.findIdByEmailAndTelephone(email, telephone);
+    }
 }

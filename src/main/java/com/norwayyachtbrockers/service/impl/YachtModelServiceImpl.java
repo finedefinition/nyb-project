@@ -7,7 +7,7 @@ import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
-import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
+import com.norwayyachtbrockers.repository.YachtModelRepository;
 import com.norwayyachtbrockers.service.YachtModelService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import org.springframework.data.domain.Sort;
@@ -112,5 +112,10 @@ public class YachtModelServiceImpl implements YachtModelService {
     public List<YachtModel> findByFuelType_Id(Long fuelTypeId) {
         EntityUtils.findEntityOrThrow(fuelTypeId, fuelRepository, "Fuel");
         return yachtModelRepository.findByFuelType_Id(fuelTypeId);
+    }
+
+    @Override
+    public Long getYachtModelId(String make, String model, Integer year) {
+        return yachtModelRepository.findIdByMakeModelYear(make, model, year);
     }
 }

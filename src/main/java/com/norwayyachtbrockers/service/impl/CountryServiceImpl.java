@@ -57,4 +57,9 @@ public class CountryServiceImpl implements CountryService {
         country.getYachts().forEach(yacht -> yacht.setCountry(null));
         countryRepository.delete(country);
     }
+
+    @Override
+    public Long getCountryIdByName(String name) {
+        return countryRepository.findIdByName(name);
+    }
 }

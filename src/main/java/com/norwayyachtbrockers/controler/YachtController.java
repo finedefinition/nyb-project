@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
@@ -33,7 +34,19 @@ public class YachtController {
         this.yachtService = yachtService;
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/full-dto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<YachtResponseDto> createYachtFromFullYachRequestDto(
+            @Valid
+            @RequestPart("yachtData") FullYachtRequestDto dto,
+            @RequestParam("mainImage") MultipartFile mainImageFile,
+            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
+
+        YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> createYacht(
             @Valid
@@ -45,17 +58,17 @@ public class YachtController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<YachtResponseDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(yachtService.findId(id));
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<YachtResponseDto>> getAll() {
         List<YachtResponseDto> yachts = yachtService.findAll();
 
         if (yachts.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok(yachts);
     }
@@ -65,7 +78,7 @@ public class YachtController {
         return yachtService.search(searchParameters);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> updateYacht(
             @Valid @PathVariable Long id,

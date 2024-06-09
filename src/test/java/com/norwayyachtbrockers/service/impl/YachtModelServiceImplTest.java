@@ -7,7 +7,7 @@ import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
-import com.norwayyachtbrockers.repository.yachtmodel.YachtModelRepository;
+import com.norwayyachtbrockers.repository.YachtModelRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

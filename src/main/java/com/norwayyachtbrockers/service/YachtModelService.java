@@ -20,4 +20,6 @@ public interface YachtModelService {
 
     // Find YachtModels by Fuel Type ID
     List<YachtModel> findByFuelType_Id(Long fuelTypeId);
+
+    Long getYachtModelId(String make, String model, Integer year);
 }

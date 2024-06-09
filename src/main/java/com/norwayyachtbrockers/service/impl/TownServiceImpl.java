@@ -88,4 +88,10 @@ public class TownServiceImpl implements TownService {
         // Delete the town
         townRepository.delete(town);
     }
+
+
+    @Override
+    public Long getTownIdByName(String name) {
+        return townRepository.findIdByName(name);
+    }
 }

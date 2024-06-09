@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.YachtMapper;
+import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
@@ -34,6 +35,49 @@ public class YachtServiceImpl implements YachtService {
     private final YachtMapper yachtMapper;
     private final YachtSpecificationBuilder yachtSpecificationBuilder;
     private final S3ImageService s3ImageService;
+
+    @Override
+    @Transactional
+    public YachtResponseDto save(FullYachtRequestDto dto, MultipartFile mainImageFile,
+                                 List<MultipartFile> additionalImageFiles) {
+        // Convert DTO to Yacht entity
+        Yacht yacht = yachtMapper.createYachtFromFullYachtRequestDto(dto);
+
+        // Set the old price from the DTO
+        yacht.setPriceOld(yacht.getPrice());
+
+        // Initially assume no main image is set
+        boolean mainImageSet = false;
+
+        // Upload and set the main image key if it's provided
+        if (mainImageFile != null && !mainImageFile.isEmpty()) {
+            String mainImageKey = s3ImageService.uploadImageToS3(mainImageFile);
+            yacht.setMainImageKey(mainImageKey);
+            mainImageSet = true;
+        }
+
+        // Save the Yacht entity to get a generated ID
+        Yacht savedYacht = yachtRepository.save(yacht);
+
+        // Check if we need to upload additional images and potentially set the main image from these
+        if (!additionalImageFiles.isEmpty()) {
+            // Prepare a DTO for saving multiple images
+            YachtImageRequestDto imageRequestDto = new YachtImageRequestDto();
+            imageRequestDto.setYachtId(savedYacht.getId());
+
+            // Delegate to saveMultipleImages method from YachtImageService
+            List<YachtImageResponseDto> savedImageDtos = yachtImageService.saveMultipleImages(imageRequestDto, additionalImageFiles);
+
+            // If no main image was explicitly provided and additional images were uploaded
+            if (!mainImageSet && !savedImageDtos.isEmpty()) {
+                savedYacht.setMainImageKey(savedImageDtos.get(0).getImageKey());
+            }
+        }
+
+        // Return the saved yacht as a DTO
+        return yachtMapper.convertToDto(savedYacht);
+    }
+
 
     @Override
     @Transactional

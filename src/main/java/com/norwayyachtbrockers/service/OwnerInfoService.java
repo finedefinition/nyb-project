@@ -15,4 +15,6 @@ public interface OwnerInfoService {
     OwnerInfo update(OwnerInfoRequestDto dto, Long id);
 
     void deleteById(Long id);
+
+    Long getOwnerInfoIdByEmailAndTelephone(String email, String telephone);
 }

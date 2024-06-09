@@ -18,4 +18,6 @@ public interface TownService {
     TownResponseDto updateTown(TownRequestDto dto, Long id);
 
     void deleteById(Long id);
+
+    Long getTownIdByName(String name);
 }

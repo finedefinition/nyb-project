@@ -1,9 +1,11 @@
 package com.norwayyachtbrockers.dto.mapper;
 
+import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
-import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.model.User;
+import com.norwayyachtbrockers.model.Yacht;
+import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import com.norwayyachtbrockers.service.TownService;
@@ -25,6 +27,45 @@ public class YachtMapper {
     private final CountryService countryService;
     private final YachtDetailService yachtDetailService;
     private final OwnerInfoService ownerInfoService;
+
+
+    public Yacht createYachtFromFullYachtRequestDto(FullYachtRequestDto dto) {
+        Yacht yacht = new Yacht();
+        yacht.setVatIncluded(dto.isVatIncluded());
+        yacht.setPrice(dto.getPrice());
+
+        // YachtModel
+        String make = dto.getMake();
+        String model = dto.getModel();
+        Integer year = dto.getYear();
+        yacht.setYachtModel(yachtModelService.findId(yachtModelService.getYachtModelId(make,model,year)));
+
+
+        // Country
+        String country = dto.getCountry();
+        yacht.setCountry(countryService.findId(countryService.getCountryIdByName(country)));
+
+        // Town
+        String town = dto.getTown();
+        yacht.setTown(townService.findTownById(townService.getTownIdByName(town)));
+
+        // YachtDetail
+        YachtDetail yachtDetail = new YachtDetail();
+        yachtDetail.setCabin(dto.getCabin());
+        yachtDetail.setBerth(dto.getBerth());
+        yachtDetail.setShower(dto.getShower());
+        yachtDetail.setHeads(dto.getHeads());
+        yachtDetail.setDescription(dto.getDescription());
+        yacht.setYachtDetail(yachtDetail);
+
+        // OwnerInfo
+        String email = dto.getEmail();
+        String phoneNumber = dto.getPhoneNumber();
+        yacht.setOwnerInfo(ownerInfoService.
+                findId(ownerInfoService.getOwnerInfoIdByEmailAndTelephone(email, phoneNumber)));
+
+        return yacht;
+    }
 
     public Yacht createYachtFromDto(YachtRequestDto dto) {
         Yacht yacht = new Yacht();
