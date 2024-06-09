@@ -30,6 +30,7 @@ public class KeelServiceImpl implements KeelService {
     }
 
     @Override
+    @Transactional
     public Keel saveKeel(Keel keel) {
         return keelRepository.save(keel);
     }

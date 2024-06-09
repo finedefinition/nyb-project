@@ -7,6 +7,8 @@ import java.util.List;
 public interface CountryService {
     Country saveCountry(CountryRequestDto dto);
 
+    Country saveCountry(Country country);
+
     Country findId(Long id);
 
     List<Country> findAll();

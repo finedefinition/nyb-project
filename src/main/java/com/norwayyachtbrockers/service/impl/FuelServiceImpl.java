@@ -31,6 +31,7 @@ public class FuelServiceImpl implements FuelService {
     }
 
     @Override
+    @Transactional
     public Fuel saveFuel(Fuel fuel) {
         return fuelRepository.save(fuel);
     }

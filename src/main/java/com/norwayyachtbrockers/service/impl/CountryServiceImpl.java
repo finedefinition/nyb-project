@@ -30,6 +30,12 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
+    @Transactional
+    public Country saveCountry(Country country) {
+        return countryRepository.save(country);
+    }
+
+    @Override
     public Country findId(Long id) {
         return EntityUtils.findEntityOrThrow(id, countryRepository, "Country");
     }

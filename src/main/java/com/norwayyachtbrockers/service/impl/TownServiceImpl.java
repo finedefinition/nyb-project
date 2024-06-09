@@ -41,6 +41,12 @@ public class TownServiceImpl implements TownService {
     }
 
     @Override
+    @Transactional
+    public Town saveTown(Town town) {
+        return townRepository.save(town);
+    }
+
+    @Override
     public TownResponseDto findId(Long id) {
         Town town = EntityUtils.findEntityOrThrow(id, townRepository, "Town");
         return townMapper.convertToDto(town);

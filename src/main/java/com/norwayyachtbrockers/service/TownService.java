@@ -9,6 +9,8 @@ import java.util.List;
 public interface TownService {
     TownResponseDto saveTown(TownRequestDto dto);
 
+    Town saveTown(Town town);
+
     TownResponseDto findId(Long id);
 
     Town findTownById(Long id);

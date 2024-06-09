@@ -8,6 +8,8 @@ public interface OwnerInfoService {
 
     OwnerInfo save(OwnerInfoRequestDto dto);
 
+    OwnerInfo save(OwnerInfo ownerInfo);
+
     OwnerInfo findId(Long id);
 
     List<OwnerInfo> findAll();

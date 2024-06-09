@@ -49,6 +49,7 @@ public class YachtModelServiceImpl implements YachtModelService {
     }
 
     @Override
+    @Transactional
     public YachtModel saveYachtModel(YachtModel yachtModel) {
         return yachtModelRepository.save(yachtModel);
     }

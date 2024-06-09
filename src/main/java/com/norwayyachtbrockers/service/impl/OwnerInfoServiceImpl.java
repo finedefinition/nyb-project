@@ -31,6 +31,11 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
     }
 
     @Override
+    public OwnerInfo save(OwnerInfo ownerInfo) {
+        return ownerInfoRepository.save(ownerInfo);
+    }
+
+    @Override
     public OwnerInfo findId(Long id) {
         return EntityUtils.findEntityOrThrow(id, ownerInfoRepository, "OwnerInfo");
     }

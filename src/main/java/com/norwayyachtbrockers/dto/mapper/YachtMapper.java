@@ -3,8 +3,11 @@ package com.norwayyachtbrockers.dto.mapper;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.Keel;
+import com.norwayyachtbrockers.model.OwnerInfo;
+import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.model.YachtDetail;
@@ -89,11 +92,26 @@ public class YachtMapper {
 
         // Country
         String country = dto.getCountry();
-        yacht.setCountry(countryService.findId(countryService.getCountryIdByName(country)));
+        Long countryId = countryService.getCountryIdByName(country);
+        if (countryId == null) {
+            Country newCountry = new Country();
+            newCountry.setName(dto.getCountry());
+            Country savedCountry = countryService.saveCountry(newCountry);
+            countryId = savedCountry.getId();
+        }
+        yacht.setCountry(countryService.findId(countryId));
 
         // Town
         String town = dto.getTown();
-        yacht.setTown(townService.findTownById(townService.getTownIdByName(town)));
+        Long townId = townService.getTownIdByName(town);
+        if (townId == null) {
+            Town newTown = new Town();
+            newTown.setName(dto.getTown());
+            newTown.setCountry(countryService.findId(countryId));
+            Town savedTown = townService.saveTown(newTown);
+            townId = savedTown.getId();
+        }
+        yacht.setTown(townService.findTownById(townId));
 
         // YachtDetail
         YachtDetail yachtDetail = new YachtDetail();
@@ -107,8 +125,17 @@ public class YachtMapper {
         // OwnerInfo
         String email = dto.getEmail();
         String phoneNumber = dto.getPhoneNumber();
-        yacht.setOwnerInfo(ownerInfoService.
-                findId(ownerInfoService.getOwnerInfoIdByEmailAndTelephone(email, phoneNumber)));
+        Long ownerInfoId = ownerInfoService.getOwnerInfoIdByEmailAndTelephone(email, phoneNumber);
+        if (ownerInfoId == null) {
+            OwnerInfo newOwnerInfo = new OwnerInfo();
+            newOwnerInfo.setFirstName(dto.getFirstName());
+            newOwnerInfo.setLastName(dto.getLastName());
+            newOwnerInfo.setEmail(dto.getEmail());
+            newOwnerInfo.setTelephone(dto.getPhoneNumber());
+            OwnerInfo savedOwnerInfo = ownerInfoService.save(newOwnerInfo);
+            ownerInfoId = savedOwnerInfo.getId();
+        }
+        yacht.setOwnerInfo(ownerInfoService.findId(ownerInfoId));
 
         return yacht;
     }
@@ -117,6 +144,7 @@ public class YachtMapper {
         Yacht yacht = new Yacht();
         return setFields(yacht, dto);
     }
+
     public Yacht updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
         return setFields(yacht, dto);
     }
@@ -167,6 +195,7 @@ public class YachtMapper {
         dto.setCreatedAt(yacht.getCreatedAt());
         return dto;
     }
+
     private Yacht setFields(Yacht yacht, YachtRequestDto dto) {
         yacht.setVatIncluded(dto.isVatIncluded());
         yacht.setPrice(dto.getPrice());
