@@ -7,6 +7,8 @@ import java.util.List;
 public interface YachtModelService {
     YachtModel saveYachtModel(YachtModelRequestDto dto);
 
+    YachtModel saveYachtModel(YachtModel yachtModel);
+
     YachtModel findId(Long id);
 
     List<YachtModel> findAll();

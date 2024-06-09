@@ -49,6 +49,11 @@ public class YachtModelServiceImpl implements YachtModelService {
     }
 
     @Override
+    public YachtModel saveYachtModel(YachtModel yachtModel) {
+        return yachtModelRepository.save(yachtModel);
+    }
+
+    @Override
     public YachtModel findId(Long id) {
         return EntityUtils.findEntityOrThrow(id, yachtModelRepository, "YachtModel");
     }

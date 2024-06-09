@@ -30,6 +30,11 @@ public class KeelServiceImpl implements KeelService {
     }
 
     @Override
+    public Keel saveKeel(Keel keel) {
+        return keelRepository.save(keel);
+    }
+
+    @Override
     public Keel findId(Long id) {
         return EntityUtils.findEntityOrThrow(id, keelRepository, "Keel");
     }
@@ -52,5 +57,10 @@ public class KeelServiceImpl implements KeelService {
     public void deleteById(Long id) {
         Keel keel = EntityUtils.findEntityOrThrow(id, keelRepository, "Keel");
         keelRepository.delete(keel);
+    }
+
+    @Override
+    public Long getKeelTypeIdByName(String name) {
+        return keelRepository.findIdByName(name);
     }
 }

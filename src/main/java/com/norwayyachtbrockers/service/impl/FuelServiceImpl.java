@@ -31,6 +31,11 @@ public class FuelServiceImpl implements FuelService {
     }
 
     @Override
+    public Fuel saveFuel(Fuel fuel) {
+        return fuelRepository.save(fuel);
+    }
+
+    @Override
     public Fuel findId(Long id) {
         return EntityUtils.findEntityOrThrow(id, fuelRepository, "Fuel");
     }
@@ -52,5 +57,10 @@ public class FuelServiceImpl implements FuelService {
     public void deleteById(Long id) {
         Fuel fuel = EntityUtils.findEntityOrThrow(id, fuelRepository, "Fuel");
         fuelRepository.delete(fuel);
+    }
+
+    @Override
+    public Long getFuelTypeIdByName(String name) {
+        return fuelRepository.findIdByName(name);
     }
 }

@@ -8,6 +8,8 @@ public interface KeelService {
 
     Keel saveKeel(KeelRequestDto dto);
 
+    Keel saveKeel(Keel keel);
+
     Keel findId(Long id);
 
     List<Keel> findAll();
@@ -15,4 +17,6 @@ public interface KeelService {
     Keel updateKeel(KeelRequestDto dto, Long id);
 
     void deleteById(Long id);
+
+    Long getKeelTypeIdByName(String name);
 }

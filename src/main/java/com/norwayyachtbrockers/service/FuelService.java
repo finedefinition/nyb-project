@@ -7,6 +7,8 @@ import java.util.List;
 public interface FuelService {
     Fuel saveFuel(FuelRequestDto dto);
 
+    Fuel saveFuel(Fuel fuel);
+
     Fuel findId(Long id);
 
     List<Fuel> findAll();
@@ -14,4 +16,6 @@ public interface FuelService {
     Fuel updateFuel(FuelRequestDto dto, Long id);
 
     void deleteById(Long id);
+
+    Long getFuelTypeIdByName(String name);
 }

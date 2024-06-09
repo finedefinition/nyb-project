@@ -3,10 +3,15 @@ package com.norwayyachtbrockers.dto.mapper;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+import com.norwayyachtbrockers.model.Fuel;
+import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.model.YachtDetail;
+import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.CountryService;
+import com.norwayyachtbrockers.service.FuelService;
+import com.norwayyachtbrockers.service.KeelService;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import com.norwayyachtbrockers.service.TownService;
 import com.norwayyachtbrockers.service.YachtDetailService;
@@ -27,6 +32,8 @@ public class YachtMapper {
     private final CountryService countryService;
     private final YachtDetailService yachtDetailService;
     private final OwnerInfoService ownerInfoService;
+    private final KeelService keelService;
+    private final FuelService fuelService;
 
 
     public Yacht createYachtFromFullYachtRequestDto(FullYachtRequestDto dto) {
@@ -38,7 +45,46 @@ public class YachtMapper {
         String make = dto.getMake();
         String model = dto.getModel();
         Integer year = dto.getYear();
-        yacht.setYachtModel(yachtModelService.findId(yachtModelService.getYachtModelId(make,model,year)));
+        Long yachtModelId = yachtModelService.getYachtModelId(make, model, year);
+
+        if (yachtModelId == null) {
+            // Create new YachtModel
+            YachtModel newYachtModel = new YachtModel();
+            newYachtModel.setMake(make);
+            newYachtModel.setModel(model);
+            newYachtModel.setYear(year);
+
+            // Check and create KeelType
+            Keel keelType = dto.getKeelType();
+            Long keelTypeId = keelService.getKeelTypeIdByName(keelType.getName());
+            if (keelTypeId == null) {
+                Keel newKeelType = new Keel();
+                newKeelType.setName(keelType.getName());
+                Keel savedKeelType = keelService.saveKeel(newKeelType);
+                keelTypeId = savedKeelType.getId();
+            }
+            newYachtModel.setKeelType(keelService.findId(keelTypeId));
+
+            // Check and create FuelType
+            Fuel fuelType = dto.getFuelType();
+            Long fuelTypeId = fuelService.getFuelTypeIdByName(fuelType.getName());
+            if (fuelTypeId == null) {
+                Fuel newFuelType = new Fuel();
+                newFuelType.setName(fuelType.getName());
+                Fuel savedFuelType = fuelService.saveFuel(newFuelType);
+                fuelTypeId = savedFuelType.getId();
+            }
+            newYachtModel.setFuelType(fuelService.findId(fuelTypeId));
+
+            newYachtModel.setLengthOverall(dto.getLengthOverall());
+            newYachtModel.setBeamWidth(dto.getBeamWidth());
+            newYachtModel.setDraftDepth(dto.getDraftDepth());
+
+            YachtModel savedYachtModel = yachtModelService.saveYachtModel(newYachtModel);
+            yachtModelId = savedYachtModel.getId();
+        }
+
+        yacht.setYachtModel(yachtModelService.findId(yachtModelId));
 
 
         // Country
