@@ -14,7 +14,9 @@ import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.service.TownService;
+import com.norwayyachtbrockers.service.YachtDetailService;
 import com.norwayyachtbrockers.service.YachtModelService;
+import com.norwayyachtbrockers.service.OwnerInfoService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,6 +53,10 @@ class YachtMapperTest {
     private TownService townService;
     @MockBean
     private CountryService countryService;
+    @MockBean
+    private YachtDetailService yachtDetailService;
+    @MockBean
+    private OwnerInfoService ownerInfoService;
 
     @Autowired
     private YachtMapper yachtMapper;
@@ -103,12 +109,14 @@ class YachtMapperTest {
         town = new Town();
         when(townService.findTownById(eq(TOWN_ID))).thenReturn(town);
         yachtDetail = new YachtDetail();
+        when(yachtDetailService.findId(eq(YACHT_DETAIL_ID))).thenReturn(yachtDetail);
         ownerInfo = new OwnerInfo();
+        when(ownerInfoService.findId(eq(OWNER_INFO_ID))).thenReturn(ownerInfo);
     }
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(yachtModelService, townService, countryService);
+        Mockito.reset(yachtModelService, townService, countryService, yachtDetailService, ownerInfoService);
     }
 
     @Test

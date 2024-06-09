@@ -1,7 +1,8 @@
 package com.norwayyachtbrockers.controler;
 
-import com.norwayyachtbrockers.dto.request.UpdateUserRequestDto;
+import com.norwayyachtbrockers.constants.ApplicationConstants;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
+import com.norwayyachtbrockers.dto.response.ResponseDto;
 import com.norwayyachtbrockers.service.AuthService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +44,7 @@ class AuthControllerTest {
     private static final String LAST_NAME = "User";
     private static final String ROLE = "ROLE_USER";
     private static final String EMAIL = "testUser@example.com";
-    private static final String REGISTRATION_SUCCESS = "ResponseDto(statusCode=201, statusMsg=Account created successfully)";
+    private static final ResponseDto REGISTRATION_SUCCESS = new ResponseDto(ApplicationConstants.STATUS_201, "Account created successfully");
     private static final String UPDATE_SUCCESS = "User updated successfully";
 
     @BeforeEach
@@ -65,7 +66,7 @@ class AuthControllerTest {
         doNothing().when(authService).register(userDto);
 
         // Act
-        ResponseEntity<?> response = authController.registerUser(userDto);
+        ResponseEntity<ResponseDto> response = authController.registerUser(userDto);
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Response status should be 201");

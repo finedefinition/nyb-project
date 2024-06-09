@@ -33,11 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Order(600)
 @SpringBootTest
@@ -102,16 +98,11 @@ class AuthServiceImplTest {
     void testRegister_Success() {
         // Arrange
         SignUpResult signUpResult = new SignUpResult();
-        AdminConfirmSignUpResult confirmSignUpResult = new AdminConfirmSignUpResult();
         AdminAddUserToGroupResult addUserToGroupResult = new AdminAddUserToGroupResult();
-        AuthenticationResultType authResultType = new AuthenticationResultType().withIdToken(VALID_JWT_TOKEN);
-        InitiateAuthResult initiateAuthResult = new InitiateAuthResult().withAuthenticationResult(authResultType);
         User user = new User();
 
         when(cognitoClient.signUp(any(SignUpRequest.class))).thenReturn(signUpResult);
-        when(cognitoClient.adminConfirmSignUp(any(AdminConfirmSignUpRequest.class))).thenReturn(confirmSignUpResult);
         when(cognitoClient.adminAddUserToGroup(any(AdminAddUserToGroupRequest.class))).thenReturn(addUserToGroupResult);
-        when(cognitoClient.initiateAuth(any(InitiateAuthRequest.class))).thenReturn(initiateAuthResult);
         when(userMapper.createUserFromDto(any(UserRegistrationRequestDto.class))).thenReturn(user);
         when(userService.saveUser(any(User.class))).thenReturn(user);
 
@@ -120,9 +111,7 @@ class AuthServiceImplTest {
 
         // Assert
         verify(cognitoClient).signUp(any(SignUpRequest.class));
-        verify(cognitoClient).adminConfirmSignUp(any(AdminConfirmSignUpRequest.class));
         verify(cognitoClient).adminAddUserToGroup(any(AdminAddUserToGroupRequest.class));
-        verify(cognitoClient).initiateAuth(any(InitiateAuthRequest.class));
         verify(userMapper).createUserFromDto(any(UserRegistrationRequestDto.class));
         verify(userService).saveUser(any(User.class));
     }
@@ -152,19 +141,18 @@ class AuthServiceImplTest {
         // Arrange
         String expectedErrorMessage = "Error during login, please check logs.";
 
-        // Simulate an exception being thrown when generateSecretHash or initiateAuthenticationAndGetToken is called
-        when(cognitoClient.initiateAuth(any(InitiateAuthRequest.class))).
-                thenThrow(new RuntimeException("Simulated authentication failure"));
+        // Simulate an exception being thrown when initiateAuth is called
+        when(cognitoClient.initiateAuth(any(InitiateAuthRequest.class)))
+                .thenThrow(new RuntimeException("Simulated authentication failure"));
 
-        // Act
-        UserLoginResponseDto response = authService.authenticate(loginRequestDto);
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            authService.authenticate(loginRequestDto);
+        });
 
-        // Assert
-        assertNotNull(response, "Response should not be null");
-        assertEquals(expectedErrorMessage, response.getToken(),
-                "Error message should be returned in the JWT token field");
-        verify(cognitoClient, times(1))
-                .initiateAuth(any(InitiateAuthRequest.class)); // Ensure that the mocked method was called
+        // Verify that the expected exception is thrown
+        assertEquals("Simulated authentication failure", exception.getMessage());
+        verify(cognitoClient).initiateAuth(any(InitiateAuthRequest.class));
     }
 
     @Test
