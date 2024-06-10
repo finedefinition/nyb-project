@@ -90,7 +90,7 @@ public class UserController {
         try {
             userService.removeFavouriteYacht(cognitoSub, yachtId);
             return ResponseEntity
-                    .status(HttpStatus.NO_CONTENT)
+                    .status(HttpStatus.OK)
                     .body(new ResponseDto(ApplicationConstants.STATUS_204,
                             ApplicationConstants.MESSAGE_204));
         } catch (AppEntityNotFoundException e) {
