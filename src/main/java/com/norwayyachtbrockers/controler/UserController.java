@@ -1,5 +1,7 @@
 package com.norwayyachtbrockers.controler;
 
+import com.norwayyachtbrockers.constants.ApplicationConstants;
+import com.norwayyachtbrockers.dto.response.ResponseDto;
 import com.norwayyachtbrockers.dto.response.UserFavouriteYachtsResponseDto;
 import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
@@ -69,7 +71,10 @@ public class UserController {
     @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
     public ResponseEntity<?> addFavouriteYacht(@PathVariable String cognitoSub, @PathVariable Long yachtId) {
         userService.addFavouriteYachtToUser(cognitoSub, yachtId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ResponseDto(ApplicationConstants.STATUS_201,
+                        ApplicationConstants.MESSAGE_201_FAVOURITE_YACHTS));
     }
 
     @GetMapping(value = "/{cognitoSub}/favouriteYachts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -84,7 +89,10 @@ public class UserController {
     public ResponseEntity<?> deleteFavouriteYachts(@PathVariable String cognitoSub, @PathVariable Long yachtId) {
         try {
             userService.removeFavouriteYacht(cognitoSub, yachtId);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body(new ResponseDto(ApplicationConstants.STATUS_204,
+                            ApplicationConstants.MESSAGE_204));
         } catch (AppEntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

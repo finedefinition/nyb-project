@@ -38,7 +38,7 @@ public class AuthController {
         authService.register(userDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ResponseDto(ApplicationConstants.STATUS_201, ApplicationConstants.MESSAGE_201));
+                .body(new ResponseDto(ApplicationConstants.STATUS_201, ApplicationConstants.MESSAGE_201_ACCOUNT));
     }
 
     @PostMapping("/confirm")

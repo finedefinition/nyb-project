@@ -9,7 +9,8 @@ public class ApplicationConstants {
     public static final String STATUS_200 = "200";
     public static final String MESSAGE_200 = "Request processed successfully";
     public static final String STATUS_201 = "201";
-    public static final String MESSAGE_201 = "Account created successfully";
+    public static final String MESSAGE_201_ACCOUNT = "Account created successfully";
+    public static final String MESSAGE_201_FAVOURITE_YACHTS = "Favourite yacht created successfully";
     public static final String STATUS_204 = "204";
     public static final String MESSAGE_204 = "No content";
     public static final String STATUS_417 = "417";

@@ -88,9 +88,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
         Yacht yacht = yachtRepository.findById(yachtId)
                 .orElseThrow(() -> new AppEntityNotFoundException("Yacht not found with id " + yachtId));
-
-        user.getFavouriteYachts().add(yacht);
-        userRepository.save(user);
+        // Check if the yacht is already in the user's favorites
+        if (!user.getFavouriteYachts().contains(yacht)) {
+            user.getFavouriteYachts().add(yacht);
+            userRepository.save(user);
+        }
     }
 
     @Override
