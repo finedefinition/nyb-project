@@ -1,14 +1,15 @@
 package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.YachtMapper;
+import com.norwayyachtbrockers.dto.mapper.YachtShortMapper;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
-import com.norwayyachtbrockers.repository.YachtImageRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.repository.specification.yacht.YachtSpecificationBuilder;
 import com.norwayyachtbrockers.service.YachtImageService;
@@ -30,11 +31,11 @@ import java.util.stream.Collectors;
 public class YachtServiceImpl implements YachtService {
 
     private final YachtRepository yachtRepository;
-    private final YachtImageRepository yachtImageRepository;
     private final YachtImageService yachtImageService;
     private final YachtMapper yachtMapper;
     private final YachtSpecificationBuilder yachtSpecificationBuilder;
     private final S3ImageService s3ImageService;
+    private final YachtShortMapper yachtShortMapper;
 
     @Override
     @Transactional
@@ -132,13 +133,13 @@ public class YachtServiceImpl implements YachtService {
         // Fetch all yachts, convert to DTOs
         List<YachtResponseDto> dtos = yachtRepository.findAll().stream()
                 .map(yachtMapper::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
 
         // Exclude yachts with 0 favourites, then sort the rest by favouritesCount in descending order
         List<YachtResponseDto> filteredAndSortedDtos = dtos.stream()
                 .filter(dto -> dto.getFavouritesCount() != null && dto.getFavouritesCount() > 0)
                 .sorted(Comparator.comparing(YachtResponseDto::getFavouritesCount, Comparator.reverseOrder()))
-                .collect(Collectors.toList());
+                .toList();
 
         // Identify the top 10 yachts among those filtered and set the 'top10' flag
         filteredAndSortedDtos.stream().limit(10).forEach(dto -> dto.setYachtTop(true));
@@ -150,6 +151,31 @@ public class YachtServiceImpl implements YachtService {
                 .sorted(Comparator.comparing(YachtResponseDto::getId).reversed())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<YachtShortResponseDto> findAllYachts() {
+        // Fetch all yachts, convert to DTOs
+        List<YachtShortResponseDto> dtos = yachtRepository.findAll().stream()
+                .map(yachtShortMapper::convertToDto)
+                .toList();
+
+        // Exclude yachts with 0 favourites, then sort the rest by favouritesCount in descending order
+        List<YachtShortResponseDto> filteredAndSortedDtos = dtos.stream()
+                .filter(dto -> dto.getFavouritesCount() != null && dto.getFavouritesCount() > 0)
+                .sorted(Comparator.comparing(YachtShortResponseDto::getFavouritesCount, Comparator.reverseOrder()))
+                .toList();
+
+        // Identify the top 10 yachts among those filtered and set the 'top10' flag
+        filteredAndSortedDtos.stream().limit(10).forEach(dto -> dto.setYachtTop(true));
+
+        // Merge back the filtered and unfiltered lists, if necessary, to include yachts with 0 favourites in the response
+        // This step is needed if you want yachts with 0 favourites to still be part of the final list but not marked as top 10
+        // Yachts already marked as top 10 are updated in the original DTOs list
+        return dtos.stream()
+                .sorted(Comparator.comparing(YachtShortResponseDto::getId).reversed())
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto) {

@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -64,7 +65,17 @@ public class YachtController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<YachtResponseDto>> getAll() {
+    public ResponseEntity<List<YachtShortResponseDto>> getAll() {
+        List<YachtShortResponseDto> yachts = yachtService.findAllYachts();
+
+        if (yachts.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(yachts);
+    }
+
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<YachtResponseDto>> getAllFullDto() {
         List<YachtResponseDto> yachts = yachtService.findAll();
 
         if (yachts.isEmpty()) {
