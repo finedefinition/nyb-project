@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
-@JsonPropertyOrder({"yacht_id", "yacht_featured", "yacht_top", "yacht_hot_price", "yacht_vat", "yacht_price",
+@JsonPropertyOrder({"yacht_id", "yacht_top", "yacht_hot_price", "yacht_vat", "yacht_price",
         "yacht_price_old", "yacht_main_image_key"})
 public class YachtShortResponseDto {
 
