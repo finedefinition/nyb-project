@@ -9,6 +9,7 @@ public class YachtSearchParametersDto {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private String model;
+    private String make;
     private String country;
     private String town;
     private String keelType;

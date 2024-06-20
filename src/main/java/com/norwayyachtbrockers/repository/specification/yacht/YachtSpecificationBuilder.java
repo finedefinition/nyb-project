@@ -29,6 +29,13 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                     .getSpecificationProvider("yachtModel")
                     .getSpecification(searchParametersDto.getModel()));
         }
+
+        if (searchParametersDto.getMake() != null && !searchParametersDto.getMake().isEmpty()) {
+            specification = specification.and(specificationProviderManager
+                    .getSpecificationProvider("make")
+                    .getSpecification(searchParametersDto.getMake()));
+        }
+
         if (searchParametersDto.getCountry() != null && !searchParametersDto.getCountry().isEmpty()) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("country")
