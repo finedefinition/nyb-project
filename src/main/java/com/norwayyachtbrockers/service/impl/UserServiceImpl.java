@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,17 +60,20 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUser(User user, Long id) {
-        userRepository.findByIdAndFetchYachtsEagerly(id)
-                .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + id));
-        User userUpdated = new User();
-        userUpdated.setId(id);
-        userUpdated.setFirstName(user.getFirstName());
-        userUpdated.setLastName(user.getLastName());
-        userUpdated.setEmail(user.getEmail());
-        userUpdated.setUserRoles(user.getUserRoles());
-        userUpdated.setCreatedAt(user.getCreatedAt());
-        return userRepository.save(userUpdated);
-    }
+    User existingUser = userRepository.findByIdAndFetchYachtsEagerly(id)
+            .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + id));
+
+    // Update the existing user's fields with the new values
+    existingUser.setFirstName(user.getFirstName());
+    existingUser.setLastName(user.getLastName());
+    existingUser.setEmail(user.getEmail());
+    existingUser.setUserRoles(user.getUserRoles());
+    existingUser.setCreatedAt(user.getCreatedAt());
+    // Preserve cognitoSub and other fields
+    existingUser.setCognitoSub(user.getCognitoSub());
+
+    return userRepository.save(existingUser);
+}
 
     @Override
     @Transactional
@@ -129,5 +133,10 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

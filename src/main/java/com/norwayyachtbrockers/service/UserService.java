@@ -5,6 +5,7 @@ import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -26,4 +27,6 @@ public interface UserService {
     UserFavouriteYachtsResponseDto getFavouriteYachts(String cognitoSub);
 
     void removeFavouriteYacht(String cognitoSub, Long yachtId);
+
+    Optional<User> findByEmail(String email);
 }

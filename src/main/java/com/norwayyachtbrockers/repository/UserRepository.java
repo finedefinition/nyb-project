@@ -23,4 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Long findUserIdByEmail(String email);
 
     Optional<User> findByCognitoSub(String cognitoSub);
+
+    @Query("SELECT u FROM User u WHERE u.email = :email")
+    Optional<User> findByEmail(@Param("email") String email);
 }

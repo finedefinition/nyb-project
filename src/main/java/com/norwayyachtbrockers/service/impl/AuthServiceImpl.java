@@ -162,17 +162,26 @@ public class AuthServiceImpl implements AuthService {
                 addUserToGroup(username, newRole, userPoolId);
             }
         }
-        // Step 5: Add user to database
-        Long id = userService.findUserIdByEmail(username);
-        User user = new User();
-        user.setId(id);
-        user.setEmail(username);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setUserRoles(UserRoles.fromString(newRole));
 
-        userService.updateUser(user, id);
+        // Step 5: Retrieve the existing user from the database
+        User existingUser = userService.findByEmail(username)
+                .orElseThrow(() -> new AppEntityNotFoundException("User not found"));
+
+        // Step 6: Update only the necessary fields
+        if (firstName != null && !firstName.isEmpty()) {
+            existingUser.setFirstName(firstName);
+        }
+        if (lastName != null && !lastName.isEmpty()) {
+            existingUser.setLastName(lastName);
+        }
+        if (newRole != null) {
+            existingUser.setUserRoles(UserRoles.fromString(newRole));
+        }
+
+        // Step 7: Save the updated user back to the database
+        userService.updateUser(existingUser, existingUser.getId());
     }
+
 
     @Override
     @Transactional
