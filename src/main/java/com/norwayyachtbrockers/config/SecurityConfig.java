@@ -31,9 +31,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Explicitly permit public endpoints
                         .requestMatchers( "/public/**", "/error", "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users/{userId}/favouriteYachts/{yachtId}").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/users/{userId}/favouriteYachts").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/users/{userId}/favouriteYachts/{yachtId}").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/users/{cognitoSub}/favouriteYachts/{yachtId}")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/{cognitoSub}/favouriteYachts")
+                        .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/{cognitoSub}/favouriteYachts/{yachtId}")
+                        .hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/yachts").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/yachts/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/yachts/{id}").hasRole("ADMIN")

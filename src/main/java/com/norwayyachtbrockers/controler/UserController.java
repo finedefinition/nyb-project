@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @PostMapping("/{cognitoSub}/favouriteYachts/{yachtId}")
-    @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
+    @PreAuthorize("(hasRole('USER') or hasRole('ADMIN')) and #cognitoSub == authentication.principal.claims['sub']")
     public ResponseEntity<?> addFavouriteYacht(@PathVariable String cognitoSub, @PathVariable Long yachtId) {
         userService.addFavouriteYachtToUser(cognitoSub, yachtId);
         return ResponseEntity
@@ -78,14 +78,14 @@ public class UserController {
     }
 
     @GetMapping(value = "/{cognitoSub}/favouriteYachts", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
+    @PreAuthorize("(hasRole('USER') or hasRole('ADMIN')) and #cognitoSub == authentication.principal.claims['sub']")
     public ResponseEntity<UserFavouriteYachtsResponseDto> getFavouriteYachts(@PathVariable String cognitoSub) {
         UserFavouriteYachtsResponseDto dto = userService.getFavouriteYachts(cognitoSub);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @DeleteMapping("/{cognitoSub}/favouriteYachts/{yachtId}")
-    @PreAuthorize("hasRole('USER') and #cognitoSub == authentication.principal.claims['sub']")
+    @PreAuthorize("(hasRole('USER') or hasRole('ADMIN')) and #cognitoSub == authentication.principal.claims['sub']")
     public ResponseEntity<?> deleteFavouriteYachts(@PathVariable String cognitoSub, @PathVariable Long yachtId) {
         try {
             userService.removeFavouriteYacht(cognitoSub, yachtId);
