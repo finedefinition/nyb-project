@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.service;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,4 +33,6 @@ public interface YachtService {
                             List<MultipartFile> additionalImageFiles);
 
     void deleteById(Long id);
+
+    PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto);
 }

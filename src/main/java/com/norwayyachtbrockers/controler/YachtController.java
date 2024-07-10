@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
@@ -106,5 +107,14 @@ public class YachtController {
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         yachtService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/crm", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            YachtSearchParametersDto searchParameters) {
+
+        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPagination(page, searchParameters);
+        return ResponseEntity.ok(response);
     }
 }

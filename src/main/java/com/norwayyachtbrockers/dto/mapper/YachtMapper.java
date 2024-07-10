@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
+import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Fuel;
@@ -192,6 +193,22 @@ public class YachtMapper {
             dto.setHotPrice(true);
         }
         // Created at
+        dto.setCreatedAt(yacht.getCreatedAt());
+        return dto;
+    }
+
+    public YachtCrmResponseDto convertToCrmDto(Yacht yacht) {
+        YachtCrmResponseDto dto = new YachtCrmResponseDto();
+        dto.setId(yacht.getId());
+        dto.setMainImageKey(yacht.getMainImageKey());
+        dto.setMake(yacht.getYachtModel().getMake());
+        dto.setModel(yacht.getYachtModel().getModel());
+        dto.setCountry(yacht.getCountry().getName());
+        dto.setTown(yacht.getTown().getName());
+        dto.setFirstName(yacht.getOwnerInfo().getFirstName());
+        dto.setLastName(yacht.getOwnerInfo().getLastName());
+        dto.setTelephone(yacht.getOwnerInfo().getTelephone());
+        dto.setEmail(yacht.getOwnerInfo().getEmail());
         dto.setCreatedAt(yacht.getCreatedAt());
         return dto;
     }

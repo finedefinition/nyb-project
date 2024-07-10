@@ -1,11 +1,14 @@
 package com.norwayyachtbrockers.service.impl;
 
+import com.norwayyachtbrockers.constants.ApplicationConstants;
 import com.norwayyachtbrockers.dto.mapper.YachtMapper;
 import com.norwayyachtbrockers.dto.mapper.YachtShortMapper;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
@@ -17,6 +20,9 @@ import com.norwayyachtbrockers.service.YachtService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import com.norwayyachtbrockers.util.S3ImageService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -230,5 +236,26 @@ public class YachtServiceImpl implements YachtService {
             yacht.getTown().getYachts().remove(yacht);
         }
         yachtRepository.delete(yacht);
+    }
+
+    @Override
+    public PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto) {
+        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+
+        PageRequest pageRequest = PageRequest.of(page - 1, ApplicationConstants.PAGE_CRM_SIZE,
+                Sort.by("id").ascending());
+        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
+
+        List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
+                .map(yachtMapper::convertToCrmDto)
+                .collect(Collectors.toList());
+
+        PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
+        response.setCurrentPage(page);
+        response.setTotalPages(yachtPage.getTotalPages());
+        response.setTotalItems(yachtPage.getTotalElements());
+        response.setYachts(yachtDtos);
+
+        return response;
     }
 }
