@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.constants.ApplicationConstants;
+import com.norwayyachtbrockers.dto.mapper.FieldMapper;
 import com.norwayyachtbrockers.dto.mapper.YachtMapper;
 import com.norwayyachtbrockers.dto.mapper.YachtShortMapper;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
@@ -8,6 +9,7 @@ import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
@@ -238,20 +240,58 @@ public class YachtServiceImpl implements YachtService {
         yachtRepository.delete(yacht);
     }
 
-    @Override
-    public PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto) {
-        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+//    @Override
+//    public PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto, String sortBy, String sortDirection) {
+//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+//
+//        // Default to ascending sort if the direction is invalid or null
+//        Sort.Direction direction = Sort.Direction.fromOptionalString(sortDirection).orElse(Sort.Direction.ASC);
+//
+//        // Build the sort object
+//        Sort sort = Sort.by(direction, sortBy);
+//
+//        // Create a PageRequest with the sort parameter
+//        PageRequest pageRequest = PageRequest.of(page - 1, ApplicationConstants.PAGE_CRM_SIZE, sort);
+//        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
+//
+//        List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
+//                .map(yachtMapper::convertToCrmDto)
+//                .collect(Collectors.toList());
+//
+//        PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
+//        response.setCurrentPage(page);
+//        response.setTotalPages(yachtPage.getTotalPages());
+//        response.setTotalItems(yachtPage.getTotalElements());
+//        response.setYachts(yachtDtos);
+//
+//        return response;
+//    }
 
-        PageRequest pageRequest = PageRequest.of(page - 1, ApplicationConstants.PAGE_CRM_SIZE,
-                Sort.by("id").ascending());
-        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
+    @Override
+    public PaginatedYachtCrmResponse getYachtsWithPagination(PaginationAndSortingParametersDto paginationAndSortingParametersDto) {
+        // Get the page, sortBy, and orderBy from the DTO
+        int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
+        String sortBy = paginationAndSortingParametersDto.getSortBy();
+        String orderBy = paginationAndSortingParametersDto.getOrderBy();
+
+        // Default to ascending sort if the direction is invalid or null
+        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
+
+    // Map DTO sort fields to entity fields
+    sortBy = FieldMapper.getEntityField(sortBy);
+
+        Sort sort = Sort.by(direction, sortBy);
+
+        // Create a PageRequest with the sort parameter
+        PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_CRM_SIZE, sort);
+        Page<Yacht> yachtPage = yachtRepository.findAll(pageRequest);
 
         List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
                 .map(yachtMapper::convertToCrmDto)
                 .collect(Collectors.toList());
 
         PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
-        response.setCurrentPage(page);
+        response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
         response.setTotalPages(yachtPage.getTotalPages());
         response.setTotalItems(yachtPage.getTotalElements());
         response.setYachts(yachtDtos);

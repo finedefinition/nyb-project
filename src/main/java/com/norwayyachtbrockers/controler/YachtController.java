@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
@@ -109,12 +110,29 @@ public class YachtController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/crm", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @GetMapping(value = "/crm", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
+//            @RequestParam(value = "page", defaultValue = "1") int page,
+//            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+//            @RequestParam(value = "sortDirection", defaultValue = "asc") String sortDirection,
+//            YachtSearchParametersDto searchParameters) {
+//
+//        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPagination(page, searchParameters, sortBy, sortDirection);
+//        return ResponseEntity.ok(response);
+//    }
+
+    @GetMapping(value = "/paginated", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            YachtSearchParametersDto searchParameters) {
+            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+            @RequestParam(value = "orderBy", defaultValue = "asc") String orderBy) {
 
-        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPagination(page, searchParameters);
+        PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
+        paginationAndSortingParameters.setPage(page);
+        paginationAndSortingParameters.setSortBy(sortBy);
+        paginationAndSortingParameters.setOrderBy(orderBy);
+
+        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPagination(paginationAndSortingParameters);
         return ResponseEntity.ok(response);
     }
 }

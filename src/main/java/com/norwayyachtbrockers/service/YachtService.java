@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,5 +35,8 @@ public interface YachtService {
 
     void deleteById(Long id);
 
-    PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto);
+//    PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto,
+//                                                      String sortBy, String sortDirection);
+
+    PaginatedYachtCrmResponse getYachtsWithPagination(PaginationAndSortingParametersDto paginationAndSortingParametersDto);
 }
