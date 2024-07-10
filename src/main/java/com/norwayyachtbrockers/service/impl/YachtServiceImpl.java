@@ -274,11 +274,18 @@ public class YachtServiceImpl implements YachtService {
         String sortBy = paginationAndSortingParametersDto.getSortBy();
         String orderBy = paginationAndSortingParametersDto.getOrderBy();
 
+        // Translate "descend" to "desc" and "ascend" to "asc"
+        if ("descend".equalsIgnoreCase(orderBy)) {
+            orderBy = "desc";
+        } else if ("ascend".equalsIgnoreCase(orderBy)) {
+            orderBy = "asc";
+        }
+
         // Default to ascending sort if the direction is invalid or null
         Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
 
-    // Map DTO sort fields to entity fields
-    sortBy = FieldMapper.getEntityField(sortBy);
+        // Map DTO sort fields to entity fields
+        sortBy = FieldMapper.getEntityField(sortBy);
 
         Sort sort = Sort.by(direction, sortBy);
 

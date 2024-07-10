@@ -127,6 +127,13 @@ public class YachtController {
             @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
             @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy) {
 
+    // Translate "descend" to "desc" and "ascend" to "asc"
+    if ("descend".equalsIgnoreCase(orderBy)) {
+        orderBy = "desc";
+    } else if ("ascend".equalsIgnoreCase(orderBy)) {
+        orderBy = "asc";
+    }
+
         PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
         paginationAndSortingParameters.setPage(page);
         paginationAndSortingParameters.setSortBy(sortBy);
