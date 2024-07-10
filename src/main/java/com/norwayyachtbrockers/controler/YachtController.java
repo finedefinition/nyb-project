@@ -125,7 +125,7 @@ public class YachtController {
     public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-            @RequestParam(value = "orderBy", defaultValue = "asc") String orderBy) {
+            @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy) {
 
         PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
         paginationAndSortingParameters.setPage(page);
