@@ -33,6 +33,9 @@ jobs:
 
       - name: Build Docker image
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           DATABASE_PATH: ${{ secrets.DATABASE_PATH }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
@@ -68,10 +71,17 @@ jobs:
                        --build-arg MAIL_USERNAME=$MAIL_USERNAME \
                        --build-arg MAIL_PASSWORD=$MAIL_PASSWORD \
                        --build-arg COGNITO_CLIENT_SECRET=$COGNITO_CLIENT_SECRET \
+                       --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+                       --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                       --build-arg AWS_REGION=$AWS_REGION \
                        -t ${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} .
 
           docker tag ${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }}
 
       - name: Push Docker image to ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }}
