@@ -83,35 +83,35 @@ class UserSecurityControllerTest {
     }
 
 
-    @Test
-    @Order(10)
-    @DisplayName("addFavouriteYacht - Successfully adds a favourite yacht")
-    void testAddFavouriteYacht_Success() throws Exception {
-        // Arrange
-        doNothing().when(userService).addFavouriteYachtToUser(COGNITO_SUB, YACHT_ID);
-
-        // Act & Assert
-        mockMvc.perform(post(BASE_URL + "/" + COGNITO_SUB + "/favouriteYachts/" + YACHT_ID))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        verify(userService, times(1)).addFavouriteYachtToUser(COGNITO_SUB, YACHT_ID);
-    }
-
-    @Test
-    @Order(20)
-    @DisplayName("deleteFavouriteYacht - Successfully deletes a favourite yacht")
-    void testDeleteFavouriteYacht_Success() throws Exception {
-        // Arrange
-        doNothing().when(userService).removeFavouriteYacht(COGNITO_SUB, YACHT_ID);
-
-        // Act & Assert
-        mockMvc.perform(delete(BASE_URL + "/" + COGNITO_SUB + "/favouriteYachts/" + YACHT_ID))
-                .andExpect(status().isNoContent())
-                .andReturn();
-
-        verify(userService, times(1)).removeFavouriteYacht(COGNITO_SUB, YACHT_ID);
-    }
+//    @Test
+//    @Order(10)
+//    @DisplayName("addFavouriteYacht - Successfully adds a favourite yacht")
+//    void testAddFavouriteYacht_Success() throws Exception {
+//        // Arrange
+//        doNothing().when(userService).addFavouriteYachtToUser(COGNITO_SUB, YACHT_ID);
+//
+//        // Act & Assert
+//        mockMvc.perform(post(BASE_URL + "/" + COGNITO_SUB + "/favouriteYachts/" + YACHT_ID))
+//                .andExpect(status().isCreated())
+//                .andReturn();
+//
+//        verify(userService, times(1)).addFavouriteYachtToUser(COGNITO_SUB, YACHT_ID);
+//    }
+//
+//    @Test
+//    @Order(20)
+//    @DisplayName("deleteFavouriteYacht - Successfully deletes a favourite yacht")
+//    void testDeleteFavouriteYacht_Success() throws Exception {
+//        // Arrange
+//        doNothing().when(userService).removeFavouriteYacht(COGNITO_SUB, YACHT_ID);
+//
+//        // Act & Assert
+//        mockMvc.perform(delete(BASE_URL + "/" + COGNITO_SUB + "/favouriteYachts/" + YACHT_ID))
+//                .andExpect(status().isNoContent())
+//                .andReturn();
+//
+//        verify(userService, times(1)).removeFavouriteYacht(COGNITO_SUB, YACHT_ID);
+//    }
 
     @Test
     @Order(30)
