@@ -44,4 +44,6 @@ target/
 backend/.env
 /backend/src/main/resources/liquibase.properties
 /backend/src/main/resources/liquibase.properties.local
+/custom-config
+
 
