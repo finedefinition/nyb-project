@@ -104,6 +104,16 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                     .getSpecification(new Integer[]{searchParametersDto.getMinShowerNumber(),
                             searchParametersDto.getMaxShowerNumber()}));
         }
+        if (searchParametersDto.getOwnerFirstName() != null && !searchParametersDto.getOwnerFirstName().isEmpty()) {
+            specification = specification.and(specificationProviderManager
+                    .getSpecificationProvider("ownerFirstName")
+                    .getSpecification(searchParametersDto.getOwnerFirstName()));
+        }
+        if (searchParametersDto.getOwnerLastName() != null && !searchParametersDto.getOwnerLastName().isEmpty()) {
+            specification = specification.and(specificationProviderManager
+                    .getSpecificationProvider("ownerLastName")
+                    .getSpecification(searchParametersDto.getOwnerLastName()));
+        }
         return specification;
     }
 }

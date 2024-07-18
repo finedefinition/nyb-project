@@ -30,4 +30,6 @@ public class YachtSearchParametersDto {
     private Integer maxHeadsNumber;
     private Integer minShowerNumber;
     private Integer maxShowerNumber;
+    private String ownerFirstName;
+    private String ownerLastName;
 }
