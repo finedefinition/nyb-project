@@ -5,6 +5,7 @@ import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
+import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
@@ -89,6 +90,11 @@ public class YachtController {
     @GetMapping("/search")
     public List<YachtResponseDto> searchYachts(YachtSearchParametersDto searchParameters) {
         return yachtService.search(searchParameters);
+    }
+
+    @GetMapping("/search-crm")
+    public List<YachtCrmResponseDto> searchYachtsCrm(YachtSearchParametersDto searchParameters) {
+        return yachtService.searchForCrm(searchParameters);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -195,6 +195,15 @@ public class YachtServiceImpl implements YachtService {
     }
 
     @Override
+    public List<YachtCrmResponseDto> searchForCrm(YachtSearchParametersDto searchParametersDto) {
+        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+        return yachtRepository.findAll(yachtSpecification).stream()
+                .map(yachtMapper::convertToCrmDto)
+                .sorted(Comparator.comparing(YachtCrmResponseDto::getId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
                                    List<MultipartFile> additionalImageFiles) {
