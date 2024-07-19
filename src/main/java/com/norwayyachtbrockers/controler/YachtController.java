@@ -92,7 +92,7 @@ public class YachtController {
         return yachtService.search(searchParameters);
     }
 
-    @GetMapping("/search-crm")
+    @GetMapping("/paginated/search-crm")
     public List<YachtCrmResponseDto> searchYachtsCrm(YachtSearchParametersDto searchParameters) {
         return yachtService.searchForCrm(searchParameters);
     }
