@@ -41,5 +41,7 @@ public interface YachtService {
 //    PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto,
 //                                                      String sortBy, String sortDirection);
 
-    PaginatedYachtCrmResponse getYachtsWithPagination(PaginationAndSortingParametersDto paginationAndSortingParametersDto);
+    PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto
+                                                                       paginationAndSortingParametersDto,
+                                                               YachtSearchParametersDto searchParametersDto);
 }

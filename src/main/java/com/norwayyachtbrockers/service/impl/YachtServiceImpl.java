@@ -277,7 +277,7 @@ public class YachtServiceImpl implements YachtService {
 //    }
 
     @Override
-    public PaginatedYachtCrmResponse getYachtsWithPagination(PaginationAndSortingParametersDto paginationAndSortingParametersDto) {
+    public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
         // Get the page, sortBy, and orderBy from the DTO
         int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
         String sortBy = paginationAndSortingParametersDto.getSortBy();
@@ -300,7 +300,12 @@ public class YachtServiceImpl implements YachtService {
 
         // Create a PageRequest with the sort parameter
         PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_CRM_SIZE, sort);
-        Page<Yacht> yachtPage = yachtRepository.findAll(pageRequest);
+
+        // Build the Specification based on search parameters
+        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+
+        // Query the repository with pagination, sorting, and search criteria
+        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
 
         List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
                 .map(yachtMapper::convertToCrmDto)
@@ -314,4 +319,6 @@ public class YachtServiceImpl implements YachtService {
 
         return response;
     }
+
+
 }

@@ -10,9 +10,6 @@ import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/yachts")
@@ -101,11 +101,11 @@ public class YachtController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> updateYacht(
             @Valid @PathVariable Long id,
-        @RequestPart(value = "yachtData", required = false) Optional<YachtRequestDto> dto,
+            @RequestPart(value = "yachtData", required = false) Optional<YachtRequestDto> dto,
             @RequestParam("mainImage") MultipartFile mainImageFile,
             @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
 
-    YachtResponseDto updatedYachtDto = yachtService.update(dto.orElse(null), id, mainImageFile, additionalImageFiles);
+        YachtResponseDto updatedYachtDto = yachtService.update(dto.orElse(null), id, mainImageFile, additionalImageFiles);
         return new ResponseEntity<>(updatedYachtDto, HttpStatus.OK);
     }
 
@@ -131,21 +131,24 @@ public class YachtController {
     public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-            @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy) {
+            @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy,
+            YachtSearchParametersDto searchParameters) {
 
-    // Translate "descend" to "desc" and "ascend" to "asc"
-    if ("descend".equalsIgnoreCase(orderBy)) {
-        orderBy = "desc";
-    } else if ("ascend".equalsIgnoreCase(orderBy)) {
-        orderBy = "asc";
-    }
+        // Translate "descend" to "desc" and "ascend" to "asc"
+        if ("descend".equalsIgnoreCase(orderBy)) {
+            orderBy = "desc";
+        } else if ("ascend".equalsIgnoreCase(orderBy)) {
+            orderBy = "asc";
+        }
 
         PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
         paginationAndSortingParameters.setPage(page);
         paginationAndSortingParameters.setSortBy(sortBy);
         paginationAndSortingParameters.setOrderBy(orderBy);
 
-        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPagination(paginationAndSortingParameters);
+        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPaginationAndSearch(paginationAndSortingParameters, searchParameters);
         return ResponseEntity.ok(response);
     }
+
+
 }
