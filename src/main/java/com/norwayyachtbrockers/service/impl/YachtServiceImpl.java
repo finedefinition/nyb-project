@@ -10,6 +10,7 @@ import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
+import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
@@ -320,5 +321,9 @@ public class YachtServiceImpl implements YachtService {
         return response;
     }
 
-
+    @Override
+    public YachtCrmFrontendResponseDto getCombinedYachtData() {
+        List<Yacht> yachts = yachtRepository.findAll();
+        return yachtMapper.combineYachtData(yachts);
+    }
 }

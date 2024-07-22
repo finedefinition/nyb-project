@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
+import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.model.Country;
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -222,6 +225,56 @@ public class YachtMapper {
         yacht.setYachtDetail(yachtDetailService.findId(dto.getYachtDetailId()));
         yacht.setOwnerInfo(ownerInfoService.findId(dto.getOwnerInfoId()));
         return yacht;
+    }
+
+    public YachtCrmFrontendResponseDto combineYachtData(List<Yacht> yachts) {
+        YachtCrmFrontendResponseDto combinedDto = new YachtCrmFrontendResponseDto();
+
+        // Group by make and models
+        Map<String, List<String>> makeToModel = yachts.stream()
+                .collect(Collectors.groupingBy(
+                        yacht -> yacht.getYachtModel().getMake(),
+                        Collectors.mapping(yacht -> yacht.getYachtModel().getModel(), Collectors.toList())
+                ));
+        combinedDto.setMakeToModel(makeToModel);
+
+        // Get distinct keel types
+        List<String> keelTypes = yachts.stream()
+                .map(yacht -> yacht.getYachtModel().getKeelType().getName())
+                .distinct()
+                .collect(Collectors.toList());
+        combinedDto.setKeelType(keelTypes);
+
+        // Get distinct fuel types
+        List<String> fuelTypes = yachts.stream()
+                .map(yacht -> yacht.getYachtModel().getFuelType().getName())
+                .distinct()
+                .collect(Collectors.toList());
+        combinedDto.setFuelType(fuelTypes);
+
+        // Group by country and towns
+        Map<String, List<String>> countryToTown = yachts.stream()
+                .collect(Collectors.groupingBy(
+                        yacht -> yacht.getCountry().getName(),
+                        Collectors.mapping(yacht -> yacht.getTown().getName(), Collectors.toList())
+                ));
+        combinedDto.setCountryToTown(countryToTown);
+
+        // Get distinct first names
+        List<String> firstNames = yachts.stream()
+                .map(yacht -> yacht.getOwnerInfo().getFirstName())
+                .distinct()
+                .collect(Collectors.toList());
+        combinedDto.setFirstName(firstNames);
+
+        // Get distinct last names
+        List<String> lastNames = yachts.stream()
+                .map(yacht -> yacht.getOwnerInfo().getLastName())
+                .distinct()
+                .collect(Collectors.toList());
+        combinedDto.setLastName(lastNames);
+
+        return combinedDto;
     }
 
     private String formatPrice(BigDecimal price) {
