@@ -76,7 +76,7 @@ jobs:
                        --build-arg AWS_REGION=$AWS_REGION \
                        -t ${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} .
 
-          docker tag ${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }}
+          docker tag ${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nyc-server:${{ secrets.IMAGE_TAG }}
 
       - name: Push Docker image to ECR
         env:
@@ -84,7 +84,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }}
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nyc-server:${{ secrets.IMAGE_TAG }}
 
   deploy:
     needs: build
@@ -104,6 +104,7 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ec2_key.pem
           chmod 600 ec2_key.pem
@@ -113,10 +114,21 @@ jobs:
             export AWS_REGION=${AWS_REGION}
             export ECR_REPOSITORY=${ECR_REPOSITORY}
             export IMAGE_TAG=${IMAGE_TAG}
+            export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
+
+            # Add user to the Docker group and refresh the group membership
             sudo usermod -aG docker $USER
             newgrp docker
-            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${AWS_REGION}.amazonaws.com
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${AWS_REGION}.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
-            docker service update --image ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} nyc
+
+            # Log in to AWS ECR
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+            # Pull the new Docker image
+            docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/nyc-server:$IMAGE_TAG
+
+            # Update the Docker service with the new image
+            docker service update --image $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/nyc-server:$IMAGE_TAG nyc_server
+
+            # Prune unused Docker images
             docker image prune -f
           EOF
