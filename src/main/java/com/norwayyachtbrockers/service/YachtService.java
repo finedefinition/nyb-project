@@ -32,18 +32,14 @@ public interface YachtService {
 
     List<YachtCrmResponseDto> searchForCrm(YachtSearchParametersDto searchParametersDto);
 
-//    YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile imageFile);
-
     YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
                             List<MultipartFile> additionalImageFiles);
 
     void deleteById(Long id);
 
-//    PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto,
-//                                                      String sortBy, String sortDirection);
-
     PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto
                                                                        paginationAndSortingParametersDto,
                                                                YachtSearchParametersDto searchParametersDto);
+
     YachtCrmFrontendResponseDto getCombinedYachtData();
 }
