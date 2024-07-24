@@ -250,33 +250,6 @@ public class YachtServiceImpl implements YachtService {
         yachtRepository.delete(yacht);
     }
 
-//    @Override
-//    public PaginatedYachtCrmResponse getYachtsWithPagination(int page, YachtSearchParametersDto searchParametersDto, String sortBy, String sortDirection) {
-//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-//
-//        // Default to ascending sort if the direction is invalid or null
-//        Sort.Direction direction = Sort.Direction.fromOptionalString(sortDirection).orElse(Sort.Direction.ASC);
-//
-//        // Build the sort object
-//        Sort sort = Sort.by(direction, sortBy);
-//
-//        // Create a PageRequest with the sort parameter
-//        PageRequest pageRequest = PageRequest.of(page - 1, ApplicationConstants.PAGE_CRM_SIZE, sort);
-//        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
-//
-//        List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
-//                .map(yachtMapper::convertToCrmDto)
-//                .collect(Collectors.toList());
-//
-//        PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
-//        response.setCurrentPage(page);
-//        response.setTotalPages(yachtPage.getTotalPages());
-//        response.setTotalItems(yachtPage.getTotalElements());
-//        response.setYachts(yachtDtos);
-//
-//        return response;
-//    }
-
     @Override
     public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
         // Get the page, sortBy, and orderBy from the DTO
