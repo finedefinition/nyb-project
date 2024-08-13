@@ -55,6 +55,8 @@ jobs:
           COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
           IMAGE_TAG: ${{ vars.IMAGE_TAG }}
           ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+          COGNITO_ACCESS_KEY_ID: ${{ secrets.COGNITO_ACCESS_KEY_ID }}
+          COGNITO_SECRET_ACCESS_KEY: ${{ secrets.COGNITO_SECRET_ACCESS_KEY }}
         run: |
           docker build --build-arg DATABASE_PATH=$DATABASE_PATH \
                        --build-arg DATABASE_USER=$DATABASE_USER \
@@ -73,6 +75,8 @@ jobs:
                        --build-arg MAIL_USERNAME=$MAIL_USERNAME \
                        --build-arg MAIL_PASSWORD=$MAIL_PASSWORD \
                        --build-arg COGNITO_CLIENT_SECRET=$COGNITO_CLIENT_SECRET \
+                       --build-arg COGNITO_ACCESS_KEY_ID=$COGNITO_ACCESS_KEY_ID \
+                       --build-arg COGNITO_SECRET_ACCESS_KEY=$COGNITO_SECRET_ACCESS_KEY \
                        --build-arg IMAGE_TAG=$IMAGE_TAG \
                        --build-arg ECR_REPOSITORY=$ECR_REPOSITORY \
                        -t $ECR_REPOSITORY:$IMAGE_TAG .
