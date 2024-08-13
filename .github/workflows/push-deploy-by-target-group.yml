@@ -53,8 +53,8 @@ jobs:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
-          IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ vars.IMAGE_TAG }}
+          ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
         run: |
           docker build --build-arg DATABASE_PATH=$DATABASE_PATH \
                        --build-arg DATABASE_USER=$DATABASE_USER \
