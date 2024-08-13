@@ -85,7 +85,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ vars.AWS_REGION }}
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/nyc-server:$IMAGE_TAG
+          docker push 767397705605.dkr.ecr.us-east-1.amazonaws.com/nyc-server:latest
+#          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/nyc-server:$IMAGE_TAG
 
   deploy:
     needs: build
