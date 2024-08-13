@@ -128,6 +128,6 @@ jobs:
               --region $AWS_REGION \
               --document-name "AWS-RunShellScript" \
               --targets "Key=instanceIds,Values=$instance" \
-              --parameters 'commands=["/home/ec2-user/app/deploy.sh $AWS_REGION $AWS_ACCOUNT_ID $ECR_REPOSITORY $IMAGE_TAG"]' \
+              --parameters 'commands=["/home/ec2-user/app/deploy.sh us-east-1 767397705605 nyc-server latest"]' \
               --comment "Deploy new Docker image to $instance"
           done
