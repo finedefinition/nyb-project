@@ -1,0 +1,126 @@
+name: Build, Push, and Deploy Docker image to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      - name: Log in to Amazon ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          aws --version
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+
+      - name: Build Docker image
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          DATABASE_PATH: ${{ vars.DATABASE_PATH }}
+          DATABASE_USER: ${{ secrets.DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          LIQUIBASE_PATH: ${{ vars.LIQUIBASE_PATH }}
+          LIQUIBASE_USER: ${{ secrets.LIQUIBASE_USER }}
+          LIQUIBASE_PASSWORD: ${{ secrets.LIQUIBASE_PASSWORD }}
+          S3_KEY_ID: ${{ secrets.S3_KEY_ID }}
+          S3_KEY_SECRET: ${{ secrets.S3_KEY_SECRET }}
+          S3_REGION_NAME: ${{ vars.S3_REGION_NAME }}
+          S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
+          SPRING_SECURITY_USER: ${{ secrets.SPRING_SECURITY_USER }}
+          SPRING_SECURITY_PASSWORD: ${{ secrets.SPRING_SECURITY_PASSWORD }}
+          MAIL_HOST: ${{ vars.MAIL_HOST }}
+          MAIL_PORT: ${{ vars.MAIL_PORT }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
+        run: |
+          docker build --build-arg DATABASE_PATH=$DATABASE_PATH \
+                       --build-arg DATABASE_USER=$DATABASE_USER \
+                       --build-arg DATABASE_PASSWORD=$DATABASE_PASSWORD \
+                       --build-arg LIQUIBASE_PATH=$LIQUIBASE_PATH \
+                       --build-arg LIQUIBASE_USER=$LIQUIBASE_USER \
+                       --build-arg LIQUIBASE_PASSWORD=$LIQUIBASE_PASSWORD \
+                       --build-arg S3_KEY_ID=$S3_KEY_ID \
+                       --build-arg S3_KEY_SECRET=$S3_KEY_SECRET \
+                       --build-arg S3_REGION_NAME=$S3_REGION_NAME \
+                       --build-arg S3_BUCKET_NAME=$S3_BUCKET_NAME \
+                       --build-arg SPRING_SECURITY_USER=$SPRING_SECURITY_USER \
+                       --build-arg SPRING_SECURITY_PASSWORD=$SPRING_SECURITY_PASSWORD \
+                       --build-arg MAIL_HOST=$MAIL_HOST \
+                       --build-arg MAIL_PORT=$MAIL_PORT \
+                       --build-arg MAIL_USERNAME=$MAIL_USERNAME \
+                       --build-arg MAIL_PASSWORD=$MAIL_PASSWORD \
+                       --build-arg COGNITO_CLIENT_SECRET=$COGNITO_CLIENT_SECRET \
+                       --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+                       --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                       --build-arg AWS_REGION=$AWS_REGION \
+                       -t ${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} .
+
+          docker tag ${{ secrets.ECR_REPOSITORY }}:${{ secrets.IMAGE_TAG }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nyc-server:${{ secrets.IMAGE_TAG }}
+
+      - name: Push Docker image to ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nyc-server:${{ secrets.IMAGE_TAG }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get EC2 instances in Target Group
+        id: get_instances
+        run: |
+          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.TARGET_GROUP_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
+          echo "::set-output name=instances::$instances"
+
+      - name: Deploy Docker image to all instances
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ secrets.IMAGE_TAG }}
+
+        run: |
+          for instance in ${{ steps.get_instances.outputs.instances }}
+          do
+            aws ssm send-command \
+              --region $AWS_REGION \
+              --document-name "AWS-RunShellScript" \
+              --targets "Key=instanceIds,Values=$instance" \
+              --parameters 'commands=["/home/ec2-user/app/deploy.sh $AWS_REGION $AWS_ACCOUNT_ID $ECR_REPOSITORY $IMAGE_TAG"]' \
+              --comment "Deploy new Docker image to $instance"
+          done
