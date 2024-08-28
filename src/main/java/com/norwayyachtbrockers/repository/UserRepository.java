@@ -22,7 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("SELECT u.id FROM User u WHERE u.email = :email")
     Long findUserIdByEmail(String email);
 
-    Optional<User> findByCognitoSub(String cognitoSub);
+    @Query("SELECT u FROM User u WHERE u.cognitoSub = :cognitoSub")
+Optional<User> findByCognitoSub(@Param("cognitoSub") String cognitoSub);
 
     @Query("SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
