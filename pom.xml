@@ -12,11 +12,13 @@
     <artifactId>nyb-project</artifactId>
     <version>1.0</version>
     <properties>
-        <java.version>17</java.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <start-class>com.norwayyachtbrockers.Application</start-class>
         <spring.boot.version>3.3.0</spring.boot.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <otelVersion>1.33.5</otelVersion>
     </properties>
     <dependencies>
         <dependency>
@@ -159,10 +161,31 @@
         </dependency>
 <!--        Prometheus metrics-->
         <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
+			<groupId>io.opentelemetry.javaagent</groupId>
+			<artifactId>opentelemetry-javaagent</artifactId>
+			<version>${otelVersion}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-config</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <plugins>
             <plugin>
@@ -196,17 +219,27 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.0</version> <!-- use the latest version -->
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.3</version>
                 <configuration>
-                    <source>17</source> <!-- or your Java version -->
-                    <target>17</target> <!-- or your Java version -->
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
+                    <to>
+                        <image>finedefinition/${project.artifactId}:d11</image>
+                    </to>
                 </configuration>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <version>3.10.0</version> &lt;!&ndash; use the latest version &ndash;&gt;-->
+<!--                <configuration>-->
+<!--                    <source>21</source> &lt;!&ndash; or your Java version &ndash;&gt;-->
+<!--                    <target>21</target> &lt;!&ndash; or your Java version &ndash;&gt;-->
+<!--                    <compilerArgs>-->
+<!--                        <arg>-parameters</arg>-->
+<!--                    </compilerArgs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

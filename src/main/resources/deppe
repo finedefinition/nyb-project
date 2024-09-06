@@ -1,0 +1,91 @@
+server:
+  port: 8080
+spring:
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  application:
+    name: "nycbackend"
+  profiles:
+    active: "prod"
+
+#  cloud:
+#    openfeign:
+#      circuitbreaker:
+#        enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+endpoints:
+  shutdown:
+    enabled: true
+
+#eureka:
+#  instance:
+#    preferIpAddress: true
+#  client:
+#    fetchRegistry: true
+#    registerWithEureka: true
+#    serviceUrl:
+#      defaultZone: http://localhost:8070/eureka/
+
+info:
+  app:
+    name: "nycbackend"
+    description: "NorseYacht  Java Spring Boot Application"
+    version: "1.0.0"
+
+logging:
+  level:
+    com:
+      norwayyachtbrockers:
+        nycbackend: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+#resilience4j.circuitbreaker:
+#  configs:
+#    default:
+#      slidingWindowSize: 10
+#      permittedNumberOfCallsInHalfOpenState: 2
+#      failureRateThreshold: 50
+#      waitDurationInOpenState: 10000
+#
+#resilience4j.retry:
+#  configs:
+#    default:
+#      maxAttempts: 3
+#      waitDuration: 500
+#      enableExponentialBackoff: true
+#      exponentialBackoffMultiplier: 2
+#      ignoreExceptions:
+#        - java.lang.NullPointerException
+#      retryExceptions:
+#        - java.util.concurrent.TimeoutException
+#
+#resilience4j.ratelimiter:
+#  configs:
+#    default:
+#      timeoutDuration: 1000
+#      limitRefreshPeriod: 5000
+#      limitForPeriod: 1
