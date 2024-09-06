@@ -1,5 +1,5 @@
 # Используйте официальный образ OpenJDK 17 в качестве базового
-FROM openjdk:17-jdk-alpine
+FROM openjdk:21-jdk
 
 # Установите рабочую директорию
 WORKDIR /app
