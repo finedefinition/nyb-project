@@ -27,15 +27,12 @@ public class YachtImageServiceImpl implements YachtImageService {
 
     private final YachtRepository yachtRepository;
 
-    private final YachtImageMapper yachtImageMapper;
-
     private final S3ImageService s3ImageService;
 
     public YachtImageServiceImpl(YachtImageRepository yachtImageRepository, YachtRepository yachtRepository,
-                                 YachtImageMapper yachtImageMapper, S3ImageService s3ImageService) {
+                                 S3ImageService s3ImageService) {
         this.yachtImageRepository = yachtImageRepository;
         this.yachtRepository = yachtRepository;
-        this.yachtImageMapper = yachtImageMapper;
         this.s3ImageService = s3ImageService;
     }
 
@@ -75,21 +72,21 @@ public class YachtImageServiceImpl implements YachtImageService {
         }
 
         return savedImages.stream()
-                .map(yachtImageMapper::convertToResponseDto)
+                .map(YachtImageMapper::convertToResponseDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public YachtImageResponseDto findById(Long id) {
         YachtImage yachtImage = EntityUtils.findEntityOrThrow(id, yachtImageRepository, "YachtImage");
-        return yachtImageMapper.convertToResponseDto(yachtImage);
+        return YachtImageMapper.convertToResponseDto(yachtImage);
     }
 
     @Override
     public List<YachtImageResponseDto> findAll() {
         List<YachtImage> yachtImages = yachtImageRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         return yachtImages.stream()
-                .map(yachtImageMapper::convertToResponseDto)
+                .map(YachtImageMapper::convertToResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -109,7 +106,7 @@ public class YachtImageServiceImpl implements YachtImageService {
         YachtImage savedYachtImage = yachtImageRepository.save(yachtImage);
 
         // Convert the saved YachtImage to YachtImageResponseDto
-        return yachtImageMapper.convertToResponseDto(savedYachtImage);
+        return YachtImageMapper.convertToResponseDto(savedYachtImage);
     }
 
     @Override
