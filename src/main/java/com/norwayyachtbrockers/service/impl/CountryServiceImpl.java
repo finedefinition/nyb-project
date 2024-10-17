@@ -7,26 +7,23 @@ import com.norwayyachtbrockers.repository.CountryRepository;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class CountryServiceImpl implements CountryService {
 
     private  final CountryRepository countryRepository;
-    private final CountryMapper countryMapper;
 
-    public CountryServiceImpl(CountryRepository countryRepository,
-                              CountryMapper countryMapper) {
+    public CountryServiceImpl(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
-        this.countryMapper = countryMapper;
     }
 
     @Override
     @Transactional
     public Country saveCountry(CountryRequestDto dto) {
-        return countryRepository.save(countryMapper.createCountryFromDto(dto));
+        return countryRepository.save(CountryMapper.createCountryFromDto(dto));
     }
 
     @Override
@@ -50,7 +47,7 @@ public class CountryServiceImpl implements CountryService {
     public Country updateCountry(CountryRequestDto dto, Long id) {
         Country country = EntityUtils
                 .findEntityOrThrow(id, countryRepository, "Country");
-        countryMapper.updateCountryFromDto(country, dto);
+        CountryMapper.updateCountryFromDto(country, dto);
         return countryRepository.save(country);
     }
 
