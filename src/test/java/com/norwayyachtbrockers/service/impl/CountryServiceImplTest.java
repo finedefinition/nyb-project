@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.CountryMapper;
 import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Town;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +42,6 @@ class CountryServiceImplTest {
 
     @MockBean
     private CountryRepository countryRepository;
-    @MockBean
-    private CountryMapper countryMapper;
 
     @Autowired
     private CountryServiceImpl countryService;
@@ -53,7 +51,7 @@ class CountryServiceImplTest {
 
     private static final Long COUNTRY_ID = 1L;
     private static final String COUNTRY_NAME = "CountryName";
-    private static final String DTO_NAME = "DtoCountryName";
+    private static final String DTO_NAME = "CountryName";
 
     @BeforeEach
     void setUp() {
@@ -68,7 +66,7 @@ class CountryServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(countryMapper, countryRepository);
+        Mockito.reset(countryRepository);
     }
 
     @Test
@@ -77,8 +75,11 @@ class CountryServiceImplTest {
     @Transactional
     void testSaveCountry_Success() {
         // Arrange
-        when(countryMapper.createCountryFromDto(countryRequestDto)).thenReturn(country);
-        when(countryRepository.save(country)).thenReturn(country);
+        when(countryRepository.save(Mockito.any(Country.class))).thenAnswer(invocation -> {
+            Country savedCountry = invocation.getArgument(0);
+            savedCountry.setId(COUNTRY_ID);  // Устанавливаем ID, как это делается при сохранении в БД
+            return savedCountry;
+        });
 
         // Act
         Country savedCountry = countryService.saveCountry(countryRequestDto);
@@ -88,7 +89,11 @@ class CountryServiceImplTest {
         assertEquals(COUNTRY_ID, savedCountry.getId(), "Country ID should match");
         assertEquals(COUNTRY_NAME, savedCountry.getName(), "Country name should match");
 
-        verify(countryRepository, times(1)).save(country);
+        ArgumentCaptor<Country> captor = ArgumentCaptor.forClass(Country.class);
+        verify(countryRepository, times(1)).save(captor.capture());
+
+        Country capturedCountry = captor.getValue();
+        assertEquals(DTO_NAME, capturedCountry.getName(), "Captured country name should match DTO name");
     }
 
     @Test
