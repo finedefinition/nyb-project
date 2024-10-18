@@ -15,18 +15,15 @@ import java.util.List;
 public class KeelServiceImpl implements KeelService {
 
     private final KeelRepository keelRepository;
-    private final KeelMapper keelMapper;
 
-    public KeelServiceImpl(KeelRepository keelRepository,
-                           KeelMapper keelMapper) {
+    public KeelServiceImpl(KeelRepository keelRepository) {
         this.keelRepository = keelRepository;
-        this.keelMapper = keelMapper;
     }
 
     @Override
     @Transactional
     public Keel saveKeel(KeelRequestDto dto) {
-        return keelRepository.save(keelMapper.createKeelFromDto(dto));
+        return keelRepository.save(KeelMapper.createKeelFromDto(dto));
     }
 
     @Override
@@ -49,7 +46,7 @@ public class KeelServiceImpl implements KeelService {
     @Transactional
     public Keel updateKeel(KeelRequestDto dto, Long id) {
         Keel keel = EntityUtils.findEntityOrThrow(id, keelRepository, "Keel");
-        keelMapper.updateKeelFromDto(keel, dto);
+        KeelMapper.updateKeelFromDto(keel, dto);
         return keelRepository.save(keel);
     }
 
