@@ -2,10 +2,6 @@ package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 public class KeelMapper {
 

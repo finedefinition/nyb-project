@@ -6,10 +6,10 @@ import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.service.KeelService;
 import com.norwayyachtbrockers.util.EntityUtils;
+import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 public class KeelServiceImpl implements KeelService {
