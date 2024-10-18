@@ -16,18 +16,14 @@ public class FuelServiceImpl implements FuelService {
 
     private final FuelRepository fuelRepository;
 
-    private final FuelMapper fuelMapper;
-
-    public FuelServiceImpl(FuelRepository fuelRepository,
-                           FuelMapper fuelMapper) {
+    public FuelServiceImpl(FuelRepository fuelRepository) {
         this.fuelRepository = fuelRepository;
-        this.fuelMapper = fuelMapper;
     }
 
     @Override
     @Transactional
     public Fuel saveFuel(FuelRequestDto dto) {
-        return fuelRepository.save(fuelMapper.createFuelFromDto(dto));
+        return fuelRepository.save(FuelMapper.createFuelFromDto(dto));
     }
 
     @Override
@@ -50,7 +46,7 @@ public class FuelServiceImpl implements FuelService {
     @Transactional
     public Fuel updateFuel(FuelRequestDto dto, Long id) {
         Fuel fuel = EntityUtils.findEntityOrThrow(id, fuelRepository, "Fuel");
-        return fuelRepository.save(fuelMapper.updateFuelFromDto(fuel, dto));
+        return fuelRepository.save(FuelMapper.updateFuelFromDto(fuel, dto));
     }
 
     @Override

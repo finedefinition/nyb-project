@@ -77,7 +77,7 @@ class CountryServiceImplTest {
         // Arrange
         when(countryRepository.save(Mockito.any(Country.class))).thenAnswer(invocation -> {
             Country savedCountry = invocation.getArgument(0);
-            savedCountry.setId(COUNTRY_ID);  // Устанавливаем ID, как это делается при сохранении в БД
+            savedCountry.setId(COUNTRY_ID);
             return savedCountry;
         });
 

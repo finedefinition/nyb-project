@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.YachtImageMapper;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
@@ -9,6 +8,10 @@ import com.norwayyachtbrockers.repository.YachtImageRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.util.S3ImageService;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,11 +28,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

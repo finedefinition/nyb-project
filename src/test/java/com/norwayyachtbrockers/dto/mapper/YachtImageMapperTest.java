@@ -9,7 +9,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -21,9 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtImageMapperTest {
-
-    @Autowired
-    private YachtImageMapper yachtImageMapper;
 
     private YachtImage yachtImage;
     private Yacht yacht;
@@ -45,7 +41,7 @@ class YachtImageMapperTest {
     @Order(10)
     void testConvertToResponseDto() {
         // Act
-        YachtImageResponseDto dto = yachtImageMapper.convertToResponseDto(yachtImage);
+        YachtImageResponseDto dto = YachtImageMapper.convertToResponseDto(yachtImage);
 
         // Assert
         assertAll("Ensure mapping is correct",

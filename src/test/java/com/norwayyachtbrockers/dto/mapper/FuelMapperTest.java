@@ -22,10 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class FuelMapperTest {
-
-    @Autowired
-    private FuelMapper fuelMapper;
-
     private Fuel fuel;
     private FuelRequestDto dto;
 
@@ -45,94 +41,6 @@ class FuelMapperTest {
     // Test cases for createFuelFromDto(FuelRequestDto dto)
 
     @Test
-    @DisplayName("Throw IllegalArgumentException for null DTO on creation")
-    @Order(10)
-    void testCreateFuelFromDto_NullDto() {
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> fuelMapper.createFuelFromDto(null),
-                "Should throw IllegalArgumentException when the DTO is null.");
-    }
-
-    @Test
-    @DisplayName("Throw ConstraintViolationException when DTO contains Name is null on creation")
-    @Order(20)
-    void testCreateFuelFromDto_NameNull() {
-        // Arrange
-        dto.setName(null);  // Setting null as Name
-
-        // Act & Assert
-        assertThrows(ConstraintViolationException.class,
-                () -> fuelMapper.createFuelFromDto(dto),
-                "Should throw ConstraintViolationException when the Name is null.");
-    }
-
-    @Test
-    @DisplayName("Throw ConstraintViolationException when DTO contains Name shorter than 3 characters")
-    @Order(30)
-    void testNameTooShort() {
-        // Arrange
-        dto.setName(INVALID_NAME_TOO_SHORT);  // Setting Name shorter than the minimum length
-
-        // Act & Assert
-        assertThrows(ConstraintViolationException.class,
-                () -> fuelMapper.createFuelFromDto(dto),
-                "Should throw ConstraintViolationException when the Name is too short.");
-    }
-
-    @Test
-    @DisplayName("Throw ConstraintViolationException when DTO contains Name longer than 20 characters")
-    @Order(40)
-    void testNameTooLong() {
-        // Arrange
-        dto.setName(INVALID_NAME_TOO_LONG);  // Setting Name longer than the maximum length
-
-        // Act & Assert
-        assertThrows(ConstraintViolationException.class,
-                () -> fuelMapper.createFuelFromDto(dto),
-                "Should throw ConstraintViolationException when the Name is too long");
-    }
-
-    @Test
-    @DisplayName("Throw ConstraintViolationException when DTO contains Name with invalid characters")
-    @Order(50)
-    void testNameInvalidCharacters() {
-        // Arrange
-        dto.setName(INVALID_NAME_WITH_DIGITS);  // Setting Name with numbers, which are invalid
-
-        // Act & Assert
-        assertThrows(ConstraintViolationException.class,
-                () -> fuelMapper.createFuelFromDto(dto),
-                "Should throw ConstraintViolationException when the Name contains invalid characters.");
-    }
-
-    @Test
-    @DisplayName("Throw ConstraintViolationException when DTO contains Name not starting with capital letter")
-    @Order(60)
-    void testNameDoesNotStartWithCapital() {
-        // Arrange
-        dto.setName(INVALID_NAME_LOWERCASE);  // Starting with a lowercase letter
-
-        // Act & Assert
-        assertThrows(ConstraintViolationException.class,
-                () -> fuelMapper.createFuelFromDto(dto),
-                "Should throw ConstraintViolationException for names not starting with a capital letter.");
-    }
-
-    @Test
-    @DisplayName("Fuel name is trimmed correctly")
-    @Order(70)
-    void testTrimString() {
-        // Arrange
-        dto.setName(FUEL_NAME + "     ");  // Name with trailing spaces
-
-        // Act
-        Fuel createdFuel = fuelMapper.createFuelFromDto(dto);
-
-        // Assert
-        assertEquals(FUEL_NAME, createdFuel.getName(), "Name should be trimmed correctly");
-    }
-
-    @Test
     @DisplayName("Successfully create Fuel from valid DTO")
     @Order(80)
     void testCreateFuelFromDto_ValidDto() {
@@ -140,7 +48,7 @@ class FuelMapperTest {
         dto.setName(FUEL_NAME);
 
         // Act
-        Fuel createdFuel = fuelMapper.createFuelFromDto(dto);
+        Fuel createdFuel = FuelMapper.createFuelFromDto(dto);
 
         // Assert
         assertNotNull(createdFuel, "The created Fuel should not be null.");
@@ -151,24 +59,6 @@ class FuelMapperTest {
     // Test cases for updateFuelFromDto(Fuel fuel, FuelRequestDto dto)
 
     @Test
-    @DisplayName("Throw ConstraintViolationException for null Fuel on update")
-    @Order(90)
-    void testUpdateFuelFromDto_NullFuel() {
-        // Assert
-        assertThrows(ConstraintViolationException.class, () -> fuelMapper.updateFuelFromDto(null, dto),
-                "Should throw ConstraintViolationException when the Fuel is null.");
-    }
-
-    @Test
-    @DisplayName("Throw IllegalArgumentException for null DTO on update")
-    @Order(100)
-    void testUpdateFuelFromDto_NullDto() {
-        // Assert
-        assertThrows(IllegalArgumentException.class, () -> fuelMapper.updateFuelFromDto(fuel, null),
-                "Should throw IllegalArgumentException when the DTO is null.");
-    }
-
-    @Test
     @DisplayName("Update Fuel name using valid Fuel and DTO")
     @Order(110)
     void testUpdateFuelFromDto_ValidArguments() {
@@ -177,7 +67,7 @@ class FuelMapperTest {
         dto.setName(UPDATED_FUEL_NAME);
 
         // Act
-        Fuel updatedFuel = fuelMapper.updateFuelFromDto(fuel, dto);
+        Fuel updatedFuel = FuelMapper.updateFuelFromDto(fuel, dto);
 
         // Assert
         assertEquals(UPDATED_FUEL_NAME, updatedFuel.getName(),

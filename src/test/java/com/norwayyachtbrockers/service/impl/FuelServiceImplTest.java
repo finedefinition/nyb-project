@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.norwayyachtbrockers.dto.mapper.FuelMapper;
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
+import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import jakarta.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -44,9 +46,6 @@ class FuelServiceImplTest {
     @MockBean
     private FuelRepository fuelRepository;
 
-    @MockBean
-    private FuelMapper fuelMapper;
-
     @Autowired
     private FuelServiceImpl fuelService;
 
@@ -70,7 +69,7 @@ class FuelServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(fuelRepository, fuelMapper);
+        Mockito.reset(fuelRepository);
     }
 
     @Test
@@ -79,8 +78,13 @@ class FuelServiceImplTest {
     @Transactional
     void testSaveFuel_Success() {
         // Arrange
-        when(fuelMapper.createFuelFromDto(requestDto)).thenReturn(fuel);
         when(fuelRepository.save(fuel)).thenReturn(fuel);
+
+        when(fuelRepository.save(Mockito.any(Fuel.class))).thenAnswer(invocation -> {
+            Fuel savedFuel = invocation.getArgument(0);
+            savedFuel.setId(FUEL_ID);
+            return savedFuel;
+        });
 
         // Act
         Fuel savedFuel = fuelService.saveFuel(requestDto);
@@ -90,8 +94,11 @@ class FuelServiceImplTest {
         assertEquals(FUEL_ID, savedFuel.getId(), "Fuel ID should match");
         assertEquals(FUEL_NAME, savedFuel.getName(), "Fuel name should match");
 
-        verify(fuelMapper, times(1)).createFuelFromDto(requestDto);
-        verify(fuelRepository, times(1)).save(fuel);
+        ArgumentCaptor<Fuel> captor = ArgumentCaptor.forClass(Fuel.class);
+        verify(fuelRepository, times(1)).save(captor.capture());
+
+        Fuel capturedFuel = captor.getValue();
+        assertEquals(FUEL_NAME, capturedFuel.getName(), "Captured fuel name should match DTO name");
     }
 
     @Test
@@ -144,7 +151,6 @@ class FuelServiceImplTest {
         updatedFuel.setName("Updated Fuel Name");
 
         when(fuelRepository.findById(FUEL_ID)).thenReturn(Optional.of(fuel));
-        when(fuelMapper.updateFuelFromDto(fuel, requestDto)).thenReturn(fuel);
         when(fuelRepository.save(any(Fuel.class))).thenReturn(updatedFuel);
 
         // Act
@@ -156,7 +162,6 @@ class FuelServiceImplTest {
         assertEquals("Updated Fuel Name", result.getName(), "Fuel name should match");
 
         verify(fuelRepository, times(1)).findById(FUEL_ID);
-        verify(fuelMapper, times(1)).updateFuelFromDto(eq(fuel), eq(requestDto));
         verify(fuelRepository, times(1)).save(fuel);
     }
 
