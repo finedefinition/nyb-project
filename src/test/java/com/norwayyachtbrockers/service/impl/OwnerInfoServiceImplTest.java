@@ -1,11 +1,12 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.OwnerInfoMapper;
 import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.OwnerInfo;
 import com.norwayyachtbrockers.repository.OwnerInfoRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,17 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,9 +37,6 @@ class OwnerInfoServiceImplTest {
 
     @MockBean
     private OwnerInfoRepository ownerInfoRepository;
-
-    @MockBean
-    private OwnerInfoMapper ownerInfoMapper;
 
     @Autowired
     private OwnerInfoServiceImpl ownerInfoService;
@@ -83,7 +76,7 @@ class OwnerInfoServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(ownerInfoMapper, ownerInfoRepository);
+        Mockito.reset(ownerInfoRepository);
     }
 
     @Test
@@ -92,8 +85,11 @@ class OwnerInfoServiceImplTest {
     @Transactional
     void testSave_Success() {
         // Arrange
-        when(ownerInfoMapper.createOwnerInfoFromDto(any(OwnerInfoRequestDto.class))).thenReturn(existingOwnerInfo);
-        when(ownerInfoRepository.save(any(OwnerInfo.class))).thenReturn(existingOwnerInfo);
+        when(ownerInfoRepository.save(Mockito.any(OwnerInfo.class))).thenAnswer(invocation -> {
+            OwnerInfo savedOwnerInfo = invocation.getArgument(0);
+            savedOwnerInfo.setId(EXISTING_ID);
+            return savedOwnerInfo;
+        });
 
         // Act
         OwnerInfo savedOwnerInfo = ownerInfoService.save(requestDto);
@@ -155,16 +151,6 @@ class OwnerInfoServiceImplTest {
 
         // Mocking behavior for update method
         when(ownerInfoRepository.findById(EXISTING_ID)).thenReturn(Optional.of(existingOwnerInfo));
-        when(ownerInfoMapper.updateOwnerInfoFromDto(any(OwnerInfo.class), any(OwnerInfoRequestDto.class)))
-            .thenAnswer(invocation -> {
-                OwnerInfo ownerInfo = invocation.getArgument(0);
-                OwnerInfoRequestDto dto = invocation.getArgument(1);
-                ownerInfo.setFirstName(dto.getFirstName());
-                ownerInfo.setLastName(dto.getLastName());
-                ownerInfo.setTelephone(dto.getPhoneNumber());
-                ownerInfo.setEmail(dto.getEmail());
-                return null;
-            });
 
         // Act
         OwnerInfo updatedOwnerInfo = ownerInfoService.update(updateDto, EXISTING_ID);
