@@ -24,4 +24,3 @@ public class FieldMapper {
         return fieldMap.getOrDefault(dtoField, "id"); // Default to sorting by id
     }
 }
-

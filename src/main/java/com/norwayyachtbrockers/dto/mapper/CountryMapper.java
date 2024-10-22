@@ -2,10 +2,6 @@ package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.Country;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 public class CountryMapper {
 
