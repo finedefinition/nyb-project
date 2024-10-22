@@ -3,20 +3,10 @@ package com.norwayyachtbrockers.dto.mapper;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.model.User;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
-@Component
-@Validated
-@AllArgsConstructor
 public class UserMapper {
 
-    public User createUserFromDto(@Valid UserRegistrationRequestDto dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("Failed to create User: DTO cannot be null");
-        }
+    public static User createUserFromDto(UserRegistrationRequestDto dto) {
         User user = new User();
         user.setFirstName(dto.getFirstName().trim());
         user.setLastName(dto.getLastName().trim());
@@ -25,10 +15,7 @@ public class UserMapper {
         return user;
     }
 
-    public UserResponseDto convertUserToDto(@Valid User existingUser) {
-        if (existingUser == null) {
-            throw new IllegalArgumentException("Failed to create UserResponseDto: User cannot be null");
-        }
+    public static UserResponseDto convertUserToDto(User existingUser) {
         UserResponseDto dto = new UserResponseDto();
         dto.setId(existingUser.getId());
         dto.setEmail(existingUser.getEmail());

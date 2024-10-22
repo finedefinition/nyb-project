@@ -27,8 +27,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
 
-    private final UserMapper userMapper;
-
     private final AWSCognitoIdentityProvider cognitoClient;
 
     @Value("${aws.cognito.userPoolId}")
@@ -40,9 +38,8 @@ public class AuthServiceImpl implements AuthService {
     @Value("${aws.cognito.clientSecret}")
     private String clientSecret;
 
-    public AuthServiceImpl(UserService userService, UserMapper userMapper, AWSCognitoIdentityProvider cognitoClient) {
+    public AuthServiceImpl(UserService userService, AWSCognitoIdentityProvider cognitoClient) {
         this.userService = userService;
-        this.userMapper = userMapper;
         this.cognitoClient = cognitoClient;
     }
 
@@ -72,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
 
             cognitoClient.adminAddUserToGroup(groupRequest);
 
-            User user = userMapper.createUserFromDto(request);
+            User user = UserMapper.createUserFromDto(request);
             user.setCognitoSub(signUpResult.getUserSub());
             user.setUserRoles(UserRoles.ROLE_USER);
 

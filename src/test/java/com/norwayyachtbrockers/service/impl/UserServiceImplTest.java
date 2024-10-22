@@ -1,14 +1,17 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.UserMapper;
 import com.norwayyachtbrockers.dto.response.UserFavouriteYachtsResponseDto;
 import com.norwayyachtbrockers.dto.response.UserResponseDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
+import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.repository.UserRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,10 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -48,8 +47,6 @@ class UserServiceImplTest {
     private UserRepository userRepository;
     @MockBean
     private YachtRepository yachtRepository;
-    @MockBean
-    private UserMapper userMapper;
 
     @Autowired
     private UserServiceImpl userService;
@@ -68,6 +65,9 @@ class UserServiceImplTest {
         user = new User();
         user.setId(USER_ID);
         user.setEmail(USER_EMAIL);
+        user.setFirstName("First Name");
+        user.setLastName("Last Name");
+        user.setUserRoles(UserRoles.ROLE_USER);
 
         yacht = new Yacht();
         yacht.setId(YACHT_ID);
@@ -75,7 +75,7 @@ class UserServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(userRepository, userMapper, yachtRepository);
+        Mockito.reset(userRepository, yachtRepository);
     }
 
     @Test
@@ -103,8 +103,6 @@ class UserServiceImplTest {
     void testFindId_Success() {
         // Arrange
         when(userRepository.findByIdAndFetchYachtsEagerly(USER_ID)).thenReturn(Optional.of(user));
-        UserResponseDto userResponseDto = new UserResponseDto();
-        when(userMapper.convertUserToDto(user)).thenReturn(userResponseDto);
 
         // Act
         UserResponseDto foundUser = userService.findId(USER_ID);
@@ -136,10 +134,12 @@ class UserServiceImplTest {
         // Arrange
         User anotherUser = new User();
         anotherUser.setId(2L);
+        anotherUser.setEmail("email@gmail.com");
+        anotherUser.setFirstName("First Name");
+        anotherUser.setLastName("Last Name");
+        anotherUser.setUserRoles(UserRoles.ROLE_USER);
         List<User> users = Arrays.asList(user, anotherUser);
         when(userRepository.findAllAndFetchYachtsEagerly()).thenReturn(users);
-        UserResponseDto userResponseDto = new UserResponseDto();
-        when(userMapper.convertUserToDto(any(User.class))).thenReturn(userResponseDto);
 
         // Act
         List<UserResponseDto> foundUsers = userService.findAll();
