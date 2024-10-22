@@ -2,7 +2,6 @@ package com.norwayyachtbrockers.service.impl;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.*;
-import com.norwayyachtbrockers.dto.mapper.UserMapper;
 import com.norwayyachtbrockers.dto.request.UserLoginRequestDto;
 import com.norwayyachtbrockers.dto.request.UserRegistrationRequestDto;
 import com.norwayyachtbrockers.dto.response.UserLoginResponseDto;
@@ -10,6 +9,7 @@ import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.enums.UserRoles;
 import com.norwayyachtbrockers.service.UserService;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,8 +24,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.Arrays;
 
 import static com.amazonaws.util.ValidationUtils.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,8 +41,7 @@ class AuthServiceImplTest {
 
     @MockBean
     private UserService userService;
-    @MockBean
-    private UserMapper userMapper;
+
     @MockBean
     private AWSCognitoIdentityProvider cognitoClient;
 
@@ -88,7 +85,7 @@ class AuthServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(userService, userMapper, cognitoClient);
+        Mockito.reset(userService, cognitoClient);
     }
 
     @Test
@@ -103,7 +100,6 @@ class AuthServiceImplTest {
 
         when(cognitoClient.signUp(any(SignUpRequest.class))).thenReturn(signUpResult);
         when(cognitoClient.adminAddUserToGroup(any(AdminAddUserToGroupRequest.class))).thenReturn(addUserToGroupResult);
-        when(userMapper.createUserFromDto(any(UserRegistrationRequestDto.class))).thenReturn(user);
         when(userService.saveUser(any(User.class))).thenReturn(user);
 
         // Act
@@ -112,7 +108,6 @@ class AuthServiceImplTest {
         // Assert
         verify(cognitoClient).signUp(any(SignUpRequest.class));
         verify(cognitoClient).adminAddUserToGroup(any(AdminAddUserToGroupRequest.class));
-        verify(userMapper).createUserFromDto(any(UserRegistrationRequestDto.class));
         verify(userService).saveUser(any(User.class));
     }
 
