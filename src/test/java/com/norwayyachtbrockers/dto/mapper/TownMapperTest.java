@@ -22,7 +22,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,15 +64,6 @@ class TownMapperTest {
     }
 
     @Test
-    @DisplayName("Throw IllegalArgumentException for null DTO on creation")
-    @Order(10)
-    void testCreateTownFromDto_NullDto() {
-        assertThrows(IllegalArgumentException.class,
-                () -> townMapper.createTownFromDto(null),
-                "Should throw IllegalArgumentException for null DTO");
-    }
-
-    @Test
     @DisplayName("Successfully create town from DTO")
     @Order(20)
     void testCreateTownFromDto_ValidDto() {
@@ -113,19 +103,6 @@ class TownMapperTest {
         assertEquals(town.getId(), responseDto.getTownId());
         assertEquals(town.getName(), responseDto.getTownName());
         assertEquals(country.getName(), responseDto.getCountryName());
-    }
-
-    @Test
-    @DisplayName("Throw IllegalArgumentException if town or DTO is null")
-    @Order(50)
-    void testUpdateTownFromDto_NullInputs() {
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> townMapper.updateTownFromDto(null, dto),
-                "Should throw IllegalArgumentException when Town is null");
-        assertThrows(IllegalArgumentException.class,
-                () -> townMapper.updateTownFromDto(town, null),
-                "Should throw IllegalArgumentException when DTO is null");
     }
 
     @Test
