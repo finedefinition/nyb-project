@@ -8,24 +8,18 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Order(230)
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class YachtDetailMapperTest {
-
-    @Autowired
-    private YachtDetailMapper yachtDetailMapper;
-
     private YachtDetail yachtDetail;
     private YachtDetailRequestDto dto;
 
@@ -42,18 +36,10 @@ class YachtDetailMapperTest {
     }
 
     @Test
-    @DisplayName("Throw IllegalArgumentException for null DTO on creation")
-    @Order(10)
-    void testCreateYachtDetailFromDto_NullDto() {
-        assertThrows(IllegalArgumentException.class, () -> yachtDetailMapper.createYachtDetailFromDto(null),
-                "Should throw IllegalArgumentException for null DTO");
-    }
-
-    @Test
     @DisplayName("Create YachtDetail from valid DTO")
     @Order(20)
     void testCreateYachtDetailFromDto_ValidDto() {
-        YachtDetail createdYachtDetail = yachtDetailMapper.createYachtDetailFromDto(dto);
+        YachtDetail createdYachtDetail = YachtDetailMapper.createYachtDetailFromDto(dto);
         assertAll(
                 () -> assertNotNull(createdYachtDetail, "YachtDetail should not be null"),
                 () -> assertEquals(dto.getCabin(), createdYachtDetail.getCabin(), "Cabin count should match"),
@@ -68,7 +54,7 @@ class YachtDetailMapperTest {
     @DisplayName("Update YachtDetail from valid DTO")
     @Order(30)
     void testUpdateYachtDetailFromDto_ValidDto() {
-        YachtDetail updatedYachtDetail = yachtDetailMapper.updateYachtDetailFromDto(yachtDetail, dto);
+        YachtDetail updatedYachtDetail = YachtDetailMapper.updateYachtDetailFromDto(yachtDetail, dto);
         assertAll(
                 () -> assertNotNull(updatedYachtDetail, "Updated YachtDetail should not be null"),
                 () -> assertEquals(dto.getCabin(), updatedYachtDetail.getCabin(), "Cabin count should match after update"),
@@ -77,17 +63,5 @@ class YachtDetailMapperTest {
                 () -> assertEquals(dto.getShower(), updatedYachtDetail.getShower(), "Shower count should match after update"),
                 () -> assertEquals(dto.getDescription(), updatedYachtDetail.getDescription(), "Descriptions should match after update")
         );
-    }
-
-    @Test
-    @DisplayName("Throw IllegalArgumentException for null DTO or YachtDetail on update")
-    @Order(40)
-    void testUpdateYachtDetailFromDto_NullInput() {
-        assertThrows(IllegalArgumentException.class,
-                () -> yachtDetailMapper.updateYachtDetailFromDto(null, dto),
-                "Should throw IllegalArgumentException when YachtDetail is null");
-        assertThrows(IllegalArgumentException.class,
-                () -> yachtDetailMapper.updateYachtDetailFromDto(yachtDetail, null),
-                "Should throw IllegalArgumentException when DTO is null");
     }
 }

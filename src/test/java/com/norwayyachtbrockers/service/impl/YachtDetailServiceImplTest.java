@@ -1,10 +1,12 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.YachtDetailMapper;
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
 import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.repository.YachtDetailRepository;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,8 +38,6 @@ class YachtDetailServiceImplTest {
 
     @MockBean
     private YachtDetailRepository yachtDetailRepository;
-    @MockBean
-    private YachtDetailMapper yachtDetailMapper;
 
     @Autowired
     private YachtDetailServiceImpl yachtDetailService;
@@ -50,7 +47,7 @@ class YachtDetailServiceImplTest {
 
     private static final Long YACHT_DETAIL_ID = 1L;
     private static final String DESCRIPTION = "YachtDescription";
-    private static final String DTO_DESCRIPTION = "DtoDescription";
+    private static final String DTO_DESCRIPTION = "YachtDescription";
 
     @BeforeEach
     void setUp() {
@@ -65,7 +62,7 @@ class YachtDetailServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(yachtDetailRepository, yachtDetailMapper);
+        Mockito.reset(yachtDetailRepository);
     }
 
     @Test
@@ -74,8 +71,11 @@ class YachtDetailServiceImplTest {
     @Transactional
     void testSaveYachtDetail_Success() {
         // Arrange
-        when(yachtDetailMapper.createYachtDetailFromDto(yachtDetailRequestDto)).thenReturn(yachtDetail);
-        when(yachtDetailRepository.save(yachtDetail)).thenReturn(yachtDetail);
+        when(yachtDetailRepository.save(Mockito.any(YachtDetail.class))).thenAnswer(invocation -> {
+            YachtDetail yachtDetail = invocation.getArgument(0);
+            yachtDetail.setId(YACHT_DETAIL_ID);
+            return yachtDetail;
+        });
 
         // Act
         YachtDetail savedYachtDetail = yachtDetailService.save(yachtDetailRequestDto);
@@ -83,9 +83,12 @@ class YachtDetailServiceImplTest {
         // Assert
         assertNotNull(savedYachtDetail, "Saved yacht detail should not be null");
         assertEquals(YACHT_DETAIL_ID, savedYachtDetail.getId(), "Yacht detail ID should match");
-        assertEquals(DESCRIPTION, savedYachtDetail.getDescription(), "Yacht detail description should match");
 
-        verify(yachtDetailRepository, times(1)).save(yachtDetail);
+        ArgumentCaptor<YachtDetail> captor = ArgumentCaptor.forClass(YachtDetail.class);
+        verify(yachtDetailRepository, times(1)).save(captor.capture());
+
+        YachtDetail capturedYachtDetail = captor.getValue();
+        assertEquals(DESCRIPTION, capturedYachtDetail.getDescription(), "Yacht detail description should match");
     }
 
     @Test
