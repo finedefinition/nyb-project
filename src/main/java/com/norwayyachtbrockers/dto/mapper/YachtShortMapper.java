@@ -3,25 +3,13 @@ package com.norwayyachtbrockers.dto.mapper;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
-import com.norwayyachtbrockers.service.CountryService;
-import com.norwayyachtbrockers.service.TownService;
-import com.norwayyachtbrockers.service.YachtModelService;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-@AllArgsConstructor
 public class YachtShortMapper {
-    private final YachtModelService yachtModelService;
-    private final TownService townService;
-    private final CountryService countryService;
-
-    public YachtShortResponseDto convertToDto(Yacht yacht) {
+    public static YachtShortResponseDto convertToDto(Yacht yacht) {
         YachtShortResponseDto dto = new YachtShortResponseDto();
         dto.setId(yacht.getId());
         dto.setVatIncluded(yacht.isVatIncluded());
@@ -51,7 +39,7 @@ public class YachtShortMapper {
         return dto;
     }
 
-    private String formatPrice(BigDecimal price) {
+    private static String formatPrice(BigDecimal price) {
         BigDecimal rounded = price.divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
         return rounded.toPlainString();
