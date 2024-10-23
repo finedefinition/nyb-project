@@ -9,15 +9,14 @@ import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.UserRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.service.UserService;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -25,8 +24,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final YachtRepository yachtRepository;
-    private final UserMapper userMapper;
-
 
     @Override
     @Transactional
@@ -39,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto findId(Long id) {
         User user = userRepository.findByIdAndFetchYachtsEagerly(id)
                 .orElseThrow(() -> new AppEntityNotFoundException("User not found with id " + id));
-        return userMapper.convertUserToDto(user);
+        return UserMapper.convertUserToDto(user);
     }
 
     @Override
@@ -53,7 +50,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllAndFetchYachtsEagerly()
                 .stream()
                 .sorted(Comparator.comparing(User::getId))
-                .map(userMapper::convertUserToDto)
+                .map(UserMapper::convertUserToDto)
                 .collect(Collectors.toList());
     }
 
