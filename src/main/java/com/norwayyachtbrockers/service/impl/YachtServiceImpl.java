@@ -18,6 +18,7 @@ import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.YachtRepository;
+import com.norwayyachtbrockers.repository.projections.YachtShortProjection;
 import com.norwayyachtbrockers.repository.specification.yacht.YachtSpecificationBuilder;
 import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.service.YachtService;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,7 @@ public class YachtServiceImpl implements YachtService {
     private final YachtRepository yachtRepository;
     private final YachtImageService yachtImageService;
     private final YachtMapper yachtMapper;
+    private final YachtShortMapper yachtShortMapper;
     private final YachtSpecificationBuilder yachtSpecificationBuilder;
     private final S3ImageService s3ImageService;
 
@@ -165,7 +168,7 @@ public class YachtServiceImpl implements YachtService {
     public List<YachtShortResponseDto> findAllYachts() {
         // Fetch all yachts, convert to DTOs
         List<YachtShortResponseDto> dtos = yachtRepository.findAll().stream()
-                .map(YachtShortMapper::convertToDto)
+                .map(yachtShortMapper::convertToDto)
                 .toList();
 
         // Exclude yachts with 0 favourites, then sort the rest by favouritesCount in descending order
@@ -296,58 +299,49 @@ public class YachtServiceImpl implements YachtService {
     }
 
     @Override
-    @Transactional
-    public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
-        // Get the page, sortBy, and orderBy from the DTO
-        int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
+    @Transactional(readOnly = true)
+    public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
+            PaginationAndSortingParametersDto paginationAndSortingParametersDto,
+            YachtSearchParametersDto searchParametersDto) {
+
+        // Преобразуем параметры пагинации и сортировки
+        int page = paginationAndSortingParametersDto.getPage() - 1; // Индексация страниц начинается с 0
+        int size = ApplicationConstants.PAGE_GALLERY_SIZE; // Используем константу
+
         String sortBy = paginationAndSortingParametersDto.getSortBy();
         String orderBy = paginationAndSortingParametersDto.getOrderBy();
 
-        // Translate "descend" to "desc" and "ascend" to "asc"
-        if ("descend".equalsIgnoreCase(orderBy)) {
-            orderBy = "desc";
-        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-            orderBy = "asc";
-        }
+    // Преобразуем "descend" в "desc" и "ascend" в "asc"
+    if ("descend".equalsIgnoreCase(orderBy)) {
+        orderBy = "desc";
+    } else if ("ascend".equalsIgnoreCase(orderBy)) {
+        orderBy = "asc";
+    }
 
-        // Default to ascending sort if the direction is invalid or null
         Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
 
         // Map DTO sort fields to entity fields
-        sortBy = FieldMapper.getEntityField(sortBy);
+        sortBy = FieldMapper.getEntityField(sortBy); // Маппируем поля DTO на поля сущности
 
-        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, Sort.by(direction, sortBy));
 
-        // Create a PageRequest with the sort parameter
-        PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, sort);
+        // Поскольку мы не можем использовать Specification с кастомным запросом, придётся от него отказаться
+        // или реализовать кастомный репозиторий (см. предыдущие шаги)
 
-        // Build the Specification based on search parameters
-        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+        // Получаем данные из репозитория
+        Page<YachtShortProjection> yachtPage = yachtRepository.findAllProjected(pageable);
 
-        // Query the repository with pagination, sorting, and search criteria
-        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
-
-        // **Инициализируем необходимые ленивые ассоциации**
-        yachtPage.getContent().forEach(yacht -> {
-            yacht.getYachtModel().getModel(); // Инициализация YachtModel
-            yacht.getCountry().getName();    // Инициализация Country
-            yacht.getTown().getName();       // Инициализация Town
-            yacht.getYachtImages().size();   // Инициализация YachtImages
-            yacht.getYachtDetail();          // Инициализация YachtDetail
-            // Инициализируйте другие необходимые ассоциации
-        });
-
-        // Преобразуем сущности в DTO
-        List<YachtShortResponseDto> yachtDtos = yachtPage.stream()
-                .map(YachtShortMapper::convertToDto)
+        // Используем ваш маппер для преобразования проекций в DTO
+        List<YachtShortResponseDto> yachts = yachtPage.stream()
+                .map(yachtShortMapper::convertProjectionToDto)
                 .collect(Collectors.toList());
 
         // Формируем ответ с пагинацией
         PaginatedYachtResponse response = new PaginatedYachtResponse();
-        response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
+        response.setCurrentPage(page + 1);
         response.setTotalPages(yachtPage.getTotalPages());
         response.setTotalItems(yachtPage.getTotalElements());
-        response.setYachts(yachtDtos);
+        response.setYachts(yachts);
 
         return response;
     }

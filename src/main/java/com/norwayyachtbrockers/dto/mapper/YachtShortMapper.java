@@ -3,13 +3,18 @@ package com.norwayyachtbrockers.dto.mapper;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
+import com.norwayyachtbrockers.repository.projections.YachtShortProjection;
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class YachtShortMapper {
-    public static YachtShortResponseDto convertToDto(Yacht yacht) {
+
+    public YachtShortResponseDto convertToDto(Yacht yacht) {
         YachtShortResponseDto dto = new YachtShortResponseDto();
         dto.setId(yacht.getId());
         dto.setVatIncluded(yacht.isVatIncluded());
@@ -25,13 +30,15 @@ public class YachtShortMapper {
         // Town
         dto.setTown(yacht.getTown().getName());
 
-        //User set
+        // User set
         // Set yacht favourites as user IDs
-        Set<Long> favouriteUserIds = yacht.getFavouritedByUsers().stream().map(User::getId).collect(Collectors.toSet());
-        dto.setFavourites(favouriteUserIds);
-        dto.setFavouritesCount((favouriteUserIds.size()));
-        //Hot price
-        if (yacht.getPriceOld().compareTo(yacht.getPrice()) > 0) {
+        Set<Long> favouriteUserIds = yacht.getFavouritedByUsers().stream()
+                .map(User::getId)
+                .collect(Collectors.toSet());
+
+        dto.setFavouritesCount(favouriteUserIds.size());
+        // Hot price
+        if (yacht.getPriceOld() != null && yacht.getPriceOld().compareTo(yacht.getPrice()) > 0) {
             dto.setHotPrice(true);
         }
         // Created at
@@ -39,7 +46,36 @@ public class YachtShortMapper {
         return dto;
     }
 
-    private static String formatPrice(BigDecimal price) {
+    public YachtShortResponseDto convertProjectionToDto(YachtShortProjection projection) {
+        YachtShortResponseDto dto = new YachtShortResponseDto();
+        dto.setId(projection.getId());
+        dto.setVatIncluded(projection.isVatIncluded());
+        dto.setPrice(formatPrice(projection.getPrice()));
+        dto.setPriceOld(formatPrice(projection.getPriceOld()));
+        dto.setMainImageKey(projection.getMainImageKey());
+        // Yacht Model set
+        dto.setMake(projection.getMake());
+        dto.setModel(projection.getModel());
+        dto.setYear(projection.getYear());
+        // Country
+        dto.setCountry(projection.getCountry());
+        // Town
+        dto.setTown(projection.getTown());
+        // Favourites count
+        dto.setFavouritesCount(projection.getFavouritesCount().intValue());
+        // Hot price
+        if (projection.getPriceOld() != null && projection.getPriceOld().compareTo(projection.getPrice()) > 0) {
+            dto.setHotPrice(true);
+        }
+        // Created at
+        dto.setCreatedAt(projection.getCreatedAt());
+        return dto;
+    }
+
+    private String formatPrice(BigDecimal price) {
+        if (price == null) {
+            return null;
+        }
         BigDecimal rounded = price.divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100));
         return rounded.toPlainString();

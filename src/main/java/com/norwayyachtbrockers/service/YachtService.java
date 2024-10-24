@@ -42,8 +42,8 @@ public interface YachtService {
                                                                        paginationAndSortingParametersDto,
                                                                YachtSearchParametersDto searchParametersDto);
 
-    PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto
-                                                                       paginationAndSortingParametersDto,
+    PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
+    PaginationAndSortingParametersDto paginationAndSortingParametersDto,
                                                             YachtSearchParametersDto searchParametersDto);
 
     YachtCrmFrontendResponseDto getCombinedYachtData();
