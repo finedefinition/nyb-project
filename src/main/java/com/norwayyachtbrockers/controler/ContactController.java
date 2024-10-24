@@ -18,17 +18,14 @@ public class ContactController {
 
     private final EmailService emailService;
 
-    private final ContactFormMapper contactFormMapper;
-
-    public ContactController(EmailService emailService, ContactFormMapper contactFormMapper) {
+    public ContactController(EmailService emailService) {
         this.emailService = emailService;
-        this.contactFormMapper = contactFormMapper;
     }
 
     @PostMapping
     public ResponseEntity<String> sendContactMessage(@Valid @RequestBody ContactFormRequestDto dto) {
 
-        ContactForm contactForm =  contactFormMapper.createContactFormFromDto(dto);
+        ContactForm contactForm =  ContactFormMapper.createContactFormFromDto(dto);
         boolean sent = emailService.sendSimpleMessage(
                 contactForm.getUserEmail(),
                 "New contact message from: " + contactForm.getName(),

@@ -6,27 +6,24 @@ import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.service.KeelService;
 import com.norwayyachtbrockers.util.EntityUtils;
+import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 public class KeelServiceImpl implements KeelService {
 
     private final KeelRepository keelRepository;
-    private final KeelMapper keelMapper;
 
-    public KeelServiceImpl(KeelRepository keelRepository,
-                           KeelMapper keelMapper) {
+    public KeelServiceImpl(KeelRepository keelRepository) {
         this.keelRepository = keelRepository;
-        this.keelMapper = keelMapper;
     }
 
     @Override
     @Transactional
     public Keel saveKeel(KeelRequestDto dto) {
-        return keelRepository.save(keelMapper.createKeelFromDto(dto));
+        return keelRepository.save(KeelMapper.createKeelFromDto(dto));
     }
 
     @Override
@@ -49,7 +46,7 @@ public class KeelServiceImpl implements KeelService {
     @Transactional
     public Keel updateKeel(KeelRequestDto dto, Long id) {
         Keel keel = EntityUtils.findEntityOrThrow(id, keelRepository, "Keel");
-        keelMapper.updateKeelFromDto(keel, dto);
+        KeelMapper.updateKeelFromDto(keel, dto);
         return keelRepository.save(keel);
     }
 

@@ -1,10 +1,12 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.KeelMapper;
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +23,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,9 +40,6 @@ class KeelServiceImplTest {
 
     @MockBean
     private KeelRepository keelRepository;
-
-    @MockBean
-    private KeelMapper keelMapper;
 
     @Autowired
     private KeelServiceImpl keelService;
@@ -69,7 +64,7 @@ class KeelServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(keelRepository, keelMapper);
+        Mockito.reset(keelRepository);
     }
 
     @Test
@@ -78,8 +73,11 @@ class KeelServiceImplTest {
     @Transactional
     void testSaveKeel_Success() {
         // Arrange
-        when(keelMapper.createKeelFromDto(requestDto)).thenReturn(keel);
-        when(keelRepository.save(keel)).thenReturn(keel);
+        when(keelRepository.save(Mockito.any(Keel.class))).thenAnswer(invocation -> {
+            Keel savedKeel = invocation.getArgument(0);
+            savedKeel.setId(KEEL_ID);
+            return savedKeel;
+        });
 
         // Act
         Keel savedKeel = keelService.saveKeel(requestDto);
@@ -89,8 +87,11 @@ class KeelServiceImplTest {
         assertEquals(KEEL_ID, savedKeel.getId(), "Keel ID should match");
         assertEquals(KEEL_NAME, savedKeel.getName(), "Keel name should match");
 
-        verify(keelMapper, times(1)).createKeelFromDto(requestDto);
-        verify(keelRepository, times(1)).save(keel);
+        ArgumentCaptor<Keel> captor = ArgumentCaptor.forClass(Keel.class);
+        verify(keelRepository, times(1)).save(captor.capture());
+
+        Keel capturedKeel = captor.getValue();
+        assertEquals(KEEL_NAME, capturedKeel.getName(), "Captured keel name should match DTO name");
     }
 
     @Test
@@ -143,7 +144,6 @@ class KeelServiceImplTest {
         updatedKeel.setName("Updated Keel Name");
 
         when(keelRepository.findById(KEEL_ID)).thenReturn(Optional.of(keel));
-        when(keelMapper.updateKeelFromDto(keel, requestDto)).thenReturn(keel);
         when(keelRepository.save(any(Keel.class))).thenReturn(updatedKeel);
 
         // Act
@@ -155,7 +155,6 @@ class KeelServiceImplTest {
         assertEquals("Updated Keel Name", result.getName(), "Keel name should match");
 
         verify(keelRepository, times(1)).findById(KEEL_ID);
-        verify(keelMapper, times(1)).updateKeelFromDto(eq(keel), eq(requestDto));
         verify(keelRepository, times(1)).save(keel);
     }
 

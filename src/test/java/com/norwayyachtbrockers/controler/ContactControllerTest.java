@@ -37,9 +37,6 @@ class ContactControllerTest {
     @MockBean
     private EmailService emailService;
 
-    @MockBean
-    private ContactFormMapper contactFormMapper;
-
     @Autowired
     private ContactController contactController;
 
@@ -70,7 +67,7 @@ class ContactControllerTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(emailService, contactFormMapper);
+        Mockito.reset(emailService);
     }
 
     @Test
@@ -78,7 +75,6 @@ class ContactControllerTest {
     @DisplayName("sendContactMessage - Successfully sends a contact message")
     void testSendContactMessage_Success() {
         // Arrange
-        when(contactFormMapper.createContactFormFromDto(contactFormRequestDto)).thenReturn(contactForm);
         when(emailService.sendSimpleMessage(USER_EMAIL, EMAIL_SUBJECT, CONTACT_NAME, EMAIL_BODY)).thenReturn(true);
 
         // Act
@@ -98,7 +94,6 @@ class ContactControllerTest {
     @DisplayName("sendContactMessage - Fails to send a contact message")
     void testSendContactMessage_Failure() {
         // Arrange
-        when(contactFormMapper.createContactFormFromDto(contactFormRequestDto)).thenReturn(contactForm);
         when(emailService
                 .sendSimpleMessage(USER_EMAIL, EMAIL_SUBJECT, CONTACT_NAME, EMAIL_BODY)).thenReturn(false);
 

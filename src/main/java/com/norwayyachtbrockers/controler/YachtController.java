@@ -41,7 +41,7 @@ public class YachtController {
 
     @PostMapping(value = "/full-dto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<YachtResponseDto> createYachtFromFullYachRequestDto(
+    public ResponseEntity<YachtResponseDto> createYachtFromFullYachtRequestDto(
             @Valid
             @RequestPart("yachtData") FullYachtRequestDto dto,
             @RequestParam("mainImage") MultipartFile mainImageFile,

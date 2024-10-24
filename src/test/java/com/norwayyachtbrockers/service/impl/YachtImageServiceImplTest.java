@@ -1,6 +1,5 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.YachtImageMapper;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
@@ -9,6 +8,10 @@ import com.norwayyachtbrockers.repository.YachtImageRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.util.S3ImageService;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,11 +28,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,8 +47,7 @@ class YachtImageServiceImplTest {
     private YachtImageRepository yachtImageRepository;
     @MockBean
     private YachtRepository yachtRepository;
-    @MockBean
-    private YachtImageMapper yachtImageMapper;
+
     @MockBean
     private S3ImageService s3ImageService;
 
@@ -83,7 +80,7 @@ class YachtImageServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(yachtImageRepository, yachtImageMapper, yachtRepository, s3ImageService);
+        Mockito.reset(yachtImageRepository, yachtRepository, s3ImageService);
     }
 
     @Test
@@ -103,8 +100,6 @@ class YachtImageServiceImplTest {
         when(s3ImageService.uploadImageToS3(file2)).thenReturn(IMAGE_KEY + "2");
         when(yachtImageRepository.save(any(YachtImage.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
-        when(yachtImageMapper.convertToResponseDto(any(YachtImage.class)))
-                .thenReturn(new YachtImageResponseDto());
 
         // Act
         List<YachtImageResponseDto> responseDtos = yachtImageService.saveMultipleImages(yachtImageRequestDto, imageFiles);
@@ -124,7 +119,6 @@ class YachtImageServiceImplTest {
     void testFindById_Success() {
         // Arrange
         when(yachtImageRepository.findById(YACHT_IMAGE_ID)).thenReturn(Optional.of(yachtImage));
-        when(yachtImageMapper.convertToResponseDto(yachtImage)).thenReturn(new YachtImageResponseDto());
 
         // Act
         YachtImageResponseDto responseDto = yachtImageService.findById(YACHT_IMAGE_ID);
@@ -139,12 +133,18 @@ class YachtImageServiceImplTest {
     @DisplayName("findAll - Successfully retrieves all yacht images sorted by ID")
     void testFindAll_Success() {
         // Arrange
+        Yacht anotherYacht = new Yacht();
+        anotherYacht.setId(3L);
+
+        yachtImage.setYacht(yacht);
+
         YachtImage anotherYachtImage = new YachtImage();
         anotherYachtImage.setId(3L);
+        anotherYachtImage.setYacht(anotherYacht);
+
         List<YachtImage> yachtImages = Arrays.asList(yachtImage, anotherYachtImage);
 
         when(yachtImageRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(yachtImages);
-        when(yachtImageMapper.convertToResponseDto(any(YachtImage.class))).thenReturn(new YachtImageResponseDto());
 
         // Act
         List<YachtImageResponseDto> responseDtos = yachtImageService.findAll();
@@ -170,7 +170,6 @@ class YachtImageServiceImplTest {
         when(yachtRepository.findById(YACHT_ID)).thenReturn(Optional.of(yacht));
         when(s3ImageService.uploadImageToS3(newFile)).thenReturn(IMAGE_KEY_UPDATED);
         when(yachtImageRepository.save(any(YachtImage.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(yachtImageMapper.convertToResponseDto(any(YachtImage.class))).thenReturn(new YachtImageResponseDto());
 
         // Act
         YachtImageResponseDto responseDto = yachtImageService.update(YACHT_IMAGE_ID, yachtImageRequestDto, newFile);

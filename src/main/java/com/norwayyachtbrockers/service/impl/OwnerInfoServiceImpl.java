@@ -6,28 +6,24 @@ import com.norwayyachtbrockers.model.OwnerInfo;
 import com.norwayyachtbrockers.repository.OwnerInfoRepository;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import com.norwayyachtbrockers.util.EntityUtils;
+import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 public class OwnerInfoServiceImpl implements OwnerInfoService {
 
     private final OwnerInfoRepository ownerInfoRepository;
 
-    private final OwnerInfoMapper ownerInfoMapper;
-
-    public OwnerInfoServiceImpl(OwnerInfoRepository ownerInfoRepository,
-                                OwnerInfoMapper ownerInfoMapper) {
+    public OwnerInfoServiceImpl(OwnerInfoRepository ownerInfoRepository) {
         this.ownerInfoRepository = ownerInfoRepository;
-        this.ownerInfoMapper = ownerInfoMapper;
     }
 
     @Override
     @Transactional
     public OwnerInfo save(OwnerInfoRequestDto dto) {
-        return ownerInfoRepository.save(ownerInfoMapper.createOwnerInfoFromDto(dto));
+        return ownerInfoRepository.save(OwnerInfoMapper.createOwnerInfoFromDto(dto));
     }
 
     @Override
@@ -48,7 +44,7 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
     @Override
     public OwnerInfo update(OwnerInfoRequestDto dto, Long id) {
         OwnerInfo ownerInfo = EntityUtils.findEntityOrThrow(id, ownerInfoRepository, "OwnerInfo");
-        ownerInfoMapper.updateOwnerInfoFromDto(ownerInfo, dto);
+        OwnerInfoMapper.updateOwnerInfoFromDto(ownerInfo, dto);
         return ownerInfo;
     }
 

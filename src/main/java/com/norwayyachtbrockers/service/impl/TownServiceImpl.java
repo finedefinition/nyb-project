@@ -9,11 +9,11 @@ import com.norwayyachtbrockers.repository.CountryRepository;
 import com.norwayyachtbrockers.repository.TownRepository;
 import com.norwayyachtbrockers.service.TownService;
 import com.norwayyachtbrockers.util.EntityUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TownServiceImpl implements TownService {

@@ -1,10 +1,12 @@
 package com.norwayyachtbrockers.service.impl;
 
-import com.norwayyachtbrockers.dto.mapper.FuelMapper;
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +14,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +23,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,9 +40,6 @@ class FuelServiceImplTest {
 
     @MockBean
     private FuelRepository fuelRepository;
-
-    @MockBean
-    private FuelMapper fuelMapper;
 
     @Autowired
     private FuelServiceImpl fuelService;
@@ -70,7 +64,7 @@ class FuelServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        Mockito.reset(fuelRepository, fuelMapper);
+        Mockito.reset(fuelRepository);
     }
 
     @Test
@@ -79,8 +73,13 @@ class FuelServiceImplTest {
     @Transactional
     void testSaveFuel_Success() {
         // Arrange
-        when(fuelMapper.createFuelFromDto(requestDto)).thenReturn(fuel);
         when(fuelRepository.save(fuel)).thenReturn(fuel);
+
+        when(fuelRepository.save(Mockito.any(Fuel.class))).thenAnswer(invocation -> {
+            Fuel savedFuel = invocation.getArgument(0);
+            savedFuel.setId(FUEL_ID);
+            return savedFuel;
+        });
 
         // Act
         Fuel savedFuel = fuelService.saveFuel(requestDto);
@@ -90,8 +89,11 @@ class FuelServiceImplTest {
         assertEquals(FUEL_ID, savedFuel.getId(), "Fuel ID should match");
         assertEquals(FUEL_NAME, savedFuel.getName(), "Fuel name should match");
 
-        verify(fuelMapper, times(1)).createFuelFromDto(requestDto);
-        verify(fuelRepository, times(1)).save(fuel);
+        ArgumentCaptor<Fuel> captor = ArgumentCaptor.forClass(Fuel.class);
+        verify(fuelRepository, times(1)).save(captor.capture());
+
+        Fuel capturedFuel = captor.getValue();
+        assertEquals(FUEL_NAME, capturedFuel.getName(), "Captured fuel name should match DTO name");
     }
 
     @Test
@@ -144,7 +146,6 @@ class FuelServiceImplTest {
         updatedFuel.setName("Updated Fuel Name");
 
         when(fuelRepository.findById(FUEL_ID)).thenReturn(Optional.of(fuel));
-        when(fuelMapper.updateFuelFromDto(fuel, requestDto)).thenReturn(fuel);
         when(fuelRepository.save(any(Fuel.class))).thenReturn(updatedFuel);
 
         // Act
@@ -156,7 +157,6 @@ class FuelServiceImplTest {
         assertEquals("Updated Fuel Name", result.getName(), "Fuel name should match");
 
         verify(fuelRepository, times(1)).findById(FUEL_ID);
-        verify(fuelMapper, times(1)).updateFuelFromDto(eq(fuel), eq(requestDto));
         verify(fuelRepository, times(1)).save(fuel);
     }
 
