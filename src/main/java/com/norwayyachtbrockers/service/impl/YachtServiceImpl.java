@@ -160,6 +160,7 @@ public class YachtServiceImpl implements YachtService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public List<YachtShortResponseDto> findAllYachts() {
         // Fetch all yachts, convert to DTOs
@@ -249,6 +250,7 @@ public class YachtServiceImpl implements YachtService {
         yachtRepository.delete(yacht);
     }
 
+    @Transactional
     @Override
     public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
         // Get the page, sortBy, and orderBy from the DTO
@@ -294,6 +296,7 @@ public class YachtServiceImpl implements YachtService {
     }
 
     @Override
+    @Transactional
     public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
         // Get the page, sortBy, and orderBy from the DTO
         int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
@@ -323,10 +326,23 @@ public class YachtServiceImpl implements YachtService {
 
         // Query the repository with pagination, sorting, and search criteria
         Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
+
+        // **Инициализируем необходимые ленивые ассоциации**
+        yachtPage.getContent().forEach(yacht -> {
+            yacht.getYachtModel().getModel(); // Инициализация YachtModel
+            yacht.getCountry().getName();    // Инициализация Country
+            yacht.getTown().getName();       // Инициализация Town
+            yacht.getYachtImages().size();   // Инициализация YachtImages
+            yacht.getYachtDetail();          // Инициализация YachtDetail
+            // Инициализируйте другие необходимые ассоциации
+        });
+
+        // Преобразуем сущности в DTO
         List<YachtShortResponseDto> yachtDtos = yachtPage.stream()
                 .map(YachtShortMapper::convertToDto)
                 .collect(Collectors.toList());
 
+        // Формируем ответ с пагинацией
         PaginatedYachtResponse response = new PaginatedYachtResponse();
         response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
         response.setTotalPages(yachtPage.getTotalPages());
