@@ -324,7 +324,7 @@ public class YachtServiceImpl implements YachtService {
         // Query the repository with pagination, sorting, and search criteria
         Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
         List<YachtShortResponseDto> yachtDtos = yachtPage.stream()
-                .map(yachtShortMapper::convertToDto)
+                .map(YachtShortMapper::convertToDto)
                 .collect(Collectors.toList());
 
         PaginatedYachtResponse response = new PaginatedYachtResponse();

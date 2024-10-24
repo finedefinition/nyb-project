@@ -68,16 +68,6 @@ public class YachtController {
         return ResponseEntity.ok(yachtService.findId(id));
     }
 
-//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<YachtShortResponseDto>> getAll() {
-//        List<YachtShortResponseDto> yachts = yachtService.findAllYachts();
-//
-//        if (yachts.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//        }
-//        return ResponseEntity.ok(yachts);
-//    }
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaginatedYachtResponse> getAllYachts(
             @RequestParam(value = "page", defaultValue = "1") int page,
