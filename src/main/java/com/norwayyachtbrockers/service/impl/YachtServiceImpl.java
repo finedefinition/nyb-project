@@ -23,6 +23,9 @@ import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.service.YachtService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import com.norwayyachtbrockers.util.S3ImageService;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,10 +34,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -45,7 +44,6 @@ public class YachtServiceImpl implements YachtService {
     private final YachtMapper yachtMapper;
     private final YachtSpecificationBuilder yachtSpecificationBuilder;
     private final S3ImageService s3ImageService;
-    private final YachtShortMapper yachtShortMapper;
 
     @Override
     @Transactional
@@ -166,7 +164,7 @@ public class YachtServiceImpl implements YachtService {
     public List<YachtShortResponseDto> findAllYachts() {
         // Fetch all yachts, convert to DTOs
         List<YachtShortResponseDto> dtos = yachtRepository.findAll().stream()
-                .map(yachtShortMapper::convertToDto)
+                .map(YachtShortMapper::convertToDto)
                 .toList();
 
         // Exclude yachts with 0 favourites, then sort the rest by favouritesCount in descending order
