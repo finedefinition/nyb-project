@@ -134,6 +134,7 @@ public class YachtServiceImpl implements YachtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public YachtResponseDto findId(Long id) {
         Yacht yacht = EntityUtils.findEntityOrThrow(id, yachtRepository, "Yacht");
         return yachtMapper.convertToDto(yacht);
