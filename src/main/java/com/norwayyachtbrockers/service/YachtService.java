@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
@@ -40,6 +41,10 @@ public interface YachtService {
     PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto
                                                                        paginationAndSortingParametersDto,
                                                                YachtSearchParametersDto searchParametersDto);
+
+    PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto
+                                                                       paginationAndSortingParametersDto,
+                                                            YachtSearchParametersDto searchParametersDto);
 
     YachtCrmFrontendResponseDto getCombinedYachtData();
 }

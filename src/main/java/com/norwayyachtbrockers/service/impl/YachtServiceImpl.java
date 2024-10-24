@@ -9,6 +9,7 @@ import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
@@ -286,6 +287,49 @@ public class YachtServiceImpl implements YachtService {
                 .collect(Collectors.toList());
 
         PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
+        response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
+        response.setTotalPages(yachtPage.getTotalPages());
+        response.setTotalItems(yachtPage.getTotalElements());
+        response.setYachts(yachtDtos);
+
+        return response;
+    }
+
+    @Override
+    public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
+        // Get the page, sortBy, and orderBy from the DTO
+        int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
+        String sortBy = paginationAndSortingParametersDto.getSortBy();
+        String orderBy = paginationAndSortingParametersDto.getOrderBy();
+
+        // Translate "descend" to "desc" and "ascend" to "asc"
+        if ("descend".equalsIgnoreCase(orderBy)) {
+            orderBy = "desc";
+        } else if ("ascend".equalsIgnoreCase(orderBy)) {
+            orderBy = "asc";
+        }
+
+        // Default to ascending sort if the direction is invalid or null
+        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
+
+        // Map DTO sort fields to entity fields
+        sortBy = FieldMapper.getEntityField(sortBy);
+
+        Sort sort = Sort.by(direction, sortBy);
+
+        // Create a PageRequest with the sort parameter
+        PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, sort);
+
+        // Build the Specification based on search parameters
+        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+
+        // Query the repository with pagination, sorting, and search criteria
+        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
+        List<YachtShortResponseDto> yachtDtos = yachtPage.stream()
+                .map(yachtShortMapper::convertToDto)
+                .collect(Collectors.toList());
+
+        PaginatedYachtResponse response = new PaginatedYachtResponse();
         response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
         response.setTotalPages(yachtPage.getTotalPages());
         response.setTotalItems(yachtPage.getTotalElements());
