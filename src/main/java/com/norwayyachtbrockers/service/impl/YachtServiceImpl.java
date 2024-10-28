@@ -9,6 +9,7 @@ import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
@@ -17,6 +18,7 @@ import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.YachtRepository;
+import com.norwayyachtbrockers.repository.projections.YachtShortProjection;
 import com.norwayyachtbrockers.repository.specification.yacht.YachtSpecificationBuilder;
 import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.service.YachtService;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -41,6 +44,7 @@ public class YachtServiceImpl implements YachtService {
     private final YachtRepository yachtRepository;
     private final YachtImageService yachtImageService;
     private final YachtMapper yachtMapper;
+    private final YachtShortMapper yachtShortMapper;
     private final YachtSpecificationBuilder yachtSpecificationBuilder;
     private final S3ImageService s3ImageService;
 
@@ -130,6 +134,7 @@ public class YachtServiceImpl implements YachtService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public YachtResponseDto findId(Long id) {
         Yacht yacht = EntityUtils.findEntityOrThrow(id, yachtRepository, "Yacht");
         return yachtMapper.convertToDto(yacht);
@@ -159,11 +164,12 @@ public class YachtServiceImpl implements YachtService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public List<YachtShortResponseDto> findAllYachts() {
         // Fetch all yachts, convert to DTOs
         List<YachtShortResponseDto> dtos = yachtRepository.findAll().stream()
-                .map(YachtShortMapper::convertToDto)
+                .map(yachtShortMapper::convertToDto)
                 .toList();
 
         // Exclude yachts with 0 favourites, then sort the rest by favouritesCount in descending order
@@ -248,6 +254,7 @@ public class YachtServiceImpl implements YachtService {
         yachtRepository.delete(yacht);
     }
 
+    @Transactional
     @Override
     public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
         // Get the page, sortBy, and orderBy from the DTO
@@ -288,6 +295,54 @@ public class YachtServiceImpl implements YachtService {
         response.setTotalPages(yachtPage.getTotalPages());
         response.setTotalItems(yachtPage.getTotalElements());
         response.setYachts(yachtDtos);
+
+        return response;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
+            PaginationAndSortingParametersDto paginationAndSortingParametersDto,
+            YachtSearchParametersDto searchParametersDto) {
+
+        // Преобразуем параметры пагинации и сортировки
+        int page = paginationAndSortingParametersDto.getPage() - 1; // Индексация страниц начинается с 0
+        int size = ApplicationConstants.PAGE_GALLERY_SIZE; // Используем константу
+
+        String sortBy = paginationAndSortingParametersDto.getSortBy();
+        String orderBy = paginationAndSortingParametersDto.getOrderBy();
+
+    // Преобразуем "descend" в "desc" и "ascend" в "asc"
+    if ("descend".equalsIgnoreCase(orderBy)) {
+        orderBy = "desc";
+    } else if ("ascend".equalsIgnoreCase(orderBy)) {
+        orderBy = "asc";
+    }
+
+        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
+
+        // Map DTO sort fields to entity fields
+        sortBy = FieldMapper.getEntityField(sortBy); // Маппируем поля DTO на поля сущности
+
+        Pageable pageable = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, Sort.by(direction, sortBy));
+
+        // Поскольку мы не можем использовать Specification с кастомным запросом, придётся от него отказаться
+        // или реализовать кастомный репозиторий (см. предыдущие шаги)
+
+        // Получаем данные из репозитория
+        Page<YachtShortProjection> yachtPage = yachtRepository.findAllProjected(pageable);
+
+        // Используем ваш маппер для преобразования проекций в DTO
+        List<YachtShortResponseDto> yachts = yachtPage.stream()
+                .map(yachtShortMapper::convertProjectionToDto)
+                .collect(Collectors.toList());
+
+        // Формируем ответ с пагинацией
+        PaginatedYachtResponse response = new PaginatedYachtResponse();
+        response.setCurrentPage(page + 1);
+        response.setTotalPages(yachtPage.getTotalPages());
+        response.setTotalItems(yachtPage.getTotalElements());
+        response.setYachts(yachts);
 
         return response;
     }

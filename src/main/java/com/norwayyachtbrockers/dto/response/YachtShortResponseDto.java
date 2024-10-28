@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @JsonPropertyOrder({"yacht_id", "yacht_top", "yacht_hot_price", "yacht_vat", "yacht_price",
-        "yacht_price_old", "yacht_main_image_key"})
+        "yacht_price_old", "yacht_main_image_key", "yacht_make", "yacht_model",
+        "yacht_year", "yacht_country", "yacht_town", "yacht_created_at", "yacht_favourites_count"})
 public class YachtShortResponseDto {
 
     @JsonProperty("yacht_id")
@@ -50,9 +50,6 @@ public class YachtShortResponseDto {
 
     @JsonProperty("yacht_created_at")
     private LocalDateTime createdAt;
-
-    @JsonProperty("yacht_favourites")
-    private Set<Long> favourites;
 
     @JsonProperty("yacht_favourites_count")
     private Integer favouritesCount;

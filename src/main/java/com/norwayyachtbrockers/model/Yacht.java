@@ -45,33 +45,33 @@ public class Yacht extends BaseEntity {
     @Column(name = "main_image_key", length = 40)
     private String mainImageKey;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "yacht_model_id")
     private YachtModel yachtModel;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "town_id")
     private Town town;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "yacht",
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "yacht",
             cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<YachtImage> yachtImages = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL,
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JoinColumn(name = "yacht_detail_id", referencedColumnName = "id")
     private YachtDetail yachtDetail;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL,
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JoinColumn(name = "owner_info_id", referencedColumnName = "id")
     private OwnerInfo ownerInfo;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "favouriteYachts")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favouriteYachts")
     private Set<User> favouritedByUsers = new HashSet<>();
 
     public void setYachtModel(YachtModel yachtModel) {
