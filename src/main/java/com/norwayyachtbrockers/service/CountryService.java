@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.Country;
+import com.norwayyachtbrockers.repository.projections.CountryProjection;
+
 import java.util.List;
 
 public interface CountryService {
@@ -11,7 +13,7 @@ public interface CountryService {
 
     Country findId(Long id);
 
-    List<Country> findAll();
+    List<CountryProjection> findAll();
 
     Country updateCountry(CountryRequestDto dto, Long id);
 
