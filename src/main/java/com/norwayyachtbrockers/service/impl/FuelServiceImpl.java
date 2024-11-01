@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.mapper.FuelMapper;
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.repository.FuelRepository;
+import com.norwayyachtbrockers.repository.projections.FuelProjection;
 import com.norwayyachtbrockers.service.FuelService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import java.util.List;
@@ -38,8 +39,8 @@ public class FuelServiceImpl implements FuelService {
     }
 
     @Override
-    public List<Fuel> findAll() {
-        return fuelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    public List<FuelProjection> findAll() {
+        return fuelRepository.findAllProjections();
     }
 
     @Override

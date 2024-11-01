@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
+import com.norwayyachtbrockers.repository.projections.FuelProjection;
+
 import java.util.List;
 
 public interface FuelService {
@@ -11,7 +13,7 @@ public interface FuelService {
 
     Fuel findId(Long id);
 
-    List<Fuel> findAll();
+    List<FuelProjection> findAll();
 
     Fuel updateFuel(FuelRequestDto dto, Long id);
 
