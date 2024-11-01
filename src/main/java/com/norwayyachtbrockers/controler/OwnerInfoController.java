@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.model.OwnerInfo;
+import com.norwayyachtbrockers.repository.projections.OwnerInfoProjection;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,8 @@ public class OwnerInfoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OwnerInfo>> getAll() {
-        List<OwnerInfo> ownerInfos = ownerInfoService.findAll();
+    public ResponseEntity<List<OwnerInfoProjection>> getAll() {
+        List<OwnerInfoProjection> ownerInfos = ownerInfoService.findAll();
 
         if (ownerInfos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
