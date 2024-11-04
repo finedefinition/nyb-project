@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.exception.AppEntityNotFoundException;
 import com.norwayyachtbrockers.model.OwnerInfo;
 import com.norwayyachtbrockers.repository.OwnerInfoRepository;
+import com.norwayyachtbrockers.repository.projections.OwnerInfoProjection;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -126,10 +127,17 @@ class OwnerInfoServiceImplTest {
     @DisplayName("findAll - Successfully finds all OwnerInfo entities")
     void testFindAll_Success() {
         // Arrange
-        when(ownerInfoRepository.findAll()).thenReturn(List.of(existingOwnerInfo));
+        OwnerInfoProjection existingOwnerInfo = new OwnerInfoProjection();
+        existingOwnerInfo.setId(EXISTING_ID);
+        existingOwnerInfo.setFirstName(OWNER_FIRST_NAME);
+        existingOwnerInfo.setLastName(OWNER_LAST_NAME);
+        existingOwnerInfo.setTelephone(OWNER_PHONE_NUMBER);
+        existingOwnerInfo.setEmail(OWNER_EMAIL);
+
+        when(ownerInfoRepository.findAllProjections()).thenReturn(List.of(existingOwnerInfo));
 
         // Act
-        List<OwnerInfo> ownerInfos = ownerInfoService.findAll();
+        List<OwnerInfoProjection> ownerInfos = ownerInfoService.findAll();
         ownerInfos.add(existingOwnerInfo);
 
         // Assert

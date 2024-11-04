@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.Country;
+import com.norwayyachtbrockers.repository.projections.CountryProjection;
 import com.norwayyachtbrockers.service.CountryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -117,11 +118,12 @@ public class CountryControllerTest {
     @DisplayName("getAllCountries - Successfully retrieves all countries")
     void testGetAllCountries_Success() throws Exception {
         // Arrange
-        Country anotherCountry = new Country();
-        anotherCountry.setId(2L);
-        anotherCountry.setName("AnotherCountry");
+        CountryProjection anotherCountry = new CountryProjection(
+                2L, "AnotherCountry", null, null
+        );
+        CountryProjection country = new CountryProjection(COUNTRY_ID, COUNTRY_NAME, null, null);
 
-        List<Country> countries = Arrays.asList(country, anotherCountry);
+        List<CountryProjection> countries = Arrays.asList(country, anotherCountry);
         when(countryService.findAll()).thenReturn(countries);
 
         // Act & Assert

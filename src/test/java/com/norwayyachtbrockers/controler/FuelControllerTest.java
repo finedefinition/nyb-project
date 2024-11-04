@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
+import com.norwayyachtbrockers.repository.projections.FuelProjection;
 import com.norwayyachtbrockers.service.FuelService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,11 +116,15 @@ class FuelControllerTest {
     @DisplayName("getAllFuels - Successfully retrieves all fuels")
     void testGetAllFuels_Success() throws Exception {
         // Arrange
-        Fuel anotherFuel = new Fuel();
+        FuelProjection anotherFuel = new FuelProjection();
         anotherFuel.setId(2L);
         anotherFuel.setName("AnotherFuel");
 
-        List<Fuel> fuels = Arrays.asList(fuel, anotherFuel);
+        FuelProjection fuel = new FuelProjection();
+        fuel.setId(FUEL_ID);
+        fuel.setName(FUEL_NAME);
+
+        List<FuelProjection> fuels = Arrays.asList(fuel, anotherFuel);
         when(fuelService.findAll()).thenReturn(fuels);
 
         // Act & Assert

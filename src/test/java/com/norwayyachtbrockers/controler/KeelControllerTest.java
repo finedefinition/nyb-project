@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
+import com.norwayyachtbrockers.repository.projections.KeelProjection;
 import com.norwayyachtbrockers.service.KeelService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,11 +116,15 @@ class KeelControllerTest {
     @DisplayName("getAllKeels - Successfully retrieves all keels")
     void testGetAllKeels_Success() throws Exception {
         // Arrange
-        Keel anotherKeel = new Keel();
+        KeelProjection anotherKeel = new KeelProjection();
         anotherKeel.setId(2L);
         anotherKeel.setName("AnotherKeel");
 
-        List<Keel> keels = Arrays.asList(keel, anotherKeel);
+        KeelProjection keel = new KeelProjection();
+        keel.setId(KEEL_ID);
+        keel.setName(KEEL_NAME);
+
+        List<KeelProjection> keels = Arrays.asList(keel, anotherKeel);
         when(keelService.findAll()).thenReturn(keels);
 
         // Act & Assert

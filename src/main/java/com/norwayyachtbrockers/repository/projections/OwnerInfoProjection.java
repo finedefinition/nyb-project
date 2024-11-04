@@ -23,6 +23,9 @@ public class OwnerInfoProjection {
         this.updatedAt = updatedAt;
     }
 
+    public OwnerInfoProjection() {
+    }
+
     public Long getId() {
         return id;
     }
