@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
+import com.norwayyachtbrockers.repository.projections.KeelProjection;
 import com.norwayyachtbrockers.service.KeelService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,8 @@ public class KeelController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Keel>> getAllKeels() {
-        List<Keel> keels = keelService.findAll();
+    public ResponseEntity<List<KeelProjection>> getAllKeels() {
+        List<KeelProjection> keels = keelService.findAll();
 
         if (keels.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

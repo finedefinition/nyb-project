@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
+import com.norwayyachtbrockers.repository.projections.FuelProjection;
 import com.norwayyachtbrockers.service.FuelService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,8 @@ public class FuelController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Fuel>> getAllFuels() {
-        List<Fuel> fuels = fuelService.findAll();
+    public ResponseEntity<List<FuelProjection>> getAllFuels() {
+        List<FuelProjection> fuels = fuelService.findAll();
 
         if (fuels.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.mapper.OwnerInfoMapper;
 import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.model.OwnerInfo;
 import com.norwayyachtbrockers.repository.OwnerInfoRepository;
+import com.norwayyachtbrockers.repository.projections.OwnerInfoProjection;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import java.util.List;
@@ -37,8 +38,8 @@ public class OwnerInfoServiceImpl implements OwnerInfoService {
     }
 
     @Override
-    public List<OwnerInfo> findAll() {
-        return ownerInfoRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    public List<OwnerInfoProjection> findAll() {
+        return ownerInfoRepository.findAllProjections();
     }
 
     @Override

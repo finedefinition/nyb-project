@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
+import com.norwayyachtbrockers.repository.projections.KeelProjection;
+
 import java.util.List;
 
 public interface KeelService {
@@ -12,7 +14,7 @@ public interface KeelService {
 
     Keel findId(Long id);
 
-    List<Keel> findAll();
+    List<KeelProjection> findAll();
 
     Keel updateKeel(KeelRequestDto dto, Long id);
 

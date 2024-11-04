@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.Country;
+import com.norwayyachtbrockers.repository.projections.CountryProjection;
 import com.norwayyachtbrockers.service.CountryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,8 @@ public class CountryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Country>> getAllCountries() {
-        List<Country> countries = countryService.findAll();
+    public ResponseEntity<List<CountryProjection>> getAllCountries() {
+        List<CountryProjection> countries = countryService.findAll();
 
         if (countries.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

@@ -4,11 +4,11 @@ import com.norwayyachtbrockers.dto.mapper.CountryMapper;
 import com.norwayyachtbrockers.dto.request.CountryRequestDto;
 import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.repository.CountryRepository;
+import com.norwayyachtbrockers.repository.projections.CountryProjection;
 import com.norwayyachtbrockers.service.CountryService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,8 +38,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public List<Country> findAll() {
-        return countryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    public List<CountryProjection> findAll() {
+        return countryRepository.findAllProjections();
     }
 
     @Override

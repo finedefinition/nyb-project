@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.model.OwnerInfo;
+import com.norwayyachtbrockers.repository.projections.OwnerInfoProjection;
+
 import java.util.List;
 
 public interface OwnerInfoService {
@@ -12,7 +14,7 @@ public interface OwnerInfoService {
 
     OwnerInfo findId(Long id);
 
-    List<OwnerInfo> findAll();
+    List<OwnerInfoProjection> findAll();
 
     OwnerInfo update(OwnerInfoRequestDto dto, Long id);
 

@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.mapper.KeelMapper;
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
+import com.norwayyachtbrockers.repository.projections.KeelProjection;
 import com.norwayyachtbrockers.service.KeelService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import java.util.List;
@@ -38,8 +39,8 @@ public class KeelServiceImpl implements KeelService {
     }
 
     @Override
-    public List<Keel> findAll() {
-        return keelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    public List<KeelProjection> findAll() {
+        return keelRepository.findAllProjections();
     }
 
     @Override
