@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
 import com.norwayyachtbrockers.model.YachtDetail;
+import com.norwayyachtbrockers.repository.projections.YachtDetailProjection;
 import com.norwayyachtbrockers.service.YachtDetailService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -116,11 +117,15 @@ class YachtDetailControllerTest {
     @DisplayName("getAllYachts - Successfully retrieves all yacht details")
     void testGetAllYachts_Success() throws Exception {
         // Arrange
-        YachtDetail anotherYacht = new YachtDetail();
+        YachtDetailProjection anotherYacht = new YachtDetailProjection();
         anotherYacht.setId(2L);
         anotherYacht.setDescription("Another Yacht");
 
-        List<YachtDetail> yachts = Arrays.asList(yachtDetail, anotherYacht);
+        YachtDetailProjection yachtDetail = new YachtDetailProjection();
+        yachtDetail.setId(YACHT_ID);
+        yachtDetail.setDescription(YACHT_DESCRIPTION);
+
+        List<YachtDetailProjection> yachts = Arrays.asList(yachtDetail, anotherYacht);
         when(yachtDetailService.findAll()).thenReturn(yachts);
 
         // Act & Assert

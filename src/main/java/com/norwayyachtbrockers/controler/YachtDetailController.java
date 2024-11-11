@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
 import com.norwayyachtbrockers.model.YachtDetail;
+import com.norwayyachtbrockers.repository.projections.YachtDetailProjection;
 import com.norwayyachtbrockers.service.YachtDetailService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,8 @@ public class YachtDetailController {
     }
 
     @GetMapping
-    public ResponseEntity<List<YachtDetail>> getAll() {
-        List<YachtDetail> yachtDetails = yachtDetailService.findAll();
+    public ResponseEntity<List<YachtDetailProjection>> getAll() {
+        List<YachtDetailProjection> yachtDetails = yachtDetailService.findAll();
 
         if (yachtDetails.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

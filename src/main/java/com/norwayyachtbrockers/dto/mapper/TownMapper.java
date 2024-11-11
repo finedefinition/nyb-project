@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.dto.mapper;
 import com.norwayyachtbrockers.dto.request.TownRequestDto;
 import com.norwayyachtbrockers.dto.response.TownResponseDto;
 import com.norwayyachtbrockers.model.Town;
+import com.norwayyachtbrockers.repository.projections.TownProjection;
 import com.norwayyachtbrockers.service.CountryService;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,14 @@ public class TownMapper {
         dto.setTownId(town.getId());
         dto.setTownName(town.getName());
         dto.setCountryName(town.getCountry().getName());
+        return dto;
+    }
+
+    public TownResponseDto convertToDto(TownProjection town) {
+        TownResponseDto dto = new TownResponseDto();
+        dto.setTownId(town.getId());
+        dto.setTownName(town.getName());
+        dto.setCountryName(town.getCountry());
         return dto;
     }
 }
