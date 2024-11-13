@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.model.YachtImage;
 import com.norwayyachtbrockers.repository.YachtImageRepository;
 import com.norwayyachtbrockers.repository.YachtRepository;
+import com.norwayyachtbrockers.repository.projections.YachtImageProjection;
 import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import com.norwayyachtbrockers.util.S3ImageService;
@@ -83,7 +84,7 @@ public class YachtImageServiceImpl implements YachtImageService {
 
     @Override
     public List<YachtImageResponseDto> findAll() {
-        List<YachtImage> yachtImages = yachtImageRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        List<YachtImageProjection> yachtImages = yachtImageRepository.findAllProjections();
         return yachtImages.stream()
                 .map(YachtImageMapper::convertToResponseDto)
                 .collect(Collectors.toList());

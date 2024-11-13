@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.norwayyachtbrockers.dto.request.OwnerInfoRequestDto;
 import com.norwayyachtbrockers.model.OwnerInfo;
+import com.norwayyachtbrockers.repository.projections.OwnerInfoProjection;
 import com.norwayyachtbrockers.service.OwnerInfoService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -125,14 +126,21 @@ class OwnerInfoControllerTest {
     @DisplayName("getAllOwnerInfos - Successfully retrieves all owner infos")
     void testGetAllOwnerInfos_Success() throws Exception {
         // Arrange
-        OwnerInfo anotherOwnerInfo = new OwnerInfo();
+        OwnerInfoProjection anotherOwnerInfo = new OwnerInfoProjection();
         anotherOwnerInfo.setId(2L);
         anotherOwnerInfo.setFirstName("AnotherOwner");
         anotherOwnerInfo.setLastName(LAST_NAME);
         anotherOwnerInfo.setTelephone(PHONE_NUMBER);
         anotherOwnerInfo.setEmail(EMAIL);
 
-        List<OwnerInfo> ownerInfos = Arrays.asList(ownerInfo, anotherOwnerInfo);
+        OwnerInfoProjection ownerInfo = new OwnerInfoProjection();
+        ownerInfo.setId(OWNER_ID);
+        ownerInfo.setFirstName(FIRST_NAME);
+        ownerInfo.setLastName(LAST_NAME);
+        ownerInfo.setTelephone(PHONE_NUMBER);
+        ownerInfo.setEmail(EMAIL);
+
+        List<OwnerInfoProjection> ownerInfos = Arrays.asList(ownerInfo, anotherOwnerInfo);
         when(ownerInfoService.findAll()).thenReturn(ownerInfos);
 
         // Act & Assert

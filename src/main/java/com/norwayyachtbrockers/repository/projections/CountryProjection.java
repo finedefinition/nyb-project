@@ -15,6 +15,9 @@ public class CountryProjection {
         this.updatedAt = updatedAt;
     }
 
+    public CountryProjection() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.service.impl;
 import com.norwayyachtbrockers.dto.request.FuelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.repository.FuelRepository;
+import com.norwayyachtbrockers.repository.projections.FuelProjection;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -119,11 +120,15 @@ class FuelServiceImplTest {
     @DisplayName("findAll - Successfully retrieves all Fuels sorted by ID")
     void testFindAll_Success() {
         // Arrange
-        List<Fuel> fuels = Arrays.asList(fuel);
-        when(fuelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(fuels);
+        FuelProjection fuel = new FuelProjection();
+        fuel.setId(FUEL_ID);
+        fuel.setName(FUEL_NAME);
+
+        List<FuelProjection> fuels = List.of(fuel);
+        when(fuelRepository.findAllProjections()).thenReturn(fuels);
 
         // Act
-        List<Fuel> foundFuels = fuelService.findAll();
+        List<FuelProjection> foundFuels = fuelService.findAll();
 
         // Assert
         assertNotNull(foundFuels, "Fuel list should not be null");

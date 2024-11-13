@@ -4,6 +4,7 @@ import com.norwayyachtbrockers.dto.mapper.YachtDetailMapper;
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
 import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.repository.YachtDetailRepository;
+import com.norwayyachtbrockers.repository.projections.YachtDetailProjection;
 import com.norwayyachtbrockers.service.YachtDetailService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import java.util.List;
@@ -32,8 +33,8 @@ public class YachtDetailServiceImpl implements YachtDetailService {
     }
 
     @Override
-    public List<YachtDetail> findAll() {
-        return yachtDetailRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    public List<YachtDetailProjection> findAll() {
+        return yachtDetailRepository.findAllProjections();
     }
 
     @Override

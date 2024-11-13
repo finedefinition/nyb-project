@@ -5,6 +5,7 @@ import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.CountryRepository;
+import com.norwayyachtbrockers.repository.projections.CountryProjection;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -116,15 +117,19 @@ class CountryServiceImplTest {
     @DisplayName("findAll - Successfully retrieves all countries sorted by ID")
     void testFindAll_Success() {
         // Arrange
-        Country anotherCountry = new Country();
+        CountryProjection anotherCountry = new CountryProjection();
         anotherCountry.setId(2L);
         anotherCountry.setName("AnotherCountry");
 
-        List<Country> countries = Arrays.asList(country, anotherCountry);
-        when(countryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(countries);
+        CountryProjection country = new CountryProjection();
+        anotherCountry.setId(COUNTRY_ID);
+        anotherCountry.setName(COUNTRY_NAME);
+
+        List<CountryProjection> countries = Arrays.asList(country, anotherCountry);
+        when(countryRepository.findAllProjections()).thenReturn(countries);
 
         // Act
-        List<Country> foundCountries = countryService.findAll();
+        List<CountryProjection> foundCountries = countryService.findAll();
 
         // Assert
         assertNotNull(foundCountries, "Found countries list should not be null");

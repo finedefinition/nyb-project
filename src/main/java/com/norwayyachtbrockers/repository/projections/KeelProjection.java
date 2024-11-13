@@ -15,6 +15,9 @@ public class KeelProjection {
         this.updatedAt = updatedAt;
     }
 
+    public KeelProjection() {
+    }
+
     public Long getId() {
         return id;
     }

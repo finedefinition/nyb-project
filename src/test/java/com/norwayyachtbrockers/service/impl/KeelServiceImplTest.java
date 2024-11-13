@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.service.impl;
 import com.norwayyachtbrockers.dto.request.KeelRequestDto;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.repository.KeelRepository;
+import com.norwayyachtbrockers.repository.projections.KeelProjection;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -117,11 +118,15 @@ class KeelServiceImplTest {
     @DisplayName("findAll - Successfully retrieves all Keels sorted by ID")
     void testFindAll_Success() {
         // Arrange
-        List<Keel> keels = Arrays.asList(keel);
-        when(keelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(keels);
+        KeelProjection keel = new KeelProjection();
+        keel.setId(KEEL_ID);
+        keel.setName(KEEL_NAME);
+
+        List<KeelProjection> keels = List.of(keel);
+        when(keelRepository.findAllProjections()).thenReturn(keels);
 
         // Act
-        List<Keel> foundKeels = keelService.findAll();
+        List<KeelProjection> foundKeels = keelService.findAll();
 
         // Assert
         assertNotNull(foundKeels, "Found keels list should not be null");

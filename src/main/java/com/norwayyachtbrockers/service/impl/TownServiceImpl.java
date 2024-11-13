@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.model.Country;
 import com.norwayyachtbrockers.model.Town;
 import com.norwayyachtbrockers.repository.CountryRepository;
 import com.norwayyachtbrockers.repository.TownRepository;
+import com.norwayyachtbrockers.repository.projections.TownProjection;
 import com.norwayyachtbrockers.service.TownService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import java.util.Comparator;
@@ -59,8 +60,7 @@ public class TownServiceImpl implements TownService {
 
     @Override
     public List<TownResponseDto> findAll() {
-        return townRepository.findAll().stream()
-                .sorted(Comparator.comparing(Town::getId))
+        return townRepository.findAllProjections().stream()
                 .map(townMapper::convertToDto)
                 .collect(Collectors.toList());
     }

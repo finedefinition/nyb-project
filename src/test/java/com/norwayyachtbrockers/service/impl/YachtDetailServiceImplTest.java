@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.service.impl;
 import com.norwayyachtbrockers.dto.request.YachtDetailRequestDto;
 import com.norwayyachtbrockers.model.YachtDetail;
 import com.norwayyachtbrockers.repository.YachtDetailRepository;
+import com.norwayyachtbrockers.repository.projections.YachtDetailProjection;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -120,7 +121,7 @@ class YachtDetailServiceImplTest {
         when(yachtDetailRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(yachtDetails);
 
         // Act
-        List<YachtDetail> foundYachtDetails = yachtDetailService.findAll();
+        List<YachtDetailProjection> foundYachtDetails = yachtDetailService.findAll();
 
         // Assert
         assertNotNull(foundYachtDetails,

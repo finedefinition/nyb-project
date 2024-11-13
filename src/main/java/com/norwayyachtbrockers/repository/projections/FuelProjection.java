@@ -15,6 +15,9 @@ public class FuelProjection {
         this.updatedAt = updatedAt;
     }
 
+    public FuelProjection() {
+    }
+
     public Long getId() {
         return id;
     }

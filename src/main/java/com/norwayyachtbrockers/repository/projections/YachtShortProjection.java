@@ -36,6 +36,9 @@ public class YachtShortProjection {
         this.favouritesCount = favouritesCount;
     }
 
+    public YachtShortProjection() {
+    }
+
     public String getCountry() {
         return country;
     }
