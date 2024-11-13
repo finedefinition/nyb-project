@@ -8,6 +8,7 @@ import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.repository.YachtModelRepository;
+import com.norwayyachtbrockers.repository.projections.YachtModelProjection;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,15 +134,19 @@ class YachtModelServiceImplTest {
     @DisplayName("findAll - Successfully retrieves all yacht models sorted by ID")
     void testFindAll_Success() {
         // Arrange
-        YachtModel anotherYachtModel = new YachtModel();
+        YachtModelProjection anotherYachtModel = new YachtModelProjection();
         anotherYachtModel.setId(2L);
         anotherYachtModel.setModel("AnotherYachtModel");
 
-        List<YachtModel> yachtModels = Arrays.asList(yachtModel, anotherYachtModel);
-        when(yachtModelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(yachtModels);
+        YachtModelProjection yachtModel = new YachtModelProjection();
+        yachtModel.setId(YACHT_MODEL_ID);
+        yachtModel.setModel(YACHT_MODEL);
+
+        List<YachtModelProjection> yachtModels = Arrays.asList(yachtModel, anotherYachtModel);
+        when(yachtModelRepository.findAllProjections()).thenReturn(yachtModels);
 
         // Act
-        List<YachtModel> foundYachtModels = yachtModelService.findAll();
+        List<YachtModelProjection> foundYachtModels = yachtModelService.findAll();
 
         // Assert
         assertNotNull(foundYachtModels,

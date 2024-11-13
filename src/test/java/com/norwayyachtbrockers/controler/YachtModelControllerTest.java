@@ -5,6 +5,7 @@ import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.model.Fuel;
 import com.norwayyachtbrockers.model.Keel;
 import com.norwayyachtbrockers.model.YachtModel;
+import com.norwayyachtbrockers.repository.projections.YachtModelProjection;
 import com.norwayyachtbrockers.service.YachtModelService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -130,12 +131,17 @@ class YachtModelControllerTest {
     @DisplayName("getAllYachtModels - Successfully retrieves all yacht models")
     void testGetAllYachtModels_Success() throws Exception {
         // Arrange
-        YachtModel anotherYachtModel = new YachtModel();
+        YachtModelProjection anotherYachtModel = new YachtModelProjection();
         anotherYachtModel.setId(2L);
         anotherYachtModel.setModel("Another Model");
         anotherYachtModel.setMake("Another Make");
 
-        List<YachtModel> yachtModels = Arrays.asList(yachtModel, anotherYachtModel);
+        YachtModelProjection yachtModel = new YachtModelProjection();
+        yachtModel.setId(YACHT_MODEL_ID);
+        yachtModel.setModel(YACHT_MODEL_MODEL);
+        yachtModel.setMake(YACHT_MODEL_MAKE);
+
+        List<YachtModelProjection> yachtModels = Arrays.asList(yachtModel, anotherYachtModel);
         when(yachtModelService.findAll()).thenReturn(yachtModels);
 
         // Act & Assert
