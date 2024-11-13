@@ -8,6 +8,7 @@ import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.FuelRepository;
 import com.norwayyachtbrockers.repository.KeelRepository;
 import com.norwayyachtbrockers.repository.YachtModelRepository;
+import com.norwayyachtbrockers.repository.projections.YachtModelProjection;
 import com.norwayyachtbrockers.service.YachtModelService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import org.springframework.data.domain.Sort;
@@ -60,8 +61,8 @@ public class YachtModelServiceImpl implements YachtModelService {
     }
 
     @Override
-    public List<YachtModel> findAll() {
-        return yachtModelRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    public List<YachtModelProjection> findAll() {
+        return yachtModelRepository.findAllProjections();
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.norwayyachtbrockers.service;
 
 import com.norwayyachtbrockers.dto.request.YachtModelRequestDto;
 import com.norwayyachtbrockers.model.YachtModel;
+import com.norwayyachtbrockers.repository.projections.YachtModelProjection;
+
 import java.util.List;
 
 public interface YachtModelService {
@@ -11,7 +13,7 @@ public interface YachtModelService {
 
     YachtModel findId(Long id);
 
-    List<YachtModel> findAll();
+    List<YachtModelProjection> findAll();
 
     YachtModel updateYachtModel(YachtModelRequestDto dto, Long id);
 
