@@ -88,6 +88,8 @@ public class YachtController {
         paginationAndSortingParameters.setOrderBy(orderBy);
 
         PaginatedYachtResponse response = yachtService.getAllYachtsWithPaginationAndSearch(paginationAndSortingParameters, searchParameters);
+
+
         return ResponseEntity.ok(response);
     }
 

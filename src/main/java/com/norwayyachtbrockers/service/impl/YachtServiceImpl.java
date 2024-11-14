@@ -300,17 +300,17 @@ public class YachtServiceImpl implements YachtService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
-            PaginationAndSortingParametersDto paginationAndSortingParametersDto,
-            YachtSearchParametersDto searchParametersDto) {
+@Transactional(readOnly = true)
+public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
+        PaginationAndSortingParametersDto paginationAndSortingParametersDto,
+        YachtSearchParametersDto searchParametersDto) {
 
         // Преобразуем параметры пагинации и сортировки
-        int page = paginationAndSortingParametersDto.getPage() - 1; // Индексация страниц начинается с 0
-        int size = ApplicationConstants.PAGE_GALLERY_SIZE; // Используем константу
+    int page = paginationAndSortingParametersDto.getPage() - 1;
+    int size = ApplicationConstants.PAGE_GALLERY_SIZE;
 
-        String sortBy = paginationAndSortingParametersDto.getSortBy();
-        String orderBy = paginationAndSortingParametersDto.getOrderBy();
+    String sortBy = paginationAndSortingParametersDto.getSortBy();
+    String orderBy = paginationAndSortingParametersDto.getOrderBy();
 
     // Преобразуем "descend" в "desc" и "ascend" в "asc"
     if ("descend".equalsIgnoreCase(orderBy)) {
@@ -319,33 +319,40 @@ public class YachtServiceImpl implements YachtService {
         orderBy = "asc";
     }
 
-        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
+    Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
 
         // Map DTO sort fields to entity fields
-        sortBy = FieldMapper.getEntityField(sortBy); // Маппируем поля DTO на поля сущности
+    sortBy = FieldMapper.getEntityField(sortBy);
 
-        Pageable pageable = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, Sort.by(direction, sortBy));
+    Pageable pageable = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, Sort.by(direction, sortBy));
 
         // Поскольку мы не можем использовать Specification с кастомным запросом, придётся от него отказаться
         // или реализовать кастомный репозиторий (см. предыдущие шаги)
 
         // Получаем данные из репозитория
-        Page<YachtShortProjection> yachtPage = yachtRepository.findAllProjected(pageable);
+    Page<YachtShortProjection> yachtPage = yachtRepository.findAllProjected(pageable);
 
         // Используем ваш маппер для преобразования проекций в DTO
-        List<YachtShortResponseDto> yachts = yachtPage.stream()
-                .map(yachtShortMapper::convertProjectionToDto)
-                .collect(Collectors.toList());
+    List<YachtShortResponseDto> yachts = yachtPage.stream()
+            .map(yachtShortMapper::convertProjectionToDto)
+            .collect(Collectors.toList());
 
-        // Формируем ответ с пагинацией
-        PaginatedYachtResponse response = new PaginatedYachtResponse();
-        response.setCurrentPage(page + 1);
-        response.setTotalPages(yachtPage.getTotalPages());
-        response.setTotalItems(yachtPage.getTotalElements());
-        response.setYachts(yachts);
+    // Создаем объект ответа и заполняем данные
+    PaginatedYachtResponse response = new PaginatedYachtResponse();
 
-        return response;
-    }
+    // Создаем и заполняем объект Pagination
+    PaginatedYachtResponse.Pagination pagination = new PaginatedYachtResponse.Pagination();
+    pagination.setCurrentPage(page + 1);
+    pagination.setTotalPages(yachtPage.getTotalPages());
+    pagination.setTotalItems(yachtPage.getTotalElements());
+
+    // Устанавливаем pagination и список яхт в ответ
+    response.setPagination(pagination);
+    response.setYachts(yachts);
+
+    return response;
+}
+
 
     @Override
     public YachtCrmFrontendResponseDto getCombinedYachtData() {
