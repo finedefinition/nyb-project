@@ -18,7 +18,7 @@ public class UserRoleValidator implements ConstraintValidator<ValidUserRole, Str
     @Override
     public boolean isValid(String role, ConstraintValidatorContext context) {
         if (role == null || role.isEmpty()) {
-            return true; // Consider null or empty as valid for optional fields.
+            return true;
         }
         try {
             UserRoles.fromString(role);
