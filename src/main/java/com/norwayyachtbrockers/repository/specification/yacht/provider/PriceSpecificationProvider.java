@@ -2,14 +2,13 @@ package com.norwayyachtbrockers.repository.specification.yacht.provider;
 
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationProvider;
-import com.norwayyachtbrockers.util.YachtSpecificationUtil;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class PriceSpecificationProvider implements SpecificationProvider<Yacht> {
