@@ -2,7 +2,6 @@ package com.norwayyachtbrockers.repository;
 
 import com.norwayyachtbrockers.model.YachtModel;
 import com.norwayyachtbrockers.repository.projections.YachtModelProjection;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,17 +30,21 @@ public interface YachtModelRepository extends JpaRepository<YachtModel, Long> {
             ym.lengthOverall,
             ym.beamWidth,
             ym.draftDepth,
-            new com.norwayyachtbrockers.repository.projections.KeelProjection(
-              kt.id, kt.name, kt.createdAt, kt.updatedAt),
-            new com.norwayyachtbrockers.repository.projections.FuelProjection(
-              ft.id, ft.name, ft.createdAt, ft.updatedAt),
+            kt.id,
+            kt.name,
+            kt.createdAt,
+            kt.updatedAt,
+            ft.id,
+            ft.name,
+            ft.createdAt,
+            ft.updatedAt,
             ym.createdAt,
             ym.updatedAt
-            )
-            FROM YachtModel ym
-            LEFT JOIN ym.keelType kt
-            LEFT JOIN ym.fuelType ft
-            ORDER BY ym.id ASC
-            """)
+        )
+        FROM YachtModel ym
+        LEFT JOIN ym.keelType kt
+        LEFT JOIN ym.fuelType ft
+        ORDER BY ym.id ASC
+        """)
     List<YachtModelProjection> findAllProjections();
 }

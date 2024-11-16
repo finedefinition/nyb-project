@@ -1,8 +1,13 @@
 package com.norwayyachtbrockers.repository.projections;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class YachtModelProjection {
     private Long id;
     private String make;
@@ -11,15 +16,26 @@ public class YachtModelProjection {
     private BigDecimal lengthOverall;
     private BigDecimal beamWidth;
     private BigDecimal draftDepth;
-    private KeelProjection keelType;
-    private FuelProjection fuelType;
+    private Long keelTypeId;
+    private String keelTypeName;
+    private LocalDateTime keelTypeCreatedAt;
+    private LocalDateTime keelTypeUpdatedAt;
+
+    // Поля из Fuel
+    private Long fuelTypeId;
+    private String fuelTypeName;
+    private LocalDateTime fuelTypeCreatedAt;
+    private LocalDateTime fuelTypeUpdatedAt;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // Конструктор с параметрами
     public YachtModelProjection(Long id, String make, String model,
                                 Integer year, BigDecimal lengthOverall,
                                 BigDecimal beamWidth, BigDecimal draftDepth,
-                                KeelProjection keelType, FuelProjection fuelType,
+                                Long keelTypeId, String keelTypeName, LocalDateTime keelTypeCreatedAt, LocalDateTime keelTypeUpdatedAt,
+                                Long fuelTypeId, String fuelTypeName, LocalDateTime fuelTypeCreatedAt, LocalDateTime fuelTypeUpdatedAt,
                                 LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.make = make;
@@ -28,100 +44,21 @@ public class YachtModelProjection {
         this.lengthOverall = lengthOverall;
         this.beamWidth = beamWidth;
         this.draftDepth = draftDepth;
-        this.keelType = keelType;
-        this.fuelType = fuelType;
+
+        this.keelTypeId = keelTypeId;
+        this.keelTypeName = keelTypeName;
+        this.keelTypeCreatedAt = keelTypeCreatedAt;
+        this.keelTypeUpdatedAt = keelTypeUpdatedAt;
+
+        this.fuelTypeId = fuelTypeId;
+        this.fuelTypeName = fuelTypeName;
+        this.fuelTypeCreatedAt = fuelTypeCreatedAt;
+        this.fuelTypeUpdatedAt = fuelTypeUpdatedAt;
+
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public YachtModelProjection() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMake() {
-        return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public BigDecimal getLengthOverall() {
-        return lengthOverall;
-    }
-
-    public void setLengthOverall(BigDecimal lengthOverall) {
-        this.lengthOverall = lengthOverall;
-    }
-
-    public BigDecimal getBeamWidth() {
-        return beamWidth;
-    }
-
-    public void setBeamWidth(BigDecimal beamWidth) {
-        this.beamWidth = beamWidth;
-    }
-
-    public BigDecimal getDraftDepth() {
-        return draftDepth;
-    }
-
-    public void setDraftDepth(BigDecimal draftDepth) {
-        this.draftDepth = draftDepth;
-    }
-
-    public KeelProjection getKeelType() {
-        return keelType;
-    }
-
-    public void setKeelType(KeelProjection keelType) {
-        this.keelType = keelType;
-    }
-
-    public FuelProjection getFuelType() {
-        return fuelType;
-    }
-
-    public void setFuelType(FuelProjection fuelType) {
-        this.fuelType = fuelType;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

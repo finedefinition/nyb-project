@@ -42,9 +42,13 @@ public interface YachtService {
                                                                        paginationAndSortingParametersDto,
                                                                YachtSearchParametersDto searchParametersDto);
 
+    //    PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
+//    PaginationAndSortingParametersDto paginationAndSortingParametersDto,
+//                                                            YachtSearchParametersDto searchParametersDto);
+
     PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
-    PaginationAndSortingParametersDto paginationAndSortingParametersDto,
-                                                            YachtSearchParametersDto searchParametersDto);
+            PaginationAndSortingParametersDto paginationAndSortingParametersDto,
+            YachtSearchParametersDto searchParametersDto);
 
     YachtCrmFrontendResponseDto getCombinedYachtData();
 }

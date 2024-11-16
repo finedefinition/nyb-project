@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -70,25 +71,11 @@ public class YachtController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PaginatedYachtResponse> getAllYachts(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-            @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy,
-            YachtSearchParametersDto searchParameters) {
+            @ModelAttribute PaginationAndSortingParametersDto paginationAndSortingParametersDto,
+            @ModelAttribute YachtSearchParametersDto searchParametersDto) {
 
-        // Translate "descend" to "desc" and "ascend" to "asc"
-        if ("descend".equalsIgnoreCase(orderBy)) {
-            orderBy = "desc";
-        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-            orderBy = "asc";
-        }
-
-        PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
-        paginationAndSortingParameters.setPage(page);
-        paginationAndSortingParameters.setSortBy(sortBy);
-        paginationAndSortingParameters.setOrderBy(orderBy);
-
-        PaginatedYachtResponse response = yachtService.getAllYachtsWithPaginationAndSearch(paginationAndSortingParameters, searchParameters);
-
+        PaginatedYachtResponse response = yachtService.getAllYachtsWithPaginationAndSearch(
+                paginationAndSortingParametersDto, searchParametersDto);
 
         return ResponseEntity.ok(response);
     }

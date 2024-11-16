@@ -13,6 +13,6 @@ public class PaginatedYachtResponse {
     public static class Pagination {
         private int currentPage;
         private int totalPages;
-        private long totalItems;
+//        private long totalItems;
     }
 }

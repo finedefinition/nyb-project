@@ -4,6 +4,10 @@ import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationProvider;
 import com.norwayyachtbrockers.util.YachtSpecificationUtil;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +20,19 @@ public class PriceSpecificationProvider implements SpecificationProvider<Yacht> 
 
     @Override
     public Specification<Yacht> getSpecification(Object param) {
-        return YachtSpecificationUtil.getSpecificationInRangeOrElseThrow((BigDecimal[]) param, getKey());
+        BigDecimal[] priceRange = (BigDecimal[]) param;
+        // Теперь используйте priceRange в реализации
+        return (root, query, criteriaBuilder) -> {
+            BigDecimal minPrice = priceRange[0];
+            BigDecimal maxPrice = priceRange[1];
+            List<Predicate> predicates = new ArrayList<>();
+            if (minPrice != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+            }
+            if (maxPrice != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }
