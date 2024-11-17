@@ -192,23 +192,23 @@ public class YachtServiceImpl implements YachtService {
     }
 
 
-    @Override
-    public List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto) {
-        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-        return yachtRepository.findAll(yachtSpecification).stream()
-                .map(yachtMapper::convertToDto)
-                .sorted(Comparator.comparing(YachtResponseDto::getId))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<YachtCrmResponseDto> searchForCrm(YachtSearchParametersDto searchParametersDto) {
-        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-        return yachtRepository.findAll(yachtSpecification).stream()
-                .map(yachtMapper::convertToCrmDto)
-                .sorted(Comparator.comparing(YachtCrmResponseDto::getId))
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto) {
+//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+//        return yachtRepository.findAll(yachtSpecification).stream()
+//                .map(yachtMapper::convertToDto)
+//                .sorted(Comparator.comparing(YachtResponseDto::getId))
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public List<YachtCrmResponseDto> searchForCrm(YachtSearchParametersDto searchParametersDto) {
+//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+//        return yachtRepository.findAll(yachtSpecification).stream()
+//                .map(yachtMapper::convertToCrmDto)
+//                .sorted(Comparator.comparing(YachtCrmResponseDto::getId))
+//                .collect(Collectors.toList());
+//    }
 
     @Override
     @Transactional
@@ -256,50 +256,50 @@ public class YachtServiceImpl implements YachtService {
         yachtRepository.delete(yacht);
     }
 
-    @Transactional
-    @Override
-    public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
-        // Get the page, sortBy, and orderBy from the DTO
-        int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
-        String sortBy = paginationAndSortingParametersDto.getSortBy();
-        String orderBy = paginationAndSortingParametersDto.getOrderBy();
-
-        // Translate "descend" to "desc" and "ascend" to "asc"
-        if ("descend".equalsIgnoreCase(orderBy)) {
-            orderBy = "desc";
-        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-            orderBy = "asc";
-        }
-
-        // Default to ascending sort if the direction is invalid or null
-        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
-
-        // Map DTO sort fields to entity fields
-        sortBy = FieldMapper.getEntityField(sortBy);
-
-        Sort sort = Sort.by(direction, sortBy);
-
-        // Create a PageRequest with the sort parameter
-        PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_CRM_SIZE, sort);
-
-        // Build the Specification based on search parameters
-        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-
-        // Query the repository with pagination, sorting, and search criteria
-        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
-
-        List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
-                .map(yachtMapper::convertToCrmDto)
-                .collect(Collectors.toList());
-
-        PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
-        response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
-        response.setTotalPages(yachtPage.getTotalPages());
-        response.setTotalItems(yachtPage.getTotalElements());
-        response.setYachts(yachtDtos);
-
-        return response;
-    }
+//    @Transactional
+//    @Override
+//    public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
+//        // Get the page, sortBy, and orderBy from the DTO
+//        int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
+//        String sortBy = paginationAndSortingParametersDto.getSortBy();
+//        String orderBy = paginationAndSortingParametersDto.getOrderBy();
+//
+//        // Translate "descend" to "desc" and "ascend" to "asc"
+//        if ("descend".equalsIgnoreCase(orderBy)) {
+//            orderBy = "desc";
+//        } else if ("ascend".equalsIgnoreCase(orderBy)) {
+//            orderBy = "asc";
+//        }
+//
+//        // Default to ascending sort if the direction is invalid or null
+//        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
+//
+//        // Map DTO sort fields to entity fields
+//        sortBy = FieldMapper.getEntityField(sortBy);
+//
+//        Sort sort = Sort.by(direction, sortBy);
+//
+//        // Create a PageRequest with the sort parameter
+//        PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_CRM_SIZE, sort);
+//
+//        // Build the Specification based on search parameters
+//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+//
+//        // Query the repository with pagination, sorting, and search criteria
+//        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
+//
+//        List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
+//                .map(yachtMapper::convertToCrmDto)
+//                .collect(Collectors.toList());
+//
+//        PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
+//        response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
+//        response.setTotalPages(yachtPage.getTotalPages());
+//        response.setTotalItems(yachtPage.getTotalElements());
+//        response.setYachts(yachtDtos);
+//
+//        return response;
+//    }
 
 //    @Override
 //    @Transactional(readOnly = true)
@@ -364,33 +364,34 @@ public class YachtServiceImpl implements YachtService {
         int page = paginationAndSortingParametersDto.getPage() - 1;
         int size = ApplicationConstants.PAGE_GALLERY_SIZE;
 
+        // Получаем параметры сортировки
         String sortBy = paginationAndSortingParametersDto.getSortBy();
         String orderBy = paginationAndSortingParametersDto.getOrderBy();
 
+        // Преобразуем направление сортировки (asc/desc)
         Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
-        sortBy = FieldMapper.getEntityField(sortBy);
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        // Создаем спецификацию с учетом сортировки
+        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto, sortBy, direction);
 
-        // Создаем спецификацию на основе параметров поиска
-        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
+        // Настраиваем пагинацию без сортировки, так как сортировка обрабатывается в спецификации
+        Pageable pageable = PageRequest.of(page, size);
 
+        // Получаем страницу с яхтами
         Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageable);
 
-        // Используем ваш маппер для преобразования сущностей в DTO
+        // Преобразуем сущности в DTO
         List<YachtShortResponseDto> yachts = yachtPage.stream()
                 .map(yachtShortMapper::convertToDto)
                 .collect(Collectors.toList());
 
-        // Создаем объект ответа и заполняем данные
+        // Формируем ответ с пагинацией
         PaginatedYachtResponse response = new PaginatedYachtResponse();
 
         // Создаем и заполняем объект Pagination
         PaginatedYachtResponse.Pagination pagination = new PaginatedYachtResponse.Pagination();
         pagination.setCurrentPage(page + 1);
         pagination.setTotalPages(yachtPage.getTotalPages());
-        // Если вам не нужен totalItems, вы можете не устанавливать его или установить в null
-        // pagination.setTotalItems(yachtPage.getTotalElements());
 
         // Устанавливаем pagination и список яхт в ответ
         response.setPagination(pagination);
@@ -398,6 +399,7 @@ public class YachtServiceImpl implements YachtService {
 
         return response;
     }
+
 
     @Override
     public YachtCrmFrontendResponseDto getCombinedYachtData() {

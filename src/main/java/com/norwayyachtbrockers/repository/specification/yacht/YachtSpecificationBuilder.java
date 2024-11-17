@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.repository.specification.yacht;
 
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationBuilder;
 import com.norwayyachtbrockers.repository.specification.SpecificationProviderManager;
@@ -9,9 +10,20 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -21,24 +33,12 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
 
     private final SpecificationProviderManager<Yacht> specificationProviderManager;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
-    public Specification<Yacht> build(YachtSearchParametersDto searchParametersDto) {
+    public Specification<Yacht> build(YachtSearchParametersDto searchParametersDto, String sortBy, Sort.Direction direction) {
         return (root, query, criteriaBuilder) -> {
-            if (query.getResultType() != Long.class && !Long.class.equals(query.getResultType())) {
-                // Устанавливаем уникальность результатов, чтобы избежать дубликатов из-за JOIN
-                query.distinct(true);
-
-                // Выполняем fetch необходимых ассоциаций для предотвращения LazyInitializationException
-                root.fetch("yachtModel", JoinType.LEFT);
-                root.fetch("ownerInfo", JoinType.LEFT);
-                root.fetch("country", JoinType.LEFT);
-                root.fetch("town", JoinType.LEFT);
-                root.fetch("yachtDetail", JoinType.LEFT);
-                root.fetch("favouritedByUsers", JoinType.LEFT);
-                root.fetch("yachtImages", JoinType.LEFT);
-
-            }
-
             // Создаем список предикатов для условий поиска
             List<Predicate> predicates = new ArrayList<>();
 
@@ -205,8 +205,55 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                 predicates.add(ownerLastNameSpec.toPredicate(root, query, criteriaBuilder));
             }
 
+            // Обработка сортировки
+            applySorting(query, criteriaBuilder, root, sortBy, direction);
+
             // Объединяем все предикаты с помощью AND
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
+    private void applySorting(CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Root<Yacht> root, String sortBy, Sort.Direction direction) {
+        if (sortBy == null || sortBy.isEmpty()) {
+            return;
+        }
+
+        List<Order> orders = new ArrayList<>();
+
+        switch (sortBy) {
+            case "yacht_price":
+                orders.add(direction.isAscending() ?
+                        criteriaBuilder.asc(root.get("price")) :
+                        criteriaBuilder.desc(root.get("price")));
+                break;
+            case "yacht_created_at":
+                orders.add(direction.isAscending() ?
+                        criteriaBuilder.asc(root.get("createdAt")) :
+                        criteriaBuilder.desc(root.get("createdAt")));
+                break;
+            case "yacht_favourites_count":
+                // Обработка сортировки по количеству избранных
+                Join<Yacht, User> favouritesJoin = root.join("favouritedByUsers", JoinType.LEFT);
+
+                // Добавляем подсчет избранных в SELECT
+                Expression<Long> favouritesCount = criteriaBuilder.count(favouritesJoin);
+
+                // Устанавливаем GROUP BY
+                query.groupBy(root.get("id"));
+
+                // Устанавливаем ORDER BY
+                orders.add(direction.isAscending() ?
+                        criteriaBuilder.asc(favouritesCount) :
+                        criteriaBuilder.desc(favouritesCount));
+
+                // Добавляем подсчет в SELECT, чтобы избежать ошибок
+                query.multiselect(root, favouritesCount);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+        }
+
+        query.orderBy(orders);
+    }
+
 }

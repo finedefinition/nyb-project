@@ -90,15 +90,15 @@ public class YachtController {
         return ResponseEntity.ok(yachts);
     }
 
-    @GetMapping("/search")
-    public List<YachtResponseDto> searchYachts(YachtSearchParametersDto searchParameters) {
-        return yachtService.search(searchParameters);
-    }
-
-    @GetMapping("/paginated/search-crm")
-    public List<YachtCrmResponseDto> searchYachtsCrm(YachtSearchParametersDto searchParameters) {
-        return yachtService.searchForCrm(searchParameters);
-    }
+//    @GetMapping("/search")
+//    public List<YachtResponseDto> searchYachts(YachtSearchParametersDto searchParameters) {
+//        return yachtService.search(searchParameters);
+//    }
+//
+//    @GetMapping("/paginated/search-crm")
+//    public List<YachtCrmResponseDto> searchYachtsCrm(YachtSearchParametersDto searchParameters) {
+//        return yachtService.searchForCrm(searchParameters);
+//    }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
@@ -130,28 +130,28 @@ public class YachtController {
 //        return ResponseEntity.ok(response);
 //    }
 
-    @GetMapping(value = "/paginated", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-            @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy,
-            YachtSearchParametersDto searchParameters) {
-
-        // Translate "descend" to "desc" and "ascend" to "asc"
-        if ("descend".equalsIgnoreCase(orderBy)) {
-            orderBy = "desc";
-        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-            orderBy = "asc";
-        }
-
-        PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
-        paginationAndSortingParameters.setPage(page);
-        paginationAndSortingParameters.setSortBy(sortBy);
-        paginationAndSortingParameters.setOrderBy(orderBy);
-
-        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPaginationAndSearch(paginationAndSortingParameters, searchParameters);
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping(value = "/paginated", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
+//            @RequestParam(value = "page", defaultValue = "1") int page,
+//            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+//            @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy,
+//            YachtSearchParametersDto searchParameters) {
+//
+//        // Translate "descend" to "desc" and "ascend" to "asc"
+//        if ("descend".equalsIgnoreCase(orderBy)) {
+//            orderBy = "desc";
+//        } else if ("ascend".equalsIgnoreCase(orderBy)) {
+//            orderBy = "asc";
+//        }
+//
+//        PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
+//        paginationAndSortingParameters.setPage(page);
+//        paginationAndSortingParameters.setSortBy(sortBy);
+//        paginationAndSortingParameters.setOrderBy(orderBy);
+//
+//        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPaginationAndSearch(paginationAndSortingParameters, searchParameters);
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping("/combined")
     public YachtCrmFrontendResponseDto getCombinedYachtData() {
