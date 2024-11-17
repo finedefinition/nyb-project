@@ -227,19 +227,14 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                 // Обработка сортировки по количеству избранных
                 Join<Yacht, User> favouritesJoin = root.join("favouritedByUsers", JoinType.LEFT);
 
-                // Добавляем подсчет избранных в SELECT
+                // Добавляем подсчет избранных в ORDER BY
                 Expression<Long> favouritesCount = criteriaBuilder.count(favouritesJoin);
-
-                // Устанавливаем GROUP BY
-                query.groupBy(root.get("id"));
 
                 // Устанавливаем ORDER BY
                 orders.add(direction.isAscending() ?
                         criteriaBuilder.asc(favouritesCount) :
                         criteriaBuilder.desc(favouritesCount));
 
-                // Добавляем подсчет в SELECT, чтобы избежать ошибок
-                query.multiselect(root, favouritesCount);
                 break;
             case "id":  // Новый кейс для поля "id"
                 orders.add(direction.isAscending() ?
