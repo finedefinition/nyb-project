@@ -1,4 +1,4 @@
-name: Build & Deploy
+name: Build & Deploy Backend to Test Environment
 
 on:
   push:
@@ -115,7 +115,7 @@ jobs:
           echo "Instances found: $instances"
           echo "instances=$instances" >> $GITHUB_OUTPUT
 
-      - name: Deploy to instances
+      - name: Pull the latest Docker image
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
           IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
@@ -138,6 +138,17 @@ jobs:
               --output text)
             echo "Pull Command ID: $command_id"
             check_command_status "$command_id" "$instance"
+          done
+
+      - name: Stop running containers
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          source /tmp/check_command_status.sh
+          instances="${{ steps.get_instances.outputs.instances }}"
+          for instance in $instances
+          do
+            echo "Stopping containers on instance: $instance"
 
             # Stop running containers
             command_id=$(aws ssm send-command \
@@ -151,6 +162,17 @@ jobs:
               --output text)
             echo "Stop Command ID: $command_id"
             check_command_status "$command_id" "$instance"
+          done
+
+      - name: Start containers
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          source /tmp/check_command_status.sh
+          instances="${{ steps.get_instances.outputs.instances }}"
+          for instance in $instances
+          do
+            echo "Starting containers on instance: $instance"
 
             # Start containers
             command_id=$(aws ssm send-command \
@@ -164,6 +186,17 @@ jobs:
               --output text)
             echo "Start Command ID: $command_id"
             check_command_status "$command_id" "$instance"
+          done
+
+      - name: Remove unused Docker images
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+        run: |
+          source /tmp/check_command_status.sh
+          instances="${{ steps.get_instances.outputs.instances }}"
+          for instance in $instances
+          do
+            echo "Pruning unused Docker images on instance: $instance"
 
             # Remove unused Docker images
             command_id=$(aws ssm send-command \
@@ -177,5 +210,4 @@ jobs:
               --output text)
             echo "Prune Command ID: $command_id"
             check_command_status "$command_id" "$instance"
-
           done
