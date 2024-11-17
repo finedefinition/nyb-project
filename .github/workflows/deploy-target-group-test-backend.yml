@@ -136,6 +136,7 @@ jobs:
               --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
+            echo "Pull Command ID: $command_id"
             check_command_status "$command_id" "$instance"
 
             # Stop running containers
@@ -148,6 +149,7 @@ jobs:
               --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
+            echo "Stop Command ID: $command_id"
             check_command_status "$command_id" "$instance"
 
             # Start containers
@@ -160,6 +162,7 @@ jobs:
               --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
+            echo "Start Command ID: $command_id"
             check_command_status "$command_id" "$instance"
 
             # Remove unused Docker images
@@ -172,6 +175,7 @@ jobs:
               --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
+            echo "Prune Command ID: $command_id"
             check_command_status "$command_id" "$instance"
 
           done
