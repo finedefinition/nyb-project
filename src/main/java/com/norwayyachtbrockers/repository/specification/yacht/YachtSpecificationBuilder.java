@@ -5,14 +5,6 @@ import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationBuilder;
 import com.norwayyachtbrockers.repository.specification.SpecificationProviderManager;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
@@ -21,20 +13,20 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
 
     private final SpecificationProviderManager<Yacht> specificationProviderManager;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Override
     public Specification<Yacht> build(YachtSearchParametersDto searchParametersDto, String sortBy, Sort.Direction direction) {
@@ -248,6 +240,11 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
 
                 // Добавляем подсчет в SELECT, чтобы избежать ошибок
                 query.multiselect(root, favouritesCount);
+                break;
+            case "id":  // Новый кейс для поля "id"
+                orders.add(direction.isAscending() ?
+                        criteriaBuilder.asc(root.get("id")) :
+                        criteriaBuilder.desc(root.get("id")));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
