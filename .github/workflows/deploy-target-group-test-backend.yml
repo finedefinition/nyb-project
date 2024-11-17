@@ -37,7 +37,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.BACKEND_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
           build-args: |
             DATABASE_PATH=${{ vars.DATABASE_PATH }}
             DATABASE_USER=${{ secrets.DATABASE_USER }}
@@ -59,7 +59,7 @@ jobs:
             COGNITO_ACCESS_KEY_ID=${{ secrets.COGNITO_ACCESS_KEY_ID }}
             COGNITO_SECRET_ACCESS_KEY=${{ secrets.COGNITO_SECRET_ACCESS_KEY }}
             IMAGE_TAG=${{ vars.IMAGE_TAG }}
-            ECR_REPOSITORY=${{ vars.ECR_REPOSITORY }}
+            ECR_REPOSITORY=${{ vars.BACKEND_TEST_ECR_REPOSITORY }}
 
   deploy:
     needs: build-and-push
@@ -118,7 +118,7 @@ jobs:
       - name: Pull the latest Docker image
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
-          IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+          IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.BACKEND_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
         run: |
           source /tmp/check_command_status.sh
           instances="${{ steps.get_instances.outputs.instances }}"
