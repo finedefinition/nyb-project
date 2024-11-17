@@ -14,31 +14,6 @@ import java.util.Optional;
 @Repository
 public interface YachtRepository extends JpaRepository<Yacht, Long>, JpaSpecificationExecutor<Yacht> {
 
-//    @Query("""
-//        SELECT new com.norwayyachtbrockers.repository.projections.YachtShortProjection(
-//            y.id,
-//            y.vatIncluded,
-//            y.price,
-//            y.priceOld,
-//            y.mainImageKey,
-//            ym.make,
-//            ym.model,
-//            ym.year,
-//            c.name,
-//            t.name,
-//            y.createdAt,
-//            COUNT(fu.id)
-//        )
-//        FROM Yacht y
-//        LEFT JOIN y.yachtModel ym
-//        LEFT JOIN y.country c
-//        LEFT JOIN y.town t
-//        LEFT JOIN y.favouritedByUsers fu
-//        GROUP BY y.id, y.vatIncluded, y.price, y.priceOld, y.mainImageKey,
-//                 ym.make, ym.model, ym.year, c.name, t.name, y.createdAt
-//    """)
-//    Page<YachtShortProjection> findAllProjected(Pageable pageable);
-
     @Override
     @EntityGraph(attributePaths = {
             "yachtModel",
