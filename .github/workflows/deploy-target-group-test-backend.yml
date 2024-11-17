@@ -126,17 +126,23 @@ jobs:
           do
             echo "Deploying to instance: $instance"
 
-            # Pull the latest Docker image
+            # Определяем команду
+            command="docker pull ${IMAGE_FULL_NAME}"
+            echo "Pull Command: \"$command\""
+
+            # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "docker pull '"$IMAGE_FULL_NAME"'"
+                "'"${command}"'"
               ]}' \
-              --region "$AWS_REGION" \
+              --region "${AWS_REGION}" \
               --query "Command.CommandId" \
               --output text)
             echo "Pull Command ID: $command_id"
+
+            # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
 
@@ -148,19 +154,25 @@ jobs:
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances
           do
-            echo "Stopping containers on instance: $instance"
+            echo "Deploying to instance: $instance"
 
-            # Stop running containers
+            # Определяем команду
+            command="cd /home/ec2-user/app && docker-compose down"
+            echo "Stop Command: \"$command\""
+
+            # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "cd /home/ec2-user/app && docker-compose down"
+                "'"${command}"'"
               ]}' \
-              --region "$AWS_REGION" \
+              --region "${AWS_REGION}" \
               --query "Command.CommandId" \
               --output text)
             echo "Stop Command ID: $command_id"
+
+            # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
 
@@ -172,19 +184,25 @@ jobs:
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances
           do
-            echo "Starting containers on instance: $instance"
+            echo "Deploying to instance: $instance"
 
-            # Start containers
+            # Определяем команду
+            command="cd /home/ec2-user/app && docker-compose up -d"
+            echo "Start Command: \"$command\""
+
+            # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "cd /home/ec2-user/app && docker-compose up -d"
+                "'"${command}"'"
               ]}' \
-              --region "$AWS_REGION" \
+              --region "${AWS_REGION}" \
               --query "Command.CommandId" \
               --output text)
             echo "Start Command ID: $command_id"
+
+            # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
 
@@ -196,18 +214,24 @@ jobs:
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances
           do
-            echo "Pruning unused Docker images on instance: $instance"
+            echo "Deploying to instance: $instance"
 
-            # Remove unused Docker images
+            # Определяем команду
+            command="docker image prune -f"
+            echo "Prune Command: \"$command\""
+
+            # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "docker image prune -f"
+                "'"${command}"'"
               ]}' \
-              --region "$AWS_REGION" \
+              --region "${AWS_REGION}" \
               --query "Command.CommandId" \
               --output text)
             echo "Prune Command ID: $command_id"
+
+            # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
