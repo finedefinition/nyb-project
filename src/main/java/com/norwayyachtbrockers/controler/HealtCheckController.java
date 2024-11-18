@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/health")
+@RequestMapping("/version")
 public class HealtCheckController {
 
     @GetMapping
     public ResponseEntity healthCheck() {
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok("v 1.0.5");
     }
 }
