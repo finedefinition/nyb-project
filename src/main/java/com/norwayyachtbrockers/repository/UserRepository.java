@@ -1,6 +1,7 @@
 package com.norwayyachtbrockers.repository;
 
 import com.norwayyachtbrockers.model.User;
+import com.norwayyachtbrockers.repository.projections.UserProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,18 @@ Optional<User> findByCognitoSub(@Param("cognitoSub") String cognitoSub);
 
     @Query("SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
+
+    @Query("""
+            SELECT new com.norwayyachtbrockers.repository.projections.UserProjection(
+            u.id,
+            u.firstName,
+            u.lastName,
+            u.email,
+            u.userRoles,
+            u.cognitoSub
+            )
+            FROM User u
+            ORDER BY u.id ASC
+            """)
+    List<UserProjection> findAllProjections();
 }

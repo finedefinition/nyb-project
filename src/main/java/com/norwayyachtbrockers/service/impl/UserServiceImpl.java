@@ -47,9 +47,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAll() {
-        return userRepository.findAllAndFetchYachtsEagerly()
+        return userRepository.findAllProjections()
                 .stream()
-                .sorted(Comparator.comparing(User::getId))
                 .map(UserMapper::convertUserToDto)
                 .collect(Collectors.toList());
     }

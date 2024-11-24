@@ -372,13 +372,28 @@ public class YachtServiceImpl implements YachtService {
         // Настраиваем пагинацию без сортировки, так как сортировка обрабатывается в спецификации
         Pageable pageable = PageRequest.of(page, size);
 
-        // Получаем страницу с яхтами
-        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageable);
+    // Проверяем, нужно ли сортировать по количеству избранного
+    Page<Object[]> yachtPage;
+    if ("yacht_favourites_count".equalsIgnoreCase(sortBy)) {
+        // Если сортировка по количеству избранного, делаем запрос с подсчетом избранного
+        yachtPage = yachtRepository.findAllWithFavoritesCount(yachtSpecification, pageable);
+    } else {
+        // Обычная сортировка
+        yachtPage = yachtRepository.findAll(yachtSpecification, pageable)
+                .map(yacht -> new Object[]{yacht, null});
+    }
 
         // Преобразуем сущности в DTO
-        List<YachtShortResponseDto> yachts = yachtPage.stream()
-                .map(yachtShortMapper::convertToDto)
-                .collect(Collectors.toList());
+    List<YachtShortResponseDto> yachts = yachtPage.stream()
+            .map(objects -> {
+                Yacht yacht = (Yacht) objects[0];
+                Integer favouritesCount = objects[1] != null ? ((Long) objects[1]).intValue() : null;
+
+                YachtShortResponseDto dto = yachtShortMapper.convertToDto(yacht);
+                dto.setFavouritesCount(favouritesCount);
+                return dto;
+            })
+            .collect(Collectors.toList());
 
         // Формируем ответ с пагинацией
         PaginatedYachtResponse response = new PaginatedYachtResponse();

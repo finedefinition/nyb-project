@@ -10,7 +10,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,7 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
     @Override
     public Specification<Yacht> build(YachtSearchParametersDto searchParametersDto, String sortBy, Sort.Direction direction) {
         return (root, query, criteriaBuilder) -> {
+
             // Создаем список предикатов для условий поиска
             List<Predicate> predicates = new ArrayList<>();
 
@@ -201,7 +201,12 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
             applySorting(query, criteriaBuilder, root, sortBy, direction);
 
             // Объединяем все предикаты с помощью AND
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            Predicate finalPredicate = criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+
+            // Включаем предикаты в запрос
+            query.where(finalPredicate);
+
+            return finalPredicate;
         };
     }
 
@@ -210,16 +215,14 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
             return;
         }
 
-        List<Order> orders = new ArrayList<>();
-
         switch (sortBy) {
             case "yacht_price":
-                orders.add(direction.isAscending() ?
+                query.orderBy(direction.isAscending() ?
                         criteriaBuilder.asc(root.get("price")) :
                         criteriaBuilder.desc(root.get("price")));
                 break;
             case "yacht_created_at":
-                orders.add(direction.isAscending() ?
+                query.orderBy(direction.isAscending() ?
                         criteriaBuilder.asc(root.get("createdAt")) :
                         criteriaBuilder.desc(root.get("createdAt")));
                 break;
@@ -227,25 +230,28 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                 // Обработка сортировки по количеству избранных
                 Join<Yacht, User> favouritesJoin = root.join("favouritedByUsers", JoinType.LEFT);
 
-                // Добавляем подсчет избранных в ORDER BY
-                Expression<Long> favouritesCount = criteriaBuilder.count(favouritesJoin);
+                // Подсчет количества избранного
+                Expression<Long> favouritesCount = criteriaBuilder.count(favouritesJoin.get("id"));
+
+                // Группировка по ID яхты
+                query.groupBy(root.get("id"));
+
+                // Включаем в SELECT яхту и количество избранного
+                query.multiselect(root, favouritesCount);
 
                 // Устанавливаем ORDER BY
-                orders.add(direction.isAscending() ?
+                query.orderBy(direction.isAscending() ?
                         criteriaBuilder.asc(favouritesCount) :
                         criteriaBuilder.desc(favouritesCount));
 
                 break;
-            case "id":  // Новый кейс для поля "id"
-                orders.add(direction.isAscending() ?
+            case "id":
+                query.orderBy(direction.isAscending() ?
                         criteriaBuilder.asc(root.get("id")) :
                         criteriaBuilder.desc(root.get("id")));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
         }
-
-        query.orderBy(orders);
     }
-
 }
