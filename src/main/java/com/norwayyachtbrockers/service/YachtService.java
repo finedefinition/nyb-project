@@ -19,8 +19,8 @@ public interface YachtService {
     YachtResponseDto save(FullYachtRequestDto dto, MultipartFile mainImageFile,
                           List<MultipartFile> additionalImageFiles);
 
-    YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
-                          List<MultipartFile> additionalImageFiles);
+//    YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
+//                          List<MultipartFile> additionalImageFiles);
 
     YachtResponseDto findId(Long id);
 
@@ -28,22 +28,10 @@ public interface YachtService {
 
     List<YachtShortResponseDto> findAllYachts();
 
-//    List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto);
-//
-//    List<YachtCrmResponseDto> searchForCrm(YachtSearchParametersDto searchParametersDto);
-
     YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
                             List<MultipartFile> additionalImageFiles);
 
     void deleteById(Long id);
-
-//    PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto
-//                                                                       paginationAndSortingParametersDto,
-//                                                               YachtSearchParametersDto searchParametersDto);
-
-    //    PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
-//    PaginationAndSortingParametersDto paginationAndSortingParametersDto,
-//                                                            YachtSearchParametersDto searchParametersDto);
 
     PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
             PaginationAndSortingParametersDto paginationAndSortingParametersDto,

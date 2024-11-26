@@ -88,47 +88,47 @@ public class YachtServiceImpl implements YachtService {
     }
 
 
-    @Override
-    @Transactional
-    public YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
-                                 List<MultipartFile> additionalImageFiles) {
-        // Convert DTO to Yacht entity
-        Yacht yacht = yachtMapper.createYachtFromDto(dto);
-
-        // Set the old price from the DTO
-        yacht.setPriceOld(yacht.getPrice());
-
-        // Initially assume no main image is set
-        boolean mainImageSet = false;
-
-        // Upload and set the main image key if it's provided
-        if (mainImageFile != null && !mainImageFile.isEmpty()) {
-            String mainImageKey = s3ImageService.uploadImageToS3(mainImageFile);
-            yacht.setMainImageKey(mainImageKey);
-            mainImageSet = true;
-        }
-
-        // Save the Yacht entity to get a generated ID
-        Yacht savedYacht = yachtRepository.save(yacht);
-
-        // Check if we need to upload additional images and potentially set the main image from these
-        if (!additionalImageFiles.isEmpty()) {
-            // Prepare a DTO for saving multiple images
-            YachtImageRequestDto imageRequestDto = new YachtImageRequestDto();
-            imageRequestDto.setYachtId(savedYacht.getId());
-
-            // Delegate to saveMultipleImages method from YachtImageService
-            List<YachtImageResponseDto> savedImageDtos = yachtImageService.saveMultipleImages(imageRequestDto, additionalImageFiles);
-
-            // If no main image was explicitly provided and additional images were uploaded
-            if (!mainImageSet && !savedImageDtos.isEmpty()) {
-                savedYacht.setMainImageKey(savedImageDtos.get(0).getImageKey());
-            }
-        }
-
-        // Return the saved yacht as a DTO
-        return yachtMapper.convertToDto(savedYacht);
-    }
+//    @Override
+//    @Transactional
+//    public YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
+//                                 List<MultipartFile> additionalImageFiles) {
+//        // Convert DTO to Yacht entity
+//        Yacht yacht = yachtMapper.createYachtFromDto(dto);
+//
+//        // Set the old price from the DTO
+//        yacht.setPriceOld(yacht.getPrice());
+//
+//        // Initially assume no main image is set
+//        boolean mainImageSet = false;
+//
+//        // Upload and set the main image key if it's provided
+//        if (mainImageFile != null && !mainImageFile.isEmpty()) {
+//            String mainImageKey = s3ImageService.uploadImageToS3(mainImageFile);
+//            yacht.setMainImageKey(mainImageKey);
+//            mainImageSet = true;
+//        }
+//
+//        // Save the Yacht entity to get a generated ID
+//        Yacht savedYacht = yachtRepository.save(yacht);
+//
+//        // Check if we need to upload additional images and potentially set the main image from these
+//        if (!additionalImageFiles.isEmpty()) {
+//            // Prepare a DTO for saving multiple images
+//            YachtImageRequestDto imageRequestDto = new YachtImageRequestDto();
+//            imageRequestDto.setYachtId(savedYacht.getId());
+//
+//            // Delegate to saveMultipleImages method from YachtImageService
+//            List<YachtImageResponseDto> savedImageDtos = yachtImageService.saveMultipleImages(imageRequestDto, additionalImageFiles);
+//
+//            // If no main image was explicitly provided and additional images were uploaded
+//            if (!mainImageSet && !savedImageDtos.isEmpty()) {
+//                savedYacht.setMainImageKey(savedImageDtos.get(0).getImageKey());
+//            }
+//        }
+//
+//        // Return the saved yacht as a DTO
+//        return yachtMapper.convertToDto(savedYacht);
+//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -209,29 +209,43 @@ public class YachtServiceImpl implements YachtService {
     @Transactional
     public YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
                                    List<MultipartFile> additionalImageFiles) {
+        // Найти яхту или выбросить исключение
         Yacht yacht = EntityUtils.findEntityOrThrow(id, yachtRepository, "Yacht");
+
+        // Сохранить текущую цену в поле oldPrice
         yacht.setPriceOld(yacht.getPrice());
 
+        // Обновить поля яхты из DTO, если DTO не пустой
         if (dto != null) {
             yachtMapper.updateYachtFromDto(yacht, dto);
         }
 
+        // Загрузка нового главного изображения, если файл передан
         if (mainImageFile != null && !mainImageFile.isEmpty()) {
             String mainImageKey = s3ImageService.uploadImageToS3(mainImageFile);
             yacht.setMainImageKey(mainImageKey);
         }
 
-        // Optional: Handle removal of existing images
-        // yacht.getYachtImages().clear();
+        // Логика "горячей цены" -> обновление поля "featured"
+        if (yacht.getPriceOld() != null && yacht.getPriceOld().compareTo(yacht.getPrice()) > 0) {
+            yacht.setFeatured(true); // Установить "горячую цену"
+        } else {
+            yacht.setFeatured(false); // Снять "горячую цену"
+        }
+
+        // Сохранение дополнительных изображений
         YachtImageRequestDto yachtImageRequestDto = new YachtImageRequestDto();
         yachtImageRequestDto.setYachtId(id);
         yachtImageService.saveMultipleImages(yachtImageRequestDto, additionalImageFiles);
 //        saveAdditionalImages(additionalImageFiles, yacht);
 
+        // Сохранить изменения в базе данных
         yachtRepository.save(yacht);
 
+        // Вернуть DTO обновленной яхты
         return yachtMapper.convertToDto(yacht);
     }
+
 
     @Override
     @Transactional
@@ -250,105 +264,6 @@ public class YachtServiceImpl implements YachtService {
         }
         yachtRepository.delete(yacht);
     }
-
-//    @Transactional
-//    @Override
-//    public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
-//        // Get the page, sortBy, and orderBy from the DTO
-//        int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
-//        String sortBy = paginationAndSortingParametersDto.getSortBy();
-//        String orderBy = paginationAndSortingParametersDto.getOrderBy();
-//
-//        // Translate "descend" to "desc" and "ascend" to "asc"
-//        if ("descend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "desc";
-//        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "asc";
-//        }
-//
-//        // Default to ascending sort if the direction is invalid or null
-//        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
-//
-//        // Map DTO sort fields to entity fields
-//        sortBy = FieldMapper.getEntityField(sortBy);
-//
-//        Sort sort = Sort.by(direction, sortBy);
-//
-//        // Create a PageRequest with the sort parameter
-//        PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_CRM_SIZE, sort);
-//
-//        // Build the Specification based on search parameters
-//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-//
-//        // Query the repository with pagination, sorting, and search criteria
-//        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
-//
-//        List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
-//                .map(yachtMapper::convertToCrmDto)
-//                .collect(Collectors.toList());
-//
-//        PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
-//        response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
-//        response.setTotalPages(yachtPage.getTotalPages());
-//        response.setTotalItems(yachtPage.getTotalElements());
-//        response.setYachts(yachtDtos);
-//
-//        return response;
-//    }
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
-//            PaginationAndSortingParametersDto paginationAndSortingParametersDto,
-//            YachtSearchParametersDto searchParametersDto) {
-//
-//        // Преобразуем параметры пагинации и сортировки
-//        int page = paginationAndSortingParametersDto.getPage() - 1;
-//        int size = ApplicationConstants.PAGE_GALLERY_SIZE;
-//
-//        String sortBy = paginationAndSortingParametersDto.getSortBy();
-//        String orderBy = paginationAndSortingParametersDto.getOrderBy();
-//
-//        // Преобразуем "descend" в "desc" и "ascend" в "asc"
-//        if ("descend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "desc";
-//        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "asc";
-//        }
-//
-//        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
-//
-//        // Map DTO sort fields to entity fields
-//        sortBy = FieldMapper.getEntityField(sortBy);
-//
-//        Pageable pageable = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, Sort.by(direction, sortBy));
-//
-//        // Поскольку мы не можем использовать Specification с кастомным запросом, придётся от него отказаться
-//        // или реализовать кастомный репозиторий (см. предыдущие шаги)
-//
-//        // Получаем данные из репозитория
-//        Page<YachtShortProjection> yachtPage = yachtRepository.findAllProjected(pageable);
-//
-//        // Используем ваш маппер для преобразования проекций в DTO
-//        List<YachtShortResponseDto> yachts = yachtPage.stream()
-//                .map(yachtShortMapper::convertProjectionToDto)
-//                .collect(Collectors.toList());
-//
-//        // Создаем объект ответа и заполняем данные
-//        PaginatedYachtResponse response = new PaginatedYachtResponse();
-//
-//        // Создаем и заполняем объект Pagination
-//        PaginatedYachtResponse.Pagination pagination = new PaginatedYachtResponse.Pagination();
-//        pagination.setCurrentPage(page + 1);
-//        pagination.setTotalPages(yachtPage.getTotalPages());
-//        pagination.setTotalItems(yachtPage.getTotalElements());
-//
-//        // Устанавливаем pagination и список яхт в ответ
-//        response.setPagination(pagination);
-//        response.setYachts(yachts);
-//
-//        return response;
-//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -372,28 +287,28 @@ public class YachtServiceImpl implements YachtService {
         // Настраиваем пагинацию без сортировки, так как сортировка обрабатывается в спецификации
         Pageable pageable = PageRequest.of(page, size);
 
-    // Проверяем, нужно ли сортировать по количеству избранного
-    Page<Object[]> yachtPage;
-    if ("yacht_favourites_count".equalsIgnoreCase(sortBy)) {
-        // Если сортировка по количеству избранного, делаем запрос с подсчетом избранного
-        yachtPage = yachtRepository.findAllWithFavoritesCount(yachtSpecification, pageable);
-    } else {
-        // Обычная сортировка
-        yachtPage = yachtRepository.findAll(yachtSpecification, pageable)
-                .map(yacht -> new Object[]{yacht, null});
-    }
+        // Проверяем, нужно ли сортировать по количеству избранного
+        Page<Object[]> yachtPage;
+        if ("yacht_favourites_count".equalsIgnoreCase(sortBy)) {
+            // Если сортировка по количеству избранного, делаем запрос с подсчетом избранного
+            yachtPage = yachtRepository.findAllWithFavoritesCount(yachtSpecification, pageable);
+        } else {
+            // Обычная сортировка
+            yachtPage = yachtRepository.findAll(yachtSpecification, pageable)
+                    .map(yacht -> new Object[]{yacht, null});
+        }
 
         // Преобразуем сущности в DTO
-    List<YachtShortResponseDto> yachts = yachtPage.stream()
-            .map(objects -> {
-                Yacht yacht = (Yacht) objects[0];
-                Integer favouritesCount = objects[1] != null ? ((Long) objects[1]).intValue() : null;
+        List<YachtShortResponseDto> yachts = yachtPage.stream()
+                .map(objects -> {
+                    Yacht yacht = (Yacht) objects[0];
+                    Integer favouritesCount = objects[1] != null ? ((Long) objects[1]).intValue() : null;
 
-                YachtShortResponseDto dto = yachtShortMapper.convertToDto(yacht);
-                dto.setFavouritesCount(favouritesCount);
-                return dto;
-            })
-            .collect(Collectors.toList());
+                    YachtShortResponseDto dto = yachtShortMapper.convertToDto(yacht);
+                    dto.setFavouritesCount(favouritesCount);
+                    return dto;
+                })
+                .collect(Collectors.toList());
 
         // Формируем ответ с пагинацией
         PaginatedYachtResponse response = new PaginatedYachtResponse();

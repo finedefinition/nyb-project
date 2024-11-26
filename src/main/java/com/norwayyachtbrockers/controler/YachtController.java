@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,7 +41,7 @@ public class YachtController {
         this.yachtService = yachtService;
     }
 
-    @PostMapping(value = "/full-dto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> createYachtFromFullYachtRequestDto(
             @Valid
@@ -52,17 +53,17 @@ public class YachtController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<YachtResponseDto> createYacht(
-            @Valid
-            @RequestPart("yachtData") YachtRequestDto dto,
-            @RequestParam("mainImage") MultipartFile mainImageFile,
-            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
-
-        YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
-    }
+//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ResponseEntity<YachtResponseDto> createYacht(
+//            @Valid
+//            @RequestPart("yachtData") YachtRequestDto dto,
+//            @RequestParam("mainImage") MultipartFile mainImageFile,
+//            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
+//
+//        YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
+//    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<YachtResponseDto> getById(@PathVariable Long id) {
@@ -90,25 +91,19 @@ public class YachtController {
         return ResponseEntity.ok(yachts);
     }
 
-//    @GetMapping("/search")
-//    public List<YachtResponseDto> searchYachts(YachtSearchParametersDto searchParameters) {
-//        return yachtService.search(searchParameters);
-//    }
-//
-//    @GetMapping("/paginated/search-crm")
-//    public List<YachtCrmResponseDto> searchYachtsCrm(YachtSearchParametersDto searchParameters) {
-//        return yachtService.searchForCrm(searchParameters);
-//    }
-
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> updateYacht(
-            @Valid @PathVariable Long id,
-            @RequestPart(value = "yachtData", required = false) Optional<YachtRequestDto> dto,
-            @RequestParam("mainImage") MultipartFile mainImageFile,
-            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
+            @PathVariable Long id,
+            @RequestPart(value = "yachtData", required = false) YachtRequestDto dto,
+            @RequestParam(value = "mainImage", required = false) MultipartFile mainImageFile,
+            @RequestParam(value = "additionalImages", required = false) List<MultipartFile> additionalImageFiles) {
 
-        YachtResponseDto updatedYachtDto = yachtService.update(dto.orElse(null), id, mainImageFile, additionalImageFiles);
+        if (id == null) {
+            throw new IllegalArgumentException("The given id must not be null");
+        }
+
+        YachtResponseDto updatedYachtDto = yachtService.update(dto, id, mainImageFile, additionalImageFiles);
         return new ResponseEntity<>(updatedYachtDto, HttpStatus.OK);
     }
 
@@ -118,40 +113,6 @@ public class YachtController {
         yachtService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-//    @GetMapping(value = "/crm", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
-//            @RequestParam(value = "page", defaultValue = "1") int page,
-//            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-//            @RequestParam(value = "sortDirection", defaultValue = "asc") String sortDirection,
-//            YachtSearchParametersDto searchParameters) {
-//
-//        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPagination(page, searchParameters, sortBy, sortDirection);
-//        return ResponseEntity.ok(response);
-//    }
-
-//    @GetMapping(value = "/paginated", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<PaginatedYachtCrmResponse> getPaginatedYachts(
-//            @RequestParam(value = "page", defaultValue = "1") int page,
-//            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-//            @RequestParam(value = "orderBy", defaultValue = "ascend") String orderBy,
-//            YachtSearchParametersDto searchParameters) {
-//
-//        // Translate "descend" to "desc" and "ascend" to "asc"
-//        if ("descend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "desc";
-//        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "asc";
-//        }
-//
-//        PaginationAndSortingParametersDto paginationAndSortingParameters = new PaginationAndSortingParametersDto();
-//        paginationAndSortingParameters.setPage(page);
-//        paginationAndSortingParameters.setSortBy(sortBy);
-//        paginationAndSortingParameters.setOrderBy(orderBy);
-//
-//        PaginatedYachtCrmResponse response = yachtService.getYachtsWithPaginationAndSearch(paginationAndSortingParameters, searchParameters);
-//        return ResponseEntity.ok(response);
-//    }
 
     @GetMapping("/combined")
     public YachtCrmFrontendResponseDto getCombinedYachtData() {
