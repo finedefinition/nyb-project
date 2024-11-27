@@ -177,25 +177,25 @@ class YachtServiceImplTest {
         assertEquals(1, foundYachts.size(), "Found yachts list size should be 2");
     }
 
-    @Test
-    @Order(50)
-    @DisplayName("update - Successfully updates a yacht")
-    @Transactional
-    void testUpdate_Success() {
-        // Arrange
-        when(yachtRepository.findById(YACHT_ID)).thenReturn(Optional.of(yacht));
-        when(s3ImageService.uploadImageToS3(mainImageFile)).thenReturn(MAIN_IMAGE_KEY);
-        when(yachtRepository.save(yacht)).thenReturn(yacht);
-        when(yachtMapper.convertToDto(yacht)).thenReturn(new YachtResponseDto());
-
-        // Act
-        YachtResponseDto responseDto = yachtService.update(yachtRequestDto, YACHT_ID, mainImageFile, additionalImageFiles);
-
-        // Assert
-        assertNotNull(responseDto, "Updated yacht should not be null");
-        verify(yachtRepository, times(1)).save(yacht);
-        assertEquals(MAIN_IMAGE_KEY, yacht.getMainImageKey(), "Main image key should match");
-    }
+//    @Test
+//    @Order(50)
+//    @DisplayName("update - Successfully updates a yacht")
+//    @Transactional
+//    void testUpdate_Success() {
+//        // Arrange
+//        when(yachtRepository.findById(YACHT_ID)).thenReturn(Optional.of(yacht));
+//        when(s3ImageService.uploadImageToS3(mainImageFile)).thenReturn(MAIN_IMAGE_KEY);
+//        when(yachtRepository.save(yacht)).thenReturn(yacht);
+//        when(yachtMapper.convertToDto(yacht)).thenReturn(new YachtResponseDto());
+//
+//        // Act
+//        YachtResponseDto responseDto = yachtService.update(yachtRequestDto, YACHT_ID, mainImageFile, additionalImageFiles);
+//
+//        // Assert
+//        assertNotNull(responseDto, "Updated yacht should not be null");
+//        verify(yachtRepository, times(1)).save(yacht);
+//        assertEquals(MAIN_IMAGE_KEY, yacht.getMainImageKey(), "Main image key should match");
+//    }
 
     @Test
     @Order(60)

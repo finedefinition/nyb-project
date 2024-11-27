@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
@@ -207,42 +208,33 @@ public class YachtServiceImpl implements YachtService {
 
     @Override
     @Transactional
-    public YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
+    public YachtResponseDto update(YachtUpdateRequestDto dto, Long id, MultipartFile mainImageFile,
                                    List<MultipartFile> additionalImageFiles) {
-        // Найти яхту или выбросить исключение
         Yacht yacht = EntityUtils.findEntityOrThrow(id, yachtRepository, "Yacht");
 
-        // Сохранить текущую цену в поле oldPrice
         yacht.setPriceOld(yacht.getPrice());
 
-        // Обновить поля яхты из DTO, если DTO не пустой
-        if (dto != null) {
-            yachtMapper.updateYachtFromDto(yacht, dto);
-        }
+        yachtMapper.updateYachtFromDto(yacht, dto);
 
-        // Загрузка нового главного изображения, если файл передан
         if (mainImageFile != null && !mainImageFile.isEmpty()) {
             String mainImageKey = s3ImageService.uploadImageToS3(mainImageFile);
             yacht.setMainImageKey(mainImageKey);
         }
 
-        // Логика "горячей цены" -> обновление поля "featured"
         if (yacht.getPriceOld() != null && yacht.getPriceOld().compareTo(yacht.getPrice()) > 0) {
-            yacht.setFeatured(true); // Установить "горячую цену"
+            yacht.setFeatured(true);
         } else {
-            yacht.setFeatured(false); // Снять "горячую цену"
+            yacht.setFeatured(false);
         }
 
-        // Сохранение дополнительных изображений
-        YachtImageRequestDto yachtImageRequestDto = new YachtImageRequestDto();
-        yachtImageRequestDto.setYachtId(id);
-        yachtImageService.saveMultipleImages(yachtImageRequestDto, additionalImageFiles);
-//        saveAdditionalImages(additionalImageFiles, yacht);
+        if (additionalImageFiles != null && !additionalImageFiles.isEmpty()) {
+            YachtImageRequestDto yachtImageRequestDto = new YachtImageRequestDto();
+            yachtImageRequestDto.setYachtId(id);
+            yachtImageService.saveMultipleImages(yachtImageRequestDto, additionalImageFiles);
+        }
 
-        // Сохранить изменения в базе данных
         yachtRepository.save(yacht);
 
-        // Вернуть DTO обновленной яхты
         return yachtMapper.convertToDto(yacht);
     }
 

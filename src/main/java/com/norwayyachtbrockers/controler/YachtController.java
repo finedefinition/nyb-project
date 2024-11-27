@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.controler;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
@@ -95,7 +96,7 @@ public class YachtController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> updateYacht(
             @PathVariable Long id,
-            @RequestPart(value = "yachtData", required = false) YachtRequestDto dto,
+            @RequestPart(value = "yachtData", required = false)YachtUpdateRequestDto dto,
             @RequestParam(value = "mainImage", required = false) MultipartFile mainImageFile,
             @RequestParam(value = "additionalImages", required = false) List<MultipartFile> additionalImageFiles) {
 

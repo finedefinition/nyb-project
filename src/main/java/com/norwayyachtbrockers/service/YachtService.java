@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.service;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
@@ -28,7 +29,8 @@ public interface YachtService {
 
     List<YachtShortResponseDto> findAllYachts();
 
-    YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
+
+    YachtResponseDto update(YachtUpdateRequestDto dto, Long id, MultipartFile mainImageFile,
                             List<MultipartFile> additionalImageFiles);
 
     void deleteById(Long id);
