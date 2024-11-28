@@ -32,4 +32,5 @@
     <include file="250-changeset-add-column-price_old.xml" relativeToChangelogFile="true" />
     <include file="260-changeset-add-column-image_index.xml" relativeToChangelogFile="true" />
     <include file="270-changeset-add-column-cognito_sub.xml" relativeToChangelogFile="true" />
+    <include file="280-changeset-add-column-favourites_count.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>

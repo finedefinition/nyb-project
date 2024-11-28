@@ -1,14 +1,11 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
-import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
-import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
-import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
@@ -19,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/yachts")
@@ -53,18 +48,6 @@ public class YachtController {
         YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
     }
-
-//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public ResponseEntity<YachtResponseDto> createYacht(
-//            @Valid
-//            @RequestPart("yachtData") YachtRequestDto dto,
-//            @RequestParam("mainImage") MultipartFile mainImageFile,
-//            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
-//
-//        YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
-//    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<YachtResponseDto> getById(@PathVariable Long id) {

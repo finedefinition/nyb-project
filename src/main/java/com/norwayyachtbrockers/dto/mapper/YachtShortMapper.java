@@ -1,15 +1,12 @@
 package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
-import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.projections.YachtShortProjection;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class YachtShortMapper {
@@ -35,10 +32,7 @@ public class YachtShortMapper {
 
         // User set
         // Set yacht favourites as user IDs
-        Set<Long> favouriteUserIds = yacht.getFavouritedByUsers().stream()
-                .map(User::getId)
-                .collect(Collectors.toSet());
-        dto.setFavouritesCount(favouriteUserIds.size());
+       dto.setFavouritesCount(yacht.getFavouritesCount());
 
         // Hot price (заполняем напрямую из базы данных)
         dto.setHotPrice(yacht.isFeatured()); // Прямое маппинг из сущности
