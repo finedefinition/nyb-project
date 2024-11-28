@@ -1,5 +1,6 @@
 package com.norwayyachtbrockers.repository;
 
+import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtWithFavoritesCount;
 import com.norwayyachtbrockers.model.Yacht;
 import org.springframework.data.domain.Page;
@@ -45,4 +46,19 @@ public interface YachtRepository extends JpaRepository<Yacht, Long>, JpaSpecific
            "GROUP BY y " +
            "ORDER BY favouritesCount DESC")
     Page<Object[]> findAllWithFavoritesCount(Specification<Yacht> spec, Pageable pageable);
+
+    @Query(value = """
+    SELECT y.id, y.featured, y.vat_included, y.price, y.main_image_key, 
+           ym.make, ym.model, ym.year, 
+           c.name AS country_name, 
+           t.name AS town_name, 
+           y.created_at 
+    FROM yachts y
+    JOIN yacht_models ym ON y.yacht_model_id = ym.id
+    JOIN countries c ON y.country_id = c.id
+    JOIN towns t ON y.town_id = t.id
+    WHERE y.featured = true
+    LIMIT 3
+    """, nativeQuery = true)
+    List<Object[]> findOptimizedFeaturedYachts();
 }

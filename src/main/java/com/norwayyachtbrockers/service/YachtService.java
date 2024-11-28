@@ -50,4 +50,6 @@ public interface YachtService {
             YachtSearchParametersDto searchParametersDto);
 
     YachtCrmFrontendResponseDto getCombinedYachtData();
+
+    List<YachtShortResponseDto> getRandomFeaturedYachts();
 }

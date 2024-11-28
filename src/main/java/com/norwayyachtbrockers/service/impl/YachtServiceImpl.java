@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -186,25 +187,6 @@ public class YachtServiceImpl implements YachtService {
                 .collect(Collectors.toList());
     }
 
-
-//    @Override
-//    public List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto) {
-//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-//        return yachtRepository.findAll(yachtSpecification).stream()
-//                .map(yachtMapper::convertToDto)
-//                .sorted(Comparator.comparing(YachtResponseDto::getId))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<YachtCrmResponseDto> searchForCrm(YachtSearchParametersDto searchParametersDto) {
-//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-//        return yachtRepository.findAll(yachtSpecification).stream()
-//                .map(yachtMapper::convertToCrmDto)
-//                .sorted(Comparator.comparing(YachtCrmResponseDto::getId))
-//                .collect(Collectors.toList());
-//    }
-
     @Override
     @Transactional
     public YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
@@ -251,105 +233,6 @@ public class YachtServiceImpl implements YachtService {
         yachtRepository.delete(yacht);
     }
 
-//    @Transactional
-//    @Override
-//    public PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto paginationAndSortingParametersDto, YachtSearchParametersDto searchParametersDto) {
-//        // Get the page, sortBy, and orderBy from the DTO
-//        int page = paginationAndSortingParametersDto.getPage() - 1; // Spring Data JPA pages are 0-indexed
-//        String sortBy = paginationAndSortingParametersDto.getSortBy();
-//        String orderBy = paginationAndSortingParametersDto.getOrderBy();
-//
-//        // Translate "descend" to "desc" and "ascend" to "asc"
-//        if ("descend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "desc";
-//        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "asc";
-//        }
-//
-//        // Default to ascending sort if the direction is invalid or null
-//        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
-//
-//        // Map DTO sort fields to entity fields
-//        sortBy = FieldMapper.getEntityField(sortBy);
-//
-//        Sort sort = Sort.by(direction, sortBy);
-//
-//        // Create a PageRequest with the sort parameter
-//        PageRequest pageRequest = PageRequest.of(page, ApplicationConstants.PAGE_CRM_SIZE, sort);
-//
-//        // Build the Specification based on search parameters
-//        Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto);
-//
-//        // Query the repository with pagination, sorting, and search criteria
-//        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageRequest);
-//
-//        List<YachtCrmResponseDto> yachtDtos = yachtPage.stream()
-//                .map(yachtMapper::convertToCrmDto)
-//                .collect(Collectors.toList());
-//
-//        PaginatedYachtCrmResponse response = new PaginatedYachtCrmResponse();
-//        response.setCurrentPage(page + 1); // Adjust back to 1-indexed page
-//        response.setTotalPages(yachtPage.getTotalPages());
-//        response.setTotalItems(yachtPage.getTotalElements());
-//        response.setYachts(yachtDtos);
-//
-//        return response;
-//    }
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
-//            PaginationAndSortingParametersDto paginationAndSortingParametersDto,
-//            YachtSearchParametersDto searchParametersDto) {
-//
-//        // Преобразуем параметры пагинации и сортировки
-//        int page = paginationAndSortingParametersDto.getPage() - 1;
-//        int size = ApplicationConstants.PAGE_GALLERY_SIZE;
-//
-//        String sortBy = paginationAndSortingParametersDto.getSortBy();
-//        String orderBy = paginationAndSortingParametersDto.getOrderBy();
-//
-//        // Преобразуем "descend" в "desc" и "ascend" в "asc"
-//        if ("descend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "desc";
-//        } else if ("ascend".equalsIgnoreCase(orderBy)) {
-//            orderBy = "asc";
-//        }
-//
-//        Sort.Direction direction = Sort.Direction.fromOptionalString(orderBy).orElse(Sort.Direction.ASC);
-//
-//        // Map DTO sort fields to entity fields
-//        sortBy = FieldMapper.getEntityField(sortBy);
-//
-//        Pageable pageable = PageRequest.of(page, ApplicationConstants.PAGE_GALLERY_SIZE, Sort.by(direction, sortBy));
-//
-//        // Поскольку мы не можем использовать Specification с кастомным запросом, придётся от него отказаться
-//        // или реализовать кастомный репозиторий (см. предыдущие шаги)
-//
-//        // Получаем данные из репозитория
-//        Page<YachtShortProjection> yachtPage = yachtRepository.findAllProjected(pageable);
-//
-//        // Используем ваш маппер для преобразования проекций в DTO
-//        List<YachtShortResponseDto> yachts = yachtPage.stream()
-//                .map(yachtShortMapper::convertProjectionToDto)
-//                .collect(Collectors.toList());
-//
-//        // Создаем объект ответа и заполняем данные
-//        PaginatedYachtResponse response = new PaginatedYachtResponse();
-//
-//        // Создаем и заполняем объект Pagination
-//        PaginatedYachtResponse.Pagination pagination = new PaginatedYachtResponse.Pagination();
-//        pagination.setCurrentPage(page + 1);
-//        pagination.setTotalPages(yachtPage.getTotalPages());
-//        pagination.setTotalItems(yachtPage.getTotalElements());
-//
-//        // Устанавливаем pagination и список яхт в ответ
-//        response.setPagination(pagination);
-//        response.setYachts(yachts);
-//
-//        return response;
-//    }
-
     @Override
     @Transactional(readOnly = true)
     public PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
@@ -372,28 +255,28 @@ public class YachtServiceImpl implements YachtService {
         // Настраиваем пагинацию без сортировки, так как сортировка обрабатывается в спецификации
         Pageable pageable = PageRequest.of(page, size);
 
-    // Проверяем, нужно ли сортировать по количеству избранного
-    Page<Object[]> yachtPage;
-    if ("yacht_favourites_count".equalsIgnoreCase(sortBy)) {
-        // Если сортировка по количеству избранного, делаем запрос с подсчетом избранного
-        yachtPage = yachtRepository.findAllWithFavoritesCount(yachtSpecification, pageable);
-    } else {
-        // Обычная сортировка
-        yachtPage = yachtRepository.findAll(yachtSpecification, pageable)
-                .map(yacht -> new Object[]{yacht, null});
-    }
+        // Проверяем, нужно ли сортировать по количеству избранного
+        Page<Object[]> yachtPage;
+        if ("yacht_favourites_count".equalsIgnoreCase(sortBy)) {
+            // Если сортировка по количеству избранного, делаем запрос с подсчетом избранного
+            yachtPage = yachtRepository.findAllWithFavoritesCount(yachtSpecification, pageable);
+        } else {
+            // Обычная сортировка
+            yachtPage = yachtRepository.findAll(yachtSpecification, pageable)
+                    .map(yacht -> new Object[]{yacht, null});
+        }
 
         // Преобразуем сущности в DTO
-    List<YachtShortResponseDto> yachts = yachtPage.stream()
-            .map(objects -> {
-                Yacht yacht = (Yacht) objects[0];
-                Integer favouritesCount = objects[1] != null ? ((Long) objects[1]).intValue() : null;
+        List<YachtShortResponseDto> yachts = yachtPage.stream()
+                .map(objects -> {
+                    Yacht yacht = (Yacht) objects[0];
+                    Integer favouritesCount = objects[1] != null ? ((Long) objects[1]).intValue() : null;
 
-                YachtShortResponseDto dto = yachtShortMapper.convertToDto(yacht);
-                dto.setFavouritesCount(favouritesCount);
-                return dto;
-            })
-            .collect(Collectors.toList());
+                    YachtShortResponseDto dto = yachtShortMapper.convertToDto(yacht);
+                    dto.setFavouritesCount(favouritesCount);
+                    return dto;
+                })
+                .collect(Collectors.toList());
 
         // Формируем ответ с пагинацией
         PaginatedYachtResponse response = new PaginatedYachtResponse();
@@ -416,4 +299,29 @@ public class YachtServiceImpl implements YachtService {
         List<Yacht> yachts = yachtRepository.findAll();
         return yachtMapper.combineYachtData(yachts);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<YachtShortResponseDto> getRandomFeaturedYachts() {
+        // Получаем данные из репозитория
+        List<Object[]> results = yachtRepository.findOptimizedFeaturedYachts();
+
+        // Преобразуем данные в DTO
+        return results.stream().map(record -> {
+            YachtShortResponseDto dto = new YachtShortResponseDto();
+            dto.setId(((Long) record[0]).longValue());
+            dto.setYachtTop((boolean) record[1]);
+            dto.setVatIncluded((boolean) record[2]);
+            dto.setPrice(record[3].toString());
+            dto.setMainImageKey((String) record[4]);
+            dto.setMake((String) record[5]);
+            dto.setModel((String) record[6]);
+            dto.setYear((Integer) record[7]);
+            dto.setCountry((String) record[8]);
+            dto.setTown((String) record[9]);
+            dto.setCreatedAt(((Timestamp) record[10]).toLocalDateTime());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 }
