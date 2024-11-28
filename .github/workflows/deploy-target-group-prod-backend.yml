@@ -3,7 +3,7 @@ name: Build & Deploy Backend to Test Environment
 on:
   push:
     branches:
-      - test
+      - main
 
 jobs:
   build-and-push:
@@ -13,13 +13,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 21
+      - name: Setup Java
         uses: actions/setup-java@v2
         with:
+<<<<<<< HEAD:.github/workflows/deploy-target-group-test-backend.yml
           distribution: temurin # Рекомендуемый дистрибутив
           java-version: 21
           java-package: jdk
           architecture: x64
+=======
+          distribution: temurin
+          java-version: 21
+          java-package: jdk
+>>>>>>> main:.github/workflows/deploy-target-group-prod-backend.yml
 
       - name: Build with Maven
         run: mvn clean install -DskipTests
@@ -39,7 +45,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.BACKEND_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
           build-args: |
             DATABASE_PATH=${{ vars.DATABASE_PATH }}
             DATABASE_USER=${{ secrets.DATABASE_USER }}
@@ -61,7 +67,7 @@ jobs:
             COGNITO_ACCESS_KEY_ID=${{ secrets.COGNITO_ACCESS_KEY_ID }}
             COGNITO_SECRET_ACCESS_KEY=${{ secrets.COGNITO_SECRET_ACCESS_KEY }}
             IMAGE_TAG=${{ vars.IMAGE_TAG }}
-            ECR_REPOSITORY=${{ vars.BACKEND_TEST_ECR_REPOSITORY }}
+            ECR_REPOSITORY=${{ vars.PROD_TEST_ECR_REPOSITORY }}
 
   deploy:
     needs: build-and-push
@@ -113,14 +119,14 @@ jobs:
       - name: Get EC2 instances in Target Group
         id: get_instances
         run: |
-          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.TEST_BACKEND_TARGET_GROUP_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
+          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.PROD_BACKEND_TARGET_GROUP_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
           echo "Instances found: $instances"
           echo "instances=$instances" >> $GITHUB_OUTPUT
 
       - name: Pull the latest Docker image
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
-          IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.BACKEND_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+          IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
         run: |
           source /tmp/check_command_status.sh
           instances="${{ steps.get_instances.outputs.instances }}"
