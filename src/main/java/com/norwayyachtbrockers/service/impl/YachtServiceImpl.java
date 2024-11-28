@@ -5,7 +5,6 @@ import com.norwayyachtbrockers.dto.mapper.YachtMapper;
 import com.norwayyachtbrockers.dto.mapper.YachtShortMapper;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
-import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
@@ -205,8 +204,8 @@ public class YachtServiceImpl implements YachtService {
         int page = paginationAndSortingParametersDto.getPage() - 1;
         int size = ApplicationConstants.PAGE_GALLERY_SIZE;
 
-        // Получаем параметры сортировки
-        String sortBy = paginationAndSortingParametersDto.getSortBy();
+        // Маппинг параметра сортировки
+        String sortBy = mapSortByParameter(paginationAndSortingParametersDto.getSortBy());
         String orderBy = paginationAndSortingParametersDto.getOrderBy();
 
         // Преобразуем направление сортировки (asc/desc)
@@ -215,28 +214,17 @@ public class YachtServiceImpl implements YachtService {
         // Создаем спецификацию с учетом сортировки
         Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto, sortBy, direction);
 
-        // Настраиваем пагинацию без сортировки, так как сортировка обрабатывается в спецификации
-        Pageable pageable = PageRequest.of(page, size);
+        // Настраиваем пагинацию с сортировкой
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        // Проверяем, нужно ли сортировать по количеству избранного
-        Page<Object[]> yachtPage;
-        if ("yacht_favourites_count".equalsIgnoreCase(sortBy)) {
-            // Если сортировка по количеству избранного, делаем запрос с подсчетом избранного
-            yachtPage = yachtRepository.findAllWithFavoritesCount(yachtSpecification, pageable);
-        } else {
-            // Обычная сортировка
-            yachtPage = yachtRepository.findAll(yachtSpecification, pageable)
-                    .map(yacht -> new Object[]{yacht, null});
-        }
+        // Получаем страницу яхт
+        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageable);
 
         // Преобразуем сущности в DTO
-        List<YachtShortResponseDto> yachts = yachtPage.stream()
-                .map(objects -> {
-                    Yacht yacht = (Yacht) objects[0];
-                    Integer favouritesCount = objects[1] != null ? ((Long) objects[1]).intValue() : null;
-
+        List<YachtShortResponseDto> yachts = yachtPage.getContent().stream()
+                .map(yacht -> {
                     YachtShortResponseDto dto = yachtShortMapper.convertToDto(yacht);
-                    dto.setFavouritesCount(favouritesCount);
+                    dto.setFavouritesCount(yacht.getFavouritesCount()); // Устанавливаем favouritesCount напрямую
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -287,4 +275,21 @@ public class YachtServiceImpl implements YachtService {
         }).collect(Collectors.toList());
     }
 
+    private String mapSortByParameter(String sortBy) {
+        if (sortBy == null || sortBy.isEmpty()) {
+            return "id"; // Сортировка по умолчанию
+        }
+        switch (sortBy) {
+            case "yacht_favourites_count":
+                return "favouritesCount";
+            case "yacht_price":
+                return "price";
+            case "yacht_created_at":
+                return "createdAt";
+            case "id":
+                return "id";
+            default:
+                throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+        }
+    }
 }

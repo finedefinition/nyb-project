@@ -1,15 +1,11 @@
 package com.norwayyachtbrockers.repository.specification.yacht;
 
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
-import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationBuilder;
 import com.norwayyachtbrockers.repository.specification.SpecificationProviderManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
@@ -221,45 +217,46 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
     }
 
     private void applySorting(CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Root<Yacht> root, String sortBy, Sort.Direction direction) {
+    switch (sortBy) {
+        case "price":
+            query.orderBy(direction.isAscending() ?
+                    criteriaBuilder.asc(root.get("price")) :
+                    criteriaBuilder.desc(root.get("price")));
+            break;
+        case "createdAt":
+            query.orderBy(direction.isAscending() ?
+                    criteriaBuilder.asc(root.get("createdAt")) :
+                    criteriaBuilder.desc(root.get("createdAt")));
+            break;
+        case "favouritesCount":
+            query.orderBy(direction.isAscending() ?
+                    criteriaBuilder.asc(root.get("favouritesCount")) :
+                    criteriaBuilder.desc(root.get("favouritesCount")));
+            break;
+        case "id":
+            query.orderBy(direction.isAscending() ?
+                    criteriaBuilder.asc(root.get("id")) :
+                    criteriaBuilder.desc(root.get("id")));
+            break;
+        default:
+            throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+    }
+}
+
+
+    private String mapSortByParameter(String sortBy) {
         if (sortBy == null || sortBy.isEmpty()) {
-            return;
+            return "id"; // Сортировка по умолчанию
         }
-
         switch (sortBy) {
-            case "yacht_price":
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(root.get("price")) :
-                        criteriaBuilder.desc(root.get("price")));
-                break;
-            case "yacht_created_at":
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(root.get("createdAt")) :
-                        criteriaBuilder.desc(root.get("createdAt")));
-                break;
             case "yacht_favourites_count":
-                // Обработка сортировки по количеству избранных
-                Join<Yacht, User> favouritesJoin = root.join("favouritedByUsers", JoinType.LEFT);
-
-                // Подсчет количества избранного
-                Expression<Long> favouritesCount = criteriaBuilder.count(favouritesJoin.get("id"));
-
-                // Группировка по ID яхты
-                query.groupBy(root.get("id"));
-
-                // Включаем в SELECT яхту и количество избранного
-                query.multiselect(root, favouritesCount);
-
-                // Устанавливаем ORDER BY
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(favouritesCount) :
-                        criteriaBuilder.desc(favouritesCount));
-
-                break;
+                return "favouritesCount";
+            case "yacht_price":
+                return "price";
+            case "yacht_created_at":
+                return "createdAt";
             case "id":
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(root.get("id")) :
-                        criteriaBuilder.desc(root.get("id")));
-                break;
+                return "id"; // Добавлено явное сопоставление для поля id
             default:
                 throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
         }
