@@ -2,6 +2,7 @@ package com.norwayyachtbrockers.dto.mapper;
 
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
+import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
@@ -149,10 +150,6 @@ public class YachtMapper {
         return setFields(yacht, dto);
     }
 
-    public Yacht updateYachtFromDto(Yacht yacht, YachtRequestDto dto) {
-        return setFields(yacht, dto);
-    }
-
     public YachtResponseDto convertToDto(Yacht yacht) {
         YachtResponseDto dto = new YachtResponseDto();
         dto.setId(yacht.getId());
@@ -275,6 +272,151 @@ public class YachtMapper {
         combinedDto.setLastName(lastNames);
 
         return combinedDto;
+    }
+
+
+    public Yacht updateYachtFromDto(Yacht yacht, YachtUpdateRequestDto dto) {
+        if (dto.getVatIncluded() != null) {
+            yacht.setVatIncluded(dto.getVatIncluded());
+        }
+        if (dto.getPrice() != null) {
+            yacht.setPrice(dto.getPrice());
+        }
+
+        // Обновление YachtModel
+        if (dto.getMake() != null || dto.getModel() != null || dto.getYear() != null ||
+                dto.getLengthOverall() != null || dto.getBeamWidth() != null || dto.getDraftDepth() != null ||
+                dto.getKeelType() != null || dto.getFuelType() != null) {
+
+            // Получаем текущую YachtModel или создаем новую
+            YachtModel yachtModel = yacht.getYachtModel();
+            if (yachtModel == null) {
+                yachtModel = new YachtModel();
+            }
+
+            // Обновляем поля YachtModel
+            if (dto.getMake() != null) {
+                yachtModel.setMake(dto.getMake());
+            }
+            if (dto.getModel() != null) {
+                yachtModel.setModel(dto.getModel());
+            }
+            if (dto.getYear() != null) {
+                yachtModel.setYear(dto.getYear());
+            }
+            if (dto.getLengthOverall() != null) {
+                yachtModel.setLengthOverall(dto.getLengthOverall());
+            }
+            if (dto.getBeamWidth() != null) {
+                yachtModel.setBeamWidth(dto.getBeamWidth());
+            }
+            if (dto.getDraftDepth() != null) {
+                yachtModel.setDraftDepth(dto.getDraftDepth());
+            }
+            if (dto.getKeelType() != null) {
+                String keelTypeName = dto.getKeelType();
+                Long keelTypeId = keelService.getKeelTypeIdByName(keelTypeName);
+                if (keelTypeId == null) {
+                    Keel newKeelType = new Keel();
+                    newKeelType.setName(keelTypeName);
+                    Keel savedKeelType = keelService.saveKeel(newKeelType);
+                    keelTypeId = savedKeelType.getId();
+                }
+                yachtModel.setKeelType(keelService.findId(keelTypeId));
+            }
+            if (dto.getFuelType() != null) {
+                String fuelTypeName = dto.getFuelType();
+                Long fuelTypeId = fuelService.getFuelTypeIdByName(fuelTypeName);
+                if (fuelTypeId == null) {
+                    Fuel newFuelType = new Fuel();
+                    newFuelType.setName(fuelTypeName);
+                    Fuel savedFuelType = fuelService.saveFuel(newFuelType);
+                    fuelTypeId = savedFuelType.getId();
+                }
+                yachtModel.setFuelType(fuelService.findId(fuelTypeId));
+            }
+
+            // Сохраняем YachtModel
+            YachtModel savedYachtModel = yachtModelService.saveYachtModel(yachtModel);
+            yacht.setYachtModel(savedYachtModel);
+        }
+
+        // Обновление страны
+        if (dto.getCountry() != null) {
+            String countryName = dto.getCountry();
+            Long countryId = countryService.getCountryIdByName(countryName);
+            if (countryId == null) {
+                Country newCountry = new Country();
+                newCountry.setName(countryName);
+                Country savedCountry = countryService.saveCountry(newCountry);
+                countryId = savedCountry.getId();
+            }
+            yacht.setCountry(countryService.findId(countryId));
+        }
+
+        // Обновление города
+        if (dto.getTown() != null) {
+            String townName = dto.getTown();
+            Long countryId = yacht.getCountry() != null ? yacht.getCountry().getId() : null;
+            Long townId = townService.getTownIdByName(townName);
+            if (townId == null) {
+                Town newTown = new Town();
+                newTown.setName(townName);
+                if (countryId != null) {
+                    newTown.setCountry(countryService.findId(countryId));
+                }
+                Town savedTown = townService.saveTown(newTown);
+                townId = savedTown.getId();
+            }
+            yacht.setTown(townService.findTownById(townId));
+        }
+
+        // Обновление YachtDetail
+        if (dto.getCabin() != null || dto.getBerth() != null || dto.getHeads() != null || dto.getShower() != null || dto.getDescription() != null) {
+            YachtDetail yachtDetail = yacht.getYachtDetail();
+            if (yachtDetail == null) {
+                yachtDetail = new YachtDetail();
+            }
+            if (dto.getCabin() != null) {
+                yachtDetail.setCabin(dto.getCabin());
+            }
+            if (dto.getBerth() != null) {
+                yachtDetail.setBerth(dto.getBerth());
+            }
+            if (dto.getHeads() != null) {
+                yachtDetail.setHeads(dto.getHeads());
+            }
+            if (dto.getShower() != null) {
+                yachtDetail.setShower(dto.getShower());
+            }
+            if (dto.getDescription() != null) {
+                yachtDetail.setDescription(dto.getDescription());
+            }
+            yacht.setYachtDetail(yachtDetail);
+        }
+
+        // Обновление OwnerInfo
+        if (dto.getFirstName() != null || dto.getLastName() != null || dto.getEmail() != null || dto.getPhoneNumber() != null) {
+            OwnerInfo ownerInfo = yacht.getOwnerInfo();
+            if (ownerInfo == null) {
+                ownerInfo = new OwnerInfo();
+            }
+            if (dto.getFirstName() != null) {
+                ownerInfo.setFirstName(dto.getFirstName());
+            }
+            if (dto.getLastName() != null) {
+                ownerInfo.setLastName(dto.getLastName());
+            }
+            if (dto.getEmail() != null) {
+                ownerInfo.setEmail(dto.getEmail());
+            }
+            if (dto.getPhoneNumber() != null) {
+                ownerInfo.setTelephone(dto.getPhoneNumber());
+            }
+            yacht.setOwnerInfo(ownerInfo);
+        }
+
+        return yacht;
     }
 
     private String formatPrice(BigDecimal price) {

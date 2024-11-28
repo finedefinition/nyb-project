@@ -74,6 +74,9 @@ public class Yacht extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favouriteYachts")
     private Set<User> favouritedByUsers = new HashSet<>();
 
+    @Column(name = "favourites_count", nullable = false)
+    private Integer favouritesCount;
+
     public void setYachtModel(YachtModel yachtModel) {
         if (yachtModel != null && yachtModel.getYachts() == null) {
             yachtModel.setYachts(new HashSet<>());

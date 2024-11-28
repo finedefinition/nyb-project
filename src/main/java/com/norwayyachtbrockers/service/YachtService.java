@@ -3,6 +3,7 @@ package com.norwayyachtbrockers.service;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
+import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
@@ -19,8 +20,8 @@ public interface YachtService {
     YachtResponseDto save(FullYachtRequestDto dto, MultipartFile mainImageFile,
                           List<MultipartFile> additionalImageFiles);
 
-    YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
-                          List<MultipartFile> additionalImageFiles);
+//    YachtResponseDto save(YachtRequestDto dto, MultipartFile mainImageFile,
+//                          List<MultipartFile> additionalImageFiles);
 
     YachtResponseDto findId(Long id);
 
@@ -28,22 +29,11 @@ public interface YachtService {
 
     List<YachtShortResponseDto> findAllYachts();
 
-//    List<YachtResponseDto> search(YachtSearchParametersDto searchParametersDto);
-//
-//    List<YachtCrmResponseDto> searchForCrm(YachtSearchParametersDto searchParametersDto);
 
-    YachtResponseDto update(YachtRequestDto dto, Long id, MultipartFile mainImageFile,
+    YachtResponseDto update(YachtUpdateRequestDto dto, Long id, MultipartFile mainImageFile,
                             List<MultipartFile> additionalImageFiles);
 
     void deleteById(Long id);
-
-//    PaginatedYachtCrmResponse getYachtsWithPaginationAndSearch(PaginationAndSortingParametersDto
-//                                                                       paginationAndSortingParametersDto,
-//                                                               YachtSearchParametersDto searchParametersDto);
-
-    //    PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
-//    PaginationAndSortingParametersDto paginationAndSortingParametersDto,
-//                                                            YachtSearchParametersDto searchParametersDto);
 
     PaginatedYachtResponse getAllYachtsWithPaginationAndSearch(
             PaginationAndSortingParametersDto paginationAndSortingParametersDto,

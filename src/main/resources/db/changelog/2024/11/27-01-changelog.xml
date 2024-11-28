@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.28.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1732747577553-1" author="sergii (generated)">
+        <createTable tableName="countries">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_countries"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="name" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-2" author="sergii (generated)">
+        <createTable tableName="fuel_types">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_fuel_types"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="name" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-3" author="sergii (generated)">
+        <createTable tableName="keel_types">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_keel_types"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="name" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-4" author="sergii (generated)">
+        <createTable tableName="owner_infos">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_owner_infos"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="first_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="telephone" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-5" author="sergii (generated)">
+        <createTable tableName="towns">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_towns"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="name" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-6" author="sergii (generated)">
+        <createTable tableName="user_favourite_yachts">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_favourite_yachts"/>
+            </column>
+            <column name="yacht_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_favourite_yachts"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-7" author="sergii (generated)">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="first_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_roles" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cognito_sub" type="VARCHAR(48)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-8" author="sergii (generated)">
+        <createTable tableName="yacht_details">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_yacht_details"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="cabin" type="INT"/>
+            <column name="berth" type="INT"/>
+            <column name="heads" type="INT"/>
+            <column name="shower" type="INT"/>
+            <column name="description" type="VARCHAR(5000)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-9" author="sergii (generated)">
+        <createTable tableName="yacht_images">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_yacht_images"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="image_key" type="VARCHAR(255)"/>
+            <column name="image_index" type="INT"/>
+            <column name="yacht_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-10" author="sergii (generated)">
+        <createTable tableName="yacht_models">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_yacht_models"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="make" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="year" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="length_overall" type="DECIMAL(5, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="beam_width" type="DECIMAL(5, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="draft_depth" type="DECIMAL(5, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="keel_type_id" type="BIGINT"/>
+            <column name="fuel_type_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-11" author="sergii (generated)">
+        <createTable tableName="yachts">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_yachts"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="featured" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat_included" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_old" type="DECIMAL(10, 2)"/>
+            <column name="main_image_key" type="VARCHAR(40)"/>
+            <column name="yacht_model_id" type="BIGINT"/>
+            <column name="country_id" type="BIGINT"/>
+            <column name="town_id" type="BIGINT"/>
+            <column name="yacht_detail_id" type="BIGINT"/>
+            <column name="owner_info_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1732747577553-12" author="sergii (generated)">
+        <addUniqueConstraint columnNames="name, country_id" constraintName="uc_40c61142ca36c848b9310f18e"
+                             tableName="towns"/>
+    </changeSet>
+    <changeSet id="1732747577553-13" author="sergii (generated)">
+        <addUniqueConstraint columnNames="make, model, year" constraintName="uc_654df82ba27d6d1a60245f6dc"
+                             tableName="yacht_models"/>
+    </changeSet>
+    <changeSet id="1732747577553-14" author="sergii (generated)">
+        <addUniqueConstraint columnNames="email" constraintName="uc_74165e195b2f7b25de690d14a" tableName="users"/>
+    </changeSet>
+    <changeSet id="1732747577553-15" author="sergii (generated)">
+        <addUniqueConstraint columnNames="name" constraintName="uc_a7b9012d53c8618e7801e4c50" tableName="keel_types"/>
+    </changeSet>
+    <changeSet id="1732747577553-16" author="sergii (generated)">
+        <addUniqueConstraint columnNames="email, telephone" constraintName="uc_e9293c381016b5d17efdec381"
+                             tableName="owner_infos"/>
+    </changeSet>
+    <changeSet id="1732747577553-17" author="sergii (generated)">
+        <addUniqueConstraint columnNames="name" constraintName="uc_ee0d5d414f6a735ea557e003a" tableName="fuel_types"/>
+    </changeSet>
+    <changeSet id="1732747577553-18" author="sergii (generated)">
+        <addUniqueConstraint columnNames="name" constraintName="uc_f054a373c493c6244e7163abe" tableName="countries"/>
+    </changeSet>
+    <changeSet id="1732747577553-19" author="sergii (generated)">
+        <addUniqueConstraint columnNames="owner_info_id" constraintName="uc_yachts_owner_info" tableName="yachts"/>
+    </changeSet>
+    <changeSet id="1732747577553-20" author="sergii (generated)">
+        <addUniqueConstraint columnNames="yacht_detail_id" constraintName="uc_yachts_yacht_detail" tableName="yachts"/>
+    </changeSet>
+    <changeSet id="1732747577553-21" author="sergii (generated)">
+        <createIndex indexName="idx_cognito_sub" tableName="users">
+            <column name="cognito_sub"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1732747577553-22" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="towns" constraintName="FK_TOWNS_ON_COUNTRY"
+                                 referencedColumnNames="id" referencedTableName="countries"/>
+    </changeSet>
+    <changeSet id="1732747577553-23" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="country_id" baseTableName="yachts"
+                                 constraintName="FK_YACHTS_ON_COUNTRY" referencedColumnNames="id"
+                                 referencedTableName="countries"/>
+    </changeSet>
+    <changeSet id="1732747577553-24" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="owner_info_id" baseTableName="yachts"
+                                 constraintName="FK_YACHTS_ON_OWNER_INFO" referencedColumnNames="id"
+                                 referencedTableName="owner_infos"/>
+    </changeSet>
+    <changeSet id="1732747577553-25" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="town_id" baseTableName="yachts" constraintName="FK_YACHTS_ON_TOWN"
+                                 referencedColumnNames="id" referencedTableName="towns"/>
+    </changeSet>
+    <changeSet id="1732747577553-26" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="yacht_detail_id" baseTableName="yachts"
+                                 constraintName="FK_YACHTS_ON_YACHT_DETAIL" referencedColumnNames="id"
+                                 referencedTableName="yacht_details"/>
+    </changeSet>
+    <changeSet id="1732747577553-27" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="yacht_model_id" baseTableName="yachts"
+                                 constraintName="FK_YACHTS_ON_YACHT_MODEL" referencedColumnNames="id"
+                                 referencedTableName="yacht_models"/>
+    </changeSet>
+    <changeSet id="1732747577553-28" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="yacht_id" baseTableName="yacht_images"
+                                 constraintName="FK_YACHT_IMAGES_ON_YACHT" referencedColumnNames="id"
+                                 referencedTableName="yachts"/>
+    </changeSet>
+    <changeSet id="1732747577553-29" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="fuel_type_id" baseTableName="yacht_models"
+                                 constraintName="FK_YACHT_MODELS_ON_FUEL_TYPE" referencedColumnNames="id"
+                                 referencedTableName="fuel_types"/>
+    </changeSet>
+    <changeSet id="1732747577553-30" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="keel_type_id" baseTableName="yacht_models"
+                                 constraintName="FK_YACHT_MODELS_ON_KEEL_TYPE" referencedColumnNames="id"
+                                 referencedTableName="keel_types"/>
+    </changeSet>
+    <changeSet id="1732747577553-31" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_favourite_yachts"
+                                 constraintName="fk_usefavyac_on_user" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1732747577553-32" author="sergii (generated)">
+        <addForeignKeyConstraint baseColumnNames="yacht_id" baseTableName="user_favourite_yachts"
+                                 constraintName="fk_usefavyac_on_yacht" referencedColumnNames="id"
+                                 referencedTableName="yachts"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,13 +1,11 @@
 package com.norwayyachtbrockers.controler;
 
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
-import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
-import com.norwayyachtbrockers.dto.response.PaginatedYachtCrmResponse;
+import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
-import com.norwayyachtbrockers.dto.response.YachtCrmResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/yachts")
@@ -41,23 +38,11 @@ public class YachtController {
         this.yachtService = yachtService;
     }
 
-    @PostMapping(value = "/full-dto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> createYachtFromFullYachtRequestDto(
             @Valid
             @RequestPart("yachtData") FullYachtRequestDto dto,
-            @RequestParam("mainImage") MultipartFile mainImageFile,
-            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
-
-        YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
-    }
-
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<YachtResponseDto> createYacht(
-            @Valid
-            @RequestPart("yachtData") YachtRequestDto dto,
             @RequestParam("mainImage") MultipartFile mainImageFile,
             @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
 
@@ -91,16 +76,19 @@ public class YachtController {
         return ResponseEntity.ok(yachts);
     }
 
-
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> updateYacht(
-            @Valid @PathVariable Long id,
-            @RequestPart(value = "yachtData", required = false) Optional<YachtRequestDto> dto,
-            @RequestParam("mainImage") MultipartFile mainImageFile,
-            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
+            @PathVariable Long id,
+            @RequestPart(value = "yachtData", required = false)YachtUpdateRequestDto dto,
+            @RequestParam(value = "mainImage", required = false) MultipartFile mainImageFile,
+            @RequestParam(value = "additionalImages", required = false) List<MultipartFile> additionalImageFiles) {
 
-        YachtResponseDto updatedYachtDto = yachtService.update(dto.orElse(null), id, mainImageFile, additionalImageFiles);
+        if (id == null) {
+            throw new IllegalArgumentException("The given id must not be null");
+        }
+
+        YachtResponseDto updatedYachtDto = yachtService.update(dto, id, mainImageFile, additionalImageFiles);
         return new ResponseEntity<>(updatedYachtDto, HttpStatus.OK);
     }
 

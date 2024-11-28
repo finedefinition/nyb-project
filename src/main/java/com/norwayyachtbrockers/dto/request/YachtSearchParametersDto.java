@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 @Data
 public class YachtSearchParametersDto {
+    private Boolean featured;
+    private Boolean vatIncluded;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
     private String model;
