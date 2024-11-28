@@ -3,7 +3,7 @@ name: Build & Deploy Backend to Test Environment
 on:
   push:
     branches:
-      - main
+      - test
 
 jobs:
   build-and-push:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Java
+      - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
           distribution: temurin # Рекомендуемый дистрибутив
@@ -39,7 +39,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.BACKEND_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
           build-args: |
             DATABASE_PATH=${{ vars.DATABASE_PATH }}
             DATABASE_USER=${{ secrets.DATABASE_USER }}
@@ -61,8 +61,7 @@ jobs:
             COGNITO_ACCESS_KEY_ID=${{ secrets.COGNITO_ACCESS_KEY_ID }}
             COGNITO_SECRET_ACCESS_KEY=${{ secrets.COGNITO_SECRET_ACCESS_KEY }}
             IMAGE_TAG=${{ vars.IMAGE_TAG }}
-            ECR_REPOSITORY=${{ vars.PROD_TEST_ECR_REPOSITORY }}
-
+            ECR_REPOSITORY=${{ vars.BACKEND_TEST_ECR_REPOSITORY }}
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -109,29 +108,25 @@ jobs:
           }
           export -f check_command_status
           EOF
-
       - name: Get EC2 instances in Target Group
         id: get_instances
         run: |
-          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.PROD_BACKEND_TARGET_GROUP_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
+          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.TEST_BACKEND_TARGET_GROUP_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
           echo "Instances found: $instances"
           echo "instances=$instances" >> $GITHUB_OUTPUT
-
       - name: Pull the latest Docker image
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
-          IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+          IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.BACKEND_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
         run: |
           source /tmp/check_command_status.sh
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances
           do
             echo "Deploying to instance: $instance"
-
             # Определяем команду
             command="docker pull ${IMAGE_FULL_NAME}"
             echo "Pull Command: \"$command\""
-
             # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
@@ -143,11 +138,9 @@ jobs:
               --query "Command.CommandId" \
               --output text)
             echo "Pull Command ID: $command_id"
-
             # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
-
       - name: Stop running containers
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
@@ -157,11 +150,9 @@ jobs:
           for instance in $instances
           do
             echo "Deploying to instance: $instance"
-
             # Определяем команду
             command="cd /home/ec2-user/app && docker-compose down"
             echo "Stop Command: \"$command\""
-
             # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
@@ -173,11 +164,9 @@ jobs:
               --query "Command.CommandId" \
               --output text)
             echo "Stop Command ID: $command_id"
-
             # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
-
       - name: Start containers
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
@@ -187,11 +176,9 @@ jobs:
           for instance in $instances
           do
             echo "Deploying to instance: $instance"
-
             # Определяем команду
             command="cd /home/ec2-user/app && docker-compose up -d"
             echo "Start Command: \"$command\""
-
             # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
@@ -203,11 +190,9 @@ jobs:
               --query "Command.CommandId" \
               --output text)
             echo "Start Command ID: $command_id"
-
             # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
-
       - name: Remove unused Docker images
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
@@ -217,11 +202,9 @@ jobs:
           for instance in $instances
           do
             echo "Deploying to instance: $instance"
-
             # Определяем команду
             command="docker image prune -f"
             echo "Prune Command: \"$command\""
-
             # Отправляем команду через SSM
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
@@ -233,7 +216,7 @@ jobs:
               --query "Command.CommandId" \
               --output text)
             echo "Prune Command ID: $command_id"
-
             # Проверяем статус выполнения команды
             check_command_status "$command_id" "$instance"
           done
+

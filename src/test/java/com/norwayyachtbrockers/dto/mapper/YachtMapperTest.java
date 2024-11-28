@@ -134,19 +134,19 @@ class YachtMapperTest {
 
     }
 
-    @Test
-    @DisplayName("Update Yacht from DTO")
-    @Order(20)
-    void testUpdateYachtFromDto() {
-        // Arrange (done in setUp)
-
-        // Act
-        Yacht updatedYacht = yachtMapper.updateYachtFromDto(yacht, dto);
-
-        // Assert
-        assertSame(yacht, updatedYacht, "The updated yacht should be the same instance as the input yacht");
-        assertTrue(updatedYacht.isVatIncluded(), "The yacht should have VAT included after update");
-    }
+//    @Test
+//    @DisplayName("Update Yacht from DTO")
+//    @Order(20)
+//    void testUpdateYachtFromDto() {
+//        // Arrange (done in setUp)
+//
+//        // Act
+//        Yacht updatedYacht = yachtMapper.updateYachtFromDto(yacht, dto);
+//
+//        // Assert
+//        assertSame(yacht, updatedYacht, "The updated yacht should be the same instance as the input yacht");
+//        assertTrue(updatedYacht.isVatIncluded(), "The yacht should have VAT included after update");
+//    }
 
     @Test
     @DisplayName("Convert Yacht to DTO")

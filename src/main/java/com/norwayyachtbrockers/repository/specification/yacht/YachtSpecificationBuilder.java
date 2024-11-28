@@ -197,6 +197,16 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                 predicates.add(ownerLastNameSpec.toPredicate(root, query, criteriaBuilder));
             }
 
+            // Фильтрация по featured
+            if (searchParametersDto.getFeatured() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("featured"), searchParametersDto.getFeatured()));
+            }
+
+            // Фильтрация по vatIncluded
+            if (searchParametersDto.getVatIncluded() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("vatIncluded"), searchParametersDto.getVatIncluded()));
+            }
+
             // Обработка сортировки
             applySorting(query, criteriaBuilder, root, sortBy, direction);
 
