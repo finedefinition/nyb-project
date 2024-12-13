@@ -8,14 +8,13 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -89,16 +88,16 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                 predicates.add(fuelTypeSpec.toPredicate(root, query, criteriaBuilder));
             }
 
-            // Фильтрация по году выпуска
-            if (searchParametersDto.getMinYear() != null || searchParametersDto.getMaxYear() != null) {
-                Specification<Yacht> yearSpec = specificationProviderManager
-                        .getSpecificationProvider("year")
-                        .getSpecification(new Integer[]{
-                                searchParametersDto.getMinYear(),
-                                searchParametersDto.getMaxYear()
-                        });
-                predicates.add(yearSpec.toPredicate(root, query, criteriaBuilder));
-            }
+//            // Фильтрация по году выпуска
+//            if (searchParametersDto.getMinYear() != null || searchParametersDto.getMaxYear() != null) {
+//                Specification<Yacht> yearSpec = specificationProviderManager
+//                        .getSpecificationProvider("year")
+//                        .getSpecification(new Integer[]{
+//                                searchParametersDto.getMinYear(),
+//                                searchParametersDto.getMaxYear()
+//                        });
+//                predicates.add(yearSpec.toPredicate(root, query, criteriaBuilder));
+//            }
 
             // Фильтрация по общей длине
             if (searchParametersDto.getMinLengthOverall() != null || searchParametersDto.getMaxLengthOverall() != null) {
@@ -233,6 +232,12 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                     criteriaBuilder.asc(root.get("favouritesCount")) :
                     criteriaBuilder.desc(root.get("favouritesCount")));
             break;
+//        case "year":
+//            Join<Yacht, YachtModel> yachtModelJoin = root.join("yachtModel", JoinType.LEFT);
+//            query.orderBy(direction.isAscending() ?
+//                    criteriaBuilder.asc(yachtModelJoin.get("year")) :
+//                    criteriaBuilder.desc(yachtModelJoin.get("year")));
+//            break;
         case "id":
             query.orderBy(direction.isAscending() ?
                     criteriaBuilder.asc(root.get("id")) :
@@ -255,6 +260,8 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
                 return "price";
             case "yacht_created_at":
                 return "createdAt";
+            case "year":
+                return "year";
             case "id":
                 return "id"; // Добавлено явное сопоставление для поля id
             default:

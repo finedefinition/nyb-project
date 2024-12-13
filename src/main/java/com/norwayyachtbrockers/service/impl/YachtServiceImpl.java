@@ -20,6 +20,10 @@ import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.service.YachtService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import com.norwayyachtbrockers.util.S3ImageService;
+import java.sql.Timestamp;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +33,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.sql.Timestamp;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -215,10 +214,16 @@ public class YachtServiceImpl implements YachtService {
         Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto, sortBy, direction);
 
         // Настраиваем пагинацию с сортировкой
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        Pageable pageable;
+        Page<Yacht> yachtPage;
 
-        // Получаем страницу яхт
-        Page<Yacht> yachtPage = yachtRepository.findAll(yachtSpecification, pageable);
+        if (sortBy.equals("year")) {
+            pageable = PageRequest.of(0, 10, Sort.by("yachtModel.year").ascending());
+            yachtPage = yachtRepository.findAll(pageable);
+        } else {
+            pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+            yachtPage = yachtRepository.findAll(yachtSpecification, pageable);
+        }
 
         // Преобразуем сущности в DTO
         List<YachtShortResponseDto> yachts = yachtPage.getContent().stream()
@@ -286,6 +291,8 @@ public class YachtServiceImpl implements YachtService {
                 return "price";
             case "yacht_created_at":
                 return "createdAt";
+            case "yacht_year":
+                return "year";
             case "id":
                 return "id";
             default:
