@@ -5,7 +5,6 @@ import com.norwayyachtbrockers.dto.mapper.YachtMapper;
 import com.norwayyachtbrockers.dto.mapper.YachtShortMapper;
 import com.norwayyachtbrockers.dto.request.FullYachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtImageRequestDto;
-import com.norwayyachtbrockers.dto.request.YachtRequestDto;
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
 import com.norwayyachtbrockers.dto.request.YachtUpdateRequestDto;
 import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
@@ -21,6 +20,10 @@ import com.norwayyachtbrockers.service.YachtImageService;
 import com.norwayyachtbrockers.service.YachtService;
 import com.norwayyachtbrockers.util.EntityUtils;
 import com.norwayyachtbrockers.util.S3ImageService;
+import java.sql.Timestamp;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,10 +33,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -204,8 +203,8 @@ public class YachtServiceImpl implements YachtService {
         int page = paginationAndSortingParametersDto.getPage() - 1;
         int size = ApplicationConstants.PAGE_GALLERY_SIZE;
 
-        // Получаем параметры сортировки
-        String sortBy = paginationAndSortingParametersDto.getSortBy();
+        // Маппинг параметра сортировки
+        String sortBy = mapSortByParameter(paginationAndSortingParametersDto.getSortBy());
         String orderBy = paginationAndSortingParametersDto.getOrderBy();
 
         // Преобразуем направление сортировки (asc/desc)
@@ -214,28 +213,23 @@ public class YachtServiceImpl implements YachtService {
         // Создаем спецификацию с учетом сортировки
         Specification<Yacht> yachtSpecification = yachtSpecificationBuilder.build(searchParametersDto, sortBy, direction);
 
-        // Настраиваем пагинацию без сортировки, так как сортировка обрабатывается в спецификации
-        Pageable pageable = PageRequest.of(page, size);
+        // Настраиваем пагинацию с сортировкой
+        Pageable pageable;
+        Page<Yacht> yachtPage;
 
-        // Проверяем, нужно ли сортировать по количеству избранного
-        Page<Object[]> yachtPage;
-        if ("yacht_favourites_count".equalsIgnoreCase(sortBy)) {
-            // Если сортировка по количеству избранного, делаем запрос с подсчетом избранного
-            yachtPage = yachtRepository.findAllWithFavoritesCount(yachtSpecification, pageable);
+        if (sortBy.equals("year")) {
+            pageable = PageRequest.of(0, 10, Sort.by("yachtModel.year").ascending());
+            yachtPage = yachtRepository.findAll(pageable);
         } else {
-            // Обычная сортировка
-            yachtPage = yachtRepository.findAll(yachtSpecification, pageable)
-                    .map(yacht -> new Object[]{yacht, null});
+            pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+            yachtPage = yachtRepository.findAll(yachtSpecification, pageable);
         }
 
         // Преобразуем сущности в DTO
-        List<YachtShortResponseDto> yachts = yachtPage.stream()
-                .map(objects -> {
-                    Yacht yacht = (Yacht) objects[0];
-                    Integer favouritesCount = objects[1] != null ? ((Long) objects[1]).intValue() : null;
-
+        List<YachtShortResponseDto> yachts = yachtPage.getContent().stream()
+                .map(yacht -> {
                     YachtShortResponseDto dto = yachtShortMapper.convertToDto(yacht);
-                    dto.setFavouritesCount(favouritesCount);
+                    dto.setFavouritesCount(yacht.getFavouritesCount()); // Устанавливаем favouritesCount напрямую
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -260,5 +254,49 @@ public class YachtServiceImpl implements YachtService {
     public YachtCrmFrontendResponseDto getCombinedYachtData() {
         List<Yacht> yachts = yachtRepository.findAll();
         return yachtMapper.combineYachtData(yachts);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<YachtShortResponseDto> getRandomFeaturedYachts() {
+        // Получаем данные из репозитория
+        List<Object[]> results = yachtRepository.findOptimizedFeaturedYachts();
+
+        // Преобразуем данные в DTO
+        return results.stream().map(record -> {
+            YachtShortResponseDto dto = new YachtShortResponseDto();
+            dto.setId(((Long) record[0]).longValue());
+            dto.setYachtTop((boolean) record[1]);
+            dto.setVatIncluded((boolean) record[2]);
+            dto.setPrice(record[3].toString());
+            dto.setMainImageKey((String) record[4]);
+            dto.setMake((String) record[5]);
+            dto.setModel((String) record[6]);
+            dto.setYear((Integer) record[7]);
+            dto.setCountry((String) record[8]);
+            dto.setTown((String) record[9]);
+            dto.setCreatedAt(((Timestamp) record[10]).toLocalDateTime());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    private String mapSortByParameter(String sortBy) {
+        if (sortBy == null || sortBy.isEmpty()) {
+            return "id"; // Сортировка по умолчанию
+        }
+        switch (sortBy) {
+            case "yacht_favourites_count":
+                return "favouritesCount";
+            case "yacht_price":
+                return "price";
+            case "yacht_created_at":
+                return "createdAt";
+            case "yacht_year":
+                return "year";
+            case "id":
+                return "id";
+            default:
+                throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+        }
     }
 }

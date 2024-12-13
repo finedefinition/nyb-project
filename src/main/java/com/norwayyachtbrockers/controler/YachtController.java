@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -103,4 +104,9 @@ public class YachtController {
         return yachtService.getCombinedYachtData();
     }
 
+    @GetMapping("/featured")
+    public ResponseEntity<List<YachtShortResponseDto>> getRandomFeaturedYachts() {
+        List<YachtShortResponseDto> randomFeaturedYachts = yachtService.getRandomFeaturedYachts();
+        return ResponseEntity.ok(randomFeaturedYachts);
+    }
 }
