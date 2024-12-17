@@ -38,13 +38,12 @@ public class YachtController {
         this.yachtService = yachtService;
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> createYachtFromFullYachtRequestDto(
-            @Valid
-            @RequestPart("yachtData") FullYachtRequestDto dto,
-            @RequestParam("mainImage") MultipartFile mainImageFile,
-            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
+            @Valid @RequestPart("yachtData") FullYachtRequestDto dto,
+            @RequestPart("mainImage") MultipartFile mainImageFile,
+            @RequestPart("additionalImages") List<MultipartFile> additionalImageFiles) {
 
         YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);

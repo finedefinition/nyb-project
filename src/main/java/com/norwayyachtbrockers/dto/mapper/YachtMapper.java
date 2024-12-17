@@ -48,6 +48,7 @@ public class YachtMapper {
         Yacht yacht = new Yacht();
         yacht.setVatIncluded(dto.isVatIncluded());
         yacht.setPrice(dto.getPrice());
+        yacht.setFavouritesCount(0);
 
         // YachtModel
         String make = dto.getMake();

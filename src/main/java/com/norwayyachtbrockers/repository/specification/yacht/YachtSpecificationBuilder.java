@@ -6,6 +6,8 @@ import com.norwayyachtbrockers.repository.specification.SpecificationBuilder;
 import com.norwayyachtbrockers.repository.specification.SpecificationProviderManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
@@ -217,48 +219,44 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
     }
 
     private void applySorting(CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Root<Yacht> root, String sortBy, Sort.Direction direction) {
-    switch (sortBy) {
-        case "price":
-            query.orderBy(direction.isAscending() ?
-                    criteriaBuilder.asc(root.get("price")) :
-                    criteriaBuilder.desc(root.get("price")));
-            break;
-        case "createdAt":
-            query.orderBy(direction.isAscending() ?
-                    criteriaBuilder.asc(root.get("createdAt")) :
-                    criteriaBuilder.desc(root.get("createdAt")));
-            break;
-        case "favouritesCount":
-            query.orderBy(direction.isAscending() ?
-                    criteriaBuilder.asc(root.get("favouritesCount")) :
-                    criteriaBuilder.desc(root.get("favouritesCount")));
-            break;
-        case "id":
-            query.orderBy(direction.isAscending() ?
-                    criteriaBuilder.asc(root.get("id")) :
-                    criteriaBuilder.desc(root.get("id")));
-            break;
-        default:
-            throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
-    }
-}
+        if (sortBy.contains(".")) {
+            String[] parts = sortBy.split("\\.");
+            String joinField = parts[0];
+            String sortField = parts[1];
 
+            Join<Yacht, ?> join = root.join(joinField, JoinType.LEFT);
 
-    private String mapSortByParameter(String sortBy) {
-        if (sortBy == null || sortBy.isEmpty()) {
-            return "id"; // Сортировка по умолчанию
-        }
-        switch (sortBy) {
-            case "yacht_favourites_count":
-                return "favouritesCount";
-            case "yacht_price":
-                return "price";
-            case "yacht_created_at":
-                return "createdAt";
-            case "id":
-                return "id"; // Добавлено явное сопоставление для поля id
-            default:
-                throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+            switch (sortField) {
+                case "year":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(join.get("year")) :
+                            criteriaBuilder.desc(join.get("year")));
+                    break;
+                // Добавьте другие вложенные поля при необходимости
+                default:
+                    throw new IllegalArgumentException("Unsupported nested sort field: " + sortField);
+            }
+        } else {
+            switch (sortBy) {
+                case "price":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(root.get("price")) :
+                            criteriaBuilder.desc(root.get("price")));
+                    break;
+                case "favouritesCount":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(root.get("favouritesCount")) :
+                            criteriaBuilder.desc(root.get("favouritesCount")));
+                    break;
+                case "id":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(root.get("id")) :
+                            criteriaBuilder.desc(root.get("id")));
+                    break;
+                // Добавьте другие поля при необходимости
+                default:
+                    throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+            }
         }
     }
 }

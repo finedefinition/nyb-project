@@ -14,6 +14,7 @@ import com.norwayyachtbrockers.dto.response.YachtImageResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.model.Yacht;
+import com.norwayyachtbrockers.model.enums.YachtSortField;
 import com.norwayyachtbrockers.repository.YachtRepository;
 import com.norwayyachtbrockers.repository.specification.yacht.YachtSpecificationBuilder;
 import com.norwayyachtbrockers.service.YachtImageService;
@@ -277,19 +278,13 @@ public class YachtServiceImpl implements YachtService {
 
     private String mapSortByParameter(String sortBy) {
         if (sortBy == null || sortBy.isEmpty()) {
-            return "id"; // Сортировка по умолчанию
+            return YachtSortField.ID.getFieldName(); // Сортировка по умолчанию
         }
-        switch (sortBy) {
-            case "yacht_favourites_count":
-                return "favouritesCount";
-            case "yacht_price":
-                return "price";
-            case "yacht_created_at":
-                return "createdAt";
-            case "id":
-                return "id";
-            default:
-                throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+        try {
+            String mappedField = YachtSortField.fromSortBy(sortBy).getFieldName();
+            return mappedField;
+        } catch (IllegalArgumentException e) {
+            throw e;
         }
     }
 }
