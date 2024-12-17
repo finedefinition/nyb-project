@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Setup Java
+      - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
           distribution: temurin
@@ -25,27 +25,23 @@ jobs:
         run: mvn clean install -DskipTests
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Login to Amazon ECR via AWS CLI
-        run: |
-          aws ecr get-login-password --region "${{ vars.AWS_REGION }}" | docker login --username AWS --password-stdin "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com"
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          driver: docker-container
-
-      - name: Build and push Docker Server image
-        uses: docker/build-push-action@v4
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          platforms: linux/amd64
+          tags: |
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:latest
           build-args: |
             DATABASE_PATH=${{ vars.DATABASE_PATH }}
             DATABASE_USER=${{ secrets.DATABASE_USER }}
@@ -68,11 +64,6 @@ jobs:
             COGNITO_SECRET_ACCESS_KEY=${{ secrets.COGNITO_SECRET_ACCESS_KEY }}
             IMAGE_TAG=${{ vars.IMAGE_TAG }}
             ECR_REPOSITORY=${{ vars.PROD_TEST_ECR_REPOSITORY }}
-          tags: |
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_CLIENT_REPOSITORY }}:${{ github.ref_name }}-latest
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_CLIENT_REPOSITORY }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   deploy:
     needs: build-and-push
@@ -80,61 +71,60 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Set up check_command_status script
+        run: |
+          cat <<- 'EOF' > /tmp/check_command_status.sh
+          #!/bin/bash
+          check_command_status () {
+            local command_id=$1
+            local instance=$2
+            local status="Pending"
+            while [[ "$status" == "Pending" || "$status" == "InProgress" ]]; do
+              status=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance" --query 'Status' --output text 2>/dev/null)
+              if [ -z "$status" ]; then
+                status="Pending"
+              fi
+              echo "Command $command_id status on instance $instance: $status"
+              sleep 5
+            done
+            output=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance" --query 'StandardOutputContent' --output text)
+            error_output=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance" --query 'StandardErrorContent' --output text)
+            if [[ "$status" != "Success" ]]; then
+              echo "Command $command_id failed with status: $status"
+              echo "Standard Error:"
+              echo "$error_output"
+              exit 1
+            else
+              echo "Command $command_id succeeded with status: $status"
+              echo "Standard Output:"
+              echo "$output"
+            fi
+          }
+          export -f check_command_status
+          EOF
+
       - name: Get EC2 instances in Target Group
         id: get_instances
         run: |
-          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.PROD_BACKEND_TARGET_GROUP_ARN  }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
+          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.PROD_BACKEND_TARGET_GROUP_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
           echo "Instances found: $instances"
           echo "instances=$instances" >> $GITHUB_OUTPUT
 
-      - name: Create wait_for_ssm_command.sh script
-        shell: bash
-        run: |
-          cat << 'EOF' > wait_for_ssm_command.sh
-          #!/bin/bash
-          command_id=$1
-          instance_id=$2
-          status="Pending"
-          while [[ "$status" == "Pending" || "$status" == "InProgress" ]]; do
-            status=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance_id" --query 'Status' --output text 2>/dev/null)
-            if [ -z "$status" ]; then
-              status="Pending"
-            fi
-            echo "Command $command_id status on instance $instance_id: $status"
-            sleep 5
-          done
-          # После завершения команды выводим стандартный вывод и ошибки
-          output=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance_id" --query 'StandardOutputContent' --output text)
-          error_output=$(aws ssm get-command-invocation --command-id "$command_id" --instance-id "$instance_id" --query 'StandardErrorContent' --output text)
-          if [[ "$status" != "Success" ]]; then
-            echo "Command $command_id failed with status: $status"
-            echo "Standard Error:"
-            echo "$error_output"
-            exit 1
-          else
-            echo "Command $command_id succeeded with status: $status"
-            echo "Standard Output:"
-            echo "$output"
-          fi
-          EOF
-          chmod +x wait_for_ssm_command.sh
-
-      - name: Deploy to Instances
+      - name: Pull the latest Docker image
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
-          IMAGE_FULL_NAME: '${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ github.ref_name }}-latest'
+          IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
         run: |
-          instances="${{ steps.get_instances.outputs.instances }}"
-          for instance in $instances; do
+          for instance in ${{ steps.get_instances.outputs.instances }}; do
             echo "Deploying to instance: $instance"
 
             # Pull latest Docker image
@@ -143,13 +133,13 @@ jobs:
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "aws ecr get-login-password --region '"${AWS_REGION}"' | docker login --username AWS --password-stdin '"${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com"'",
-                "cd /home/ec2-user/app && docker pull '"${IMAGE_FULL_NAME}"'"
+                "aws ecr get-login-password --region '"$AWS_REGION"' | docker login --username AWS --password-stdin '"${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com"'",
+                "cd /home/ec2-user/app && docker pull '"$IMAGE_FULL_NAME"'"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            ./wait_for_ssm_command.sh "$command_id" "$instance"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
 
             # Stop running containers
             echo "Stopping containers on instance: $instance"
@@ -159,10 +149,10 @@ jobs:
               --parameters '{"commands": [
                 "cd /home/ec2-user/app && docker-compose down"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            ./wait_for_ssm_command.sh "$command_id" "$instance"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
 
             # Start containers
             echo "Starting containers on instance: $instance"
@@ -172,10 +162,10 @@ jobs:
               --parameters '{"commands": [
                 "cd /home/ec2-user/app && docker-compose up -d"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            ./wait_for_ssm_command.sh "$command_id" "$instance"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
 
             # Remove unused Docker images
             echo "Pruning Docker images on instance: $instance"
@@ -185,8 +175,8 @@ jobs:
               --parameters '{"commands": [
                 "docker image prune -f"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            ./wait_for_ssm_command.sh "$command_id" "$instance"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
           done
