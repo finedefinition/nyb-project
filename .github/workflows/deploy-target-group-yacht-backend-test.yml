@@ -9,6 +9,9 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
   AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_ACCOUNT: ${{ secrets.AWS_ACCOUNT }}
+  ECR_PRIVATE_REPOSITORY: ${{ vars.ECR_PRIVATE_REPOSITORY }}
+  YACHT_BACKEND_TEST_TG_ARN: ${{ secrets.YACHT_BACKEND_TEST_TG_ARN }}
   DOCKER_BUILDKIT: 1
   BUILDKIT_PROGRESS: plain
 
@@ -25,6 +28,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
+          docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+
       - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
@@ -39,8 +47,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest
-            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_PRIVATE_REPOSITORY }}:latest
+            ${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest
+            ${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_PRIVATE_REPOSITORY }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -76,7 +84,7 @@ jobs:
       - name: Get EC2 instances in Target Group
         id: get_instances
         run: |
-          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.YACHT_BACKEND_TEST_TG_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
+          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ env.YACHT_BACKEND_TEST_TG_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
           echo "Instances found: $instances"
           echo "instances=$instances" >> $GITHUB_OUTPUT
 
@@ -85,7 +93,7 @@ jobs:
           source /tmp/utils.sh
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances; do
-            run_command "docker pull ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest" "$instance"
+            run_command "docker pull ${{ env.AWS_ACCOUNT }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest" "$instance"
           done
 
       - name: Stop running containers
