@@ -4,9 +4,16 @@ FROM openjdk:21-jdk AS builder
 # Установите рабочую директорию
 WORKDIR /build
 
+# Скопируйте Maven Wrapper
+COPY mvnw .
+COPY .mvn .mvn
+
 # Скопируйте файлы проекта
 COPY pom.xml .
 COPY src ./src
+
+# Дайте права на выполнение для mvnw
+RUN chmod +x mvnw
 
 # Соберите проект и создайте JAR файл
 RUN ./mvnw clean package -DskipTests
