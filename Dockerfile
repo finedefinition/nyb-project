@@ -1,57 +1,27 @@
-# Используйте официальный образ OpenJDK 21 в качестве базового
-FROM openjdk:21-jdk
+# Используйте официальный образ OpenJDK 21 в качестве базового для сборки
+FROM openjdk:21-jdk AS builder
+
+# Установите рабочую директорию
+WORKDIR /build
+
+# Скопируйте файлы проекта
+COPY pom.xml .
+COPY src ./src
+
+# Соберите проект и создайте JAR файл
+RUN ./mvnw clean package -DskipTests
+
+# Используйте минимальный образ для выполнения
+FROM openjdk:21-jdk-slim
 
 # Установите рабочую директорию
 WORKDIR /app
 
-# Аргументы сборки
-ARG DATABASE_PATH
-ARG DATABASE_USER
-ARG DATABASE_PASSWORD
-ARG LIQUIBASE_PATH
-ARG LIQUIBASE_USER
-ARG LIQUIBASE_PASSWORD
-ARG IMAGE_TAG
-ARG ECR_REPOSITORY
-ARG S3_KEY_ID
-ARG S3_KEY_SECRET
-ARG S3_REGION_NAME
-ARG S3_BUCKET_NAME
-ARG SPRING_SECURITY_USER
-ARG SPRING_SECURITY_PASSWORD
-ARG MAIL_HOST
-ARG MAIL_PORT
-ARG MAIL_USERNAME
-ARG MAIL_PASSWORD
-ARG COGNITO_CLIENT_SECRET
-ARG COGNITO_ACCESS_KEY_ID
-ARG COGNITO_SECRET_ACCESS_KEY
+# Скопируйте JAR файл из предыдущего этапа
+COPY --from=builder /build/target/*.jar app.jar
 
-# Скопируйте JAR файл вашего приложения в контейнер
-COPY target/*.jar app.jar
-
-# Установите переменные окружения
-ENV DATABASE_PATH=$DATABASE_PATH \
-    DATABASE_USER=$DATABASE_USER \
-    DATABASE_PASSWORD=$DATABASE_PASSWORD \
-    IMAGE_TAG=$IMAGE_TAG \
-    ECR_REPOSITORY=$ECR_REPOSITORY \
-    LIQUIBASE_PATH=$LIQUIBASE_PATH \
-    LIQUIBASE_USER=$LIQUIBASE_USER \
-    LIQUIBASE_PASSWORD=$LIQUIBASE_PASSWORD \
-    S3_KEY_ID=$S3_KEY_ID \
-    S3_KEY_SECRET=$S3_KEY_SECRET \
-    S3_REGION_NAME=$S3_REGION_NAME \
-    S3_BUCKET_NAME=$S3_BUCKET_NAME \
-    SPRING_SECURITY_USER=$SPRING_SECURITY_USER \
-    SPRING_SECURITY_PASSWORD=$SPRING_SECURITY_PASSWORD \
-    MAIL_HOST=$MAIL_HOST \
-    MAIL_PORT=$MAIL_PORT \
-    MAIL_USERNAME=$MAIL_USERNAME \
-    MAIL_PASSWORD=$MAIL_PASSWORD \
-    COGNITO_CLIENT_SECRET=$COGNITO_CLIENT_SECRET \
-    COGNITO_ACCESS_KEY_ID=$COGNITO_ACCESS_KEY_ID \
-    COGNITO_SECRET_ACCESS_KEY=$COGNITO_SECRET_ACCESS_KEY
+# Включите метаданные для образа
+LABEL org.opencontainers.image.source=https://github.com/finedefinition/nyb-project
 
 # Установите точку входа для выполнения JAR файла
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

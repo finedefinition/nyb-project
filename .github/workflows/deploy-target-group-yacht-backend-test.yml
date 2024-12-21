@@ -1,0 +1,112 @@
+name: Build & Deploy to Target Group YACHT-BACKEND-TEST
+
+on:
+  push:
+    branches:
+      - test
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 21
+          java-package: jdk
+          architecture: x64
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest
+            ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_PRIVATE_REPOSITORY }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up utility functions
+        run: |
+          cat <<- 'EOF' > /tmp/utils.sh
+          #!/bin/bash
+
+          run_command() {
+            local command="$1"
+            local instance="$2"
+            command_id=$(aws ssm send-command \
+              --instance-ids "$instance" \
+              --document-name "AWS-RunShellScript" \
+              --parameters '{"commands": ["'"$command"'"]}' \
+              --query "Command.CommandId" \
+              --output text)
+            aws ssm wait command-executed \
+              --command-id "$command_id" \
+              --instance-id "$instance"
+          }
+          export -f run_command
+          EOF
+
+      - name: Get EC2 instances in Target Group
+        id: get_instances
+        run: |
+          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ secrets.YACHT_BACKEND_TEST_TG_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
+          echo "Instances found: $instances"
+          echo "instances=$instances" >> $GITHUB_OUTPUT
+
+      - name: Pull the latest Docker image
+        run: |
+          source /tmp/utils.sh
+          instances="${{ steps.get_instances.outputs.instances }}"
+          for instance in $instances; do
+            run_command "docker pull ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest" "$instance"
+          done
+
+      - name: Stop running containers
+        run: |
+          source /tmp/utils.sh
+          instances="${{ steps.get_instances.outputs.instances }}"
+          for instance in $instances; do
+            run_command "cd /home/ec2-user/app && docker-compose down" "$instance"
+          done
+
+      - name: Start containers
+        run: |
+          source /tmp/utils.sh
+          instances="${{ steps.get_instances.outputs.instances }}"
+          for instance in $instances; do
+            run_command "cd /home/ec2-user/app && docker-compose up -d" "$instance"
+          done
+
+      - name: Remove unused Docker images
+        run: |
+          source /tmp/utils.sh
+          instances="${{ steps.get_instances.outputs.instances }}"
+          for instance in $instances; do
+            run_command "docker image prune -f" "$instance"
+          done
