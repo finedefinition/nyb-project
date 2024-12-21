@@ -1,13 +1,11 @@
 package com.norwayyachtbrockers.repository.specification.yacht;
 
 import com.norwayyachtbrockers.dto.request.YachtSearchParametersDto;
-import com.norwayyachtbrockers.model.User;
 import com.norwayyachtbrockers.model.Yacht;
 import com.norwayyachtbrockers.repository.specification.SpecificationBuilder;
 import com.norwayyachtbrockers.repository.specification.SpecificationProviderManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -221,47 +219,44 @@ public class YachtSpecificationBuilder implements SpecificationBuilder<Yacht> {
     }
 
     private void applySorting(CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Root<Yacht> root, String sortBy, Sort.Direction direction) {
-        if (sortBy == null || sortBy.isEmpty()) {
-            return;
-        }
+        if (sortBy.contains(".")) {
+            String[] parts = sortBy.split("\\.");
+            String joinField = parts[0];
+            String sortField = parts[1];
 
-        switch (sortBy) {
-            case "yacht_price":
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(root.get("price")) :
-                        criteriaBuilder.desc(root.get("price")));
-                break;
-            case "yacht_created_at":
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(root.get("createdAt")) :
-                        criteriaBuilder.desc(root.get("createdAt")));
-                break;
-            case "yacht_favourites_count":
-                // Обработка сортировки по количеству избранных
-                Join<Yacht, User> favouritesJoin = root.join("favouritedByUsers", JoinType.LEFT);
+            Join<Yacht, ?> join = root.join(joinField, JoinType.LEFT);
 
-                // Подсчет количества избранного
-                Expression<Long> favouritesCount = criteriaBuilder.count(favouritesJoin.get("id"));
-
-                // Группировка по ID яхты
-                query.groupBy(root.get("id"));
-
-                // Включаем в SELECT яхту и количество избранного
-                query.multiselect(root, favouritesCount);
-
-                // Устанавливаем ORDER BY
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(favouritesCount) :
-                        criteriaBuilder.desc(favouritesCount));
-
-                break;
-            case "id":
-                query.orderBy(direction.isAscending() ?
-                        criteriaBuilder.asc(root.get("id")) :
-                        criteriaBuilder.desc(root.get("id")));
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+            switch (sortField) {
+                case "year":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(join.get("year")) :
+                            criteriaBuilder.desc(join.get("year")));
+                    break;
+                // Добавьте другие вложенные поля при необходимости
+                default:
+                    throw new IllegalArgumentException("Unsupported nested sort field: " + sortField);
+            }
+        } else {
+            switch (sortBy) {
+                case "price":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(root.get("price")) :
+                            criteriaBuilder.desc(root.get("price")));
+                    break;
+                case "favouritesCount":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(root.get("favouritesCount")) :
+                            criteriaBuilder.desc(root.get("favouritesCount")));
+                    break;
+                case "id":
+                    query.orderBy(direction.isAscending() ?
+                            criteriaBuilder.asc(root.get("id")) :
+                            criteriaBuilder.desc(root.get("id")));
+                    break;
+                // Добавьте другие поля при необходимости
+                default:
+                    throw new IllegalArgumentException("Unsupported sort field: " + sortBy);
+            }
         }
     }
 }

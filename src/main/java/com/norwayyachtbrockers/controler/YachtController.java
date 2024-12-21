@@ -7,6 +7,7 @@ import com.norwayyachtbrockers.dto.response.PaginatedYachtResponse;
 import com.norwayyachtbrockers.dto.response.PaginationAndSortingParametersDto;
 import com.norwayyachtbrockers.dto.response.YachtCrmFrontendResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtResponseDto;
+import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,13 +38,12 @@ public class YachtController {
         this.yachtService = yachtService;
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> createYachtFromFullYachtRequestDto(
-            @Valid
-            @RequestPart("yachtData") FullYachtRequestDto dto,
-            @RequestParam("mainImage") MultipartFile mainImageFile,
-            @RequestParam("additionalImages") List<MultipartFile> additionalImageFiles) {
+            @Valid @RequestPart("yachtData") FullYachtRequestDto dto,
+            @RequestPart("mainImage") MultipartFile mainImageFile,
+            @RequestPart("additionalImages") List<MultipartFile> additionalImageFiles) {
 
         YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
@@ -103,4 +103,9 @@ public class YachtController {
         return yachtService.getCombinedYachtData();
     }
 
+    @GetMapping("/featured")
+    public ResponseEntity<List<YachtShortResponseDto>> getRandomFeaturedYachts() {
+        List<YachtShortResponseDto> randomFeaturedYachts = yachtService.getRandomFeaturedYachts();
+        return ResponseEntity.ok(randomFeaturedYachts);
+    }
 }

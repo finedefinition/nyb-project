@@ -1,4 +1,4 @@
-name: Build & Deploy Backend to Test Environment
+name: Build & Deploy Backend to Production Environment
 
 on:
   push:
@@ -13,10 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Java
+      - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
-          distribution: temurin # Рекомендуемый дистрибутив
+          distribution: temurin
           java-version: 21
           java-package: jdk
           architecture: x64
@@ -39,7 +39,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+          tags: |
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:latest
           build-args: |
             DATABASE_PATH=${{ vars.DATABASE_PATH }}
             DATABASE_USER=${{ secrets.DATABASE_USER }}
@@ -122,118 +124,59 @@ jobs:
           AWS_REGION: ${{ vars.AWS_REGION }}
           IMAGE_FULL_NAME: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROD_TEST_ECR_REPOSITORY }}:${{ vars.IMAGE_TAG }}
         run: |
-          source /tmp/check_command_status.sh
-          instances="${{ steps.get_instances.outputs.instances }}"
-          for instance in $instances
-          do
+          for instance in ${{ steps.get_instances.outputs.instances }}; do
             echo "Deploying to instance: $instance"
 
-            # Определяем команду
-            command="docker pull ${IMAGE_FULL_NAME}"
-            echo "Pull Command: \"$command\""
-
-            # Отправляем команду через SSM
+            # Pull latest Docker image
+            echo "Pulling Docker image on instance: $instance"
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "'"${command}"'"
+                "aws ecr get-login-password --region '"$AWS_REGION"' | docker login --username AWS --password-stdin '"${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com"'",
+                "cd /home/ec2-user/app && docker pull '"$IMAGE_FULL_NAME"'"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            echo "Pull Command ID: $command_id"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
 
-            # Проверяем статус выполнения команды
-            check_command_status "$command_id" "$instance"
-          done
-
-      - name: Stop running containers
-        env:
-          AWS_REGION: ${{ vars.AWS_REGION }}
-        run: |
-          source /tmp/check_command_status.sh
-          instances="${{ steps.get_instances.outputs.instances }}"
-          for instance in $instances
-          do
-            echo "Deploying to instance: $instance"
-
-            # Определяем команду
-            command="cd /home/ec2-user/app && docker-compose down"
-            echo "Stop Command: \"$command\""
-
-            # Отправляем команду через SSM
+            # Stop running containers
+            echo "Stopping containers on instance: $instance"
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "'"${command}"'"
+                "cd /home/ec2-user/app && docker-compose down"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            echo "Stop Command ID: $command_id"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
 
-            # Проверяем статус выполнения команды
-            check_command_status "$command_id" "$instance"
-          done
-
-      - name: Start containers
-        env:
-          AWS_REGION: ${{ vars.AWS_REGION }}
-        run: |
-          source /tmp/check_command_status.sh
-          instances="${{ steps.get_instances.outputs.instances }}"
-          for instance in $instances
-          do
-            echo "Deploying to instance: $instance"
-
-            # Определяем команду
-            command="cd /home/ec2-user/app && docker-compose up -d"
-            echo "Start Command: \"$command\""
-
-            # Отправляем команду через SSM
+            # Start containers
+            echo "Starting containers on instance: $instance"
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "'"${command}"'"
+                "cd /home/ec2-user/app && docker-compose up -d"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            echo "Start Command ID: $command_id"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
 
-            # Проверяем статус выполнения команды
-            check_command_status "$command_id" "$instance"
-          done
-
-      - name: Remove unused Docker images
-        env:
-          AWS_REGION: ${{ vars.AWS_REGION }}
-        run: |
-          source /tmp/check_command_status.sh
-          instances="${{ steps.get_instances.outputs.instances }}"
-          for instance in $instances
-          do
-            echo "Deploying to instance: $instance"
-
-            # Определяем команду
-            command="docker image prune -f"
-            echo "Prune Command: \"$command\""
-
-            # Отправляем команду через SSM
+            # Remove unused Docker images
+            echo "Pruning Docker images on instance: $instance"
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": [
-                "'"${command}"'"
+                "docker image prune -f"
               ]}' \
-              --region "${AWS_REGION}" \
+              --region "$AWS_REGION" \
               --query "Command.CommandId" \
               --output text)
-            echo "Prune Command ID: $command_id"
-
-            # Проверяем статус выполнения команды
-            check_command_status "$command_id" "$instance"
+            bash /tmp/check_command_status.sh "$command_id" "$instance"
           done
