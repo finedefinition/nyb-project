@@ -11,6 +11,6 @@ public class HealtCheckController {
 
     @GetMapping
     public ResponseEntity healthCheck() {
-        return ResponseEntity.ok("v 2.0.0");
+        return ResponseEntity.ok("v 3.0.0");
     }
 }
