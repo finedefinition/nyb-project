@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/version")
-public class HealtCheckController {
+public class VersionController {
 
     @GetMapping
-    public ResponseEntity healthCheck() {
-        return ResponseEntity.ok("v 3.0.0");
+    public ResponseEntity versionCheck() {
+        return ResponseEntity.ok("v 2.0.3");
     }
 }
