@@ -6,7 +6,7 @@ spring:
   application:
     name: "nycbackend"
   profiles:
-    active: "prod"
+    active: "qa"
 
 #  cloud:
 #    openfeign:
