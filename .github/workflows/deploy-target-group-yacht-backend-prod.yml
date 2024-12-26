@@ -6,115 +6,112 @@ on:
       - main
 
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   AWS_REGION: ${{ vars.AWS_REGION }}
-  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
-  ECR_PRIVATE_REPOSITORY: ${{ vars.ECR_PRIVATE_REPOSITORY }}
-  YACHT_BACKEND_PRODUCTION_TG_ARN: ${{ secrets.YACHT_BACKEND_PRODUCTION_TG_ARN }}
+  ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+  TARGET_GROUP_ARN: ${{ vars[format('TARGET_GROUP_ARN_{0}', github.ref_name)] }}
   DOCKER_BUILDKIT: 1
   BUILDKIT_PROGRESS: plain
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3 # Обновлено до последней версии
         with:
           install: true
-
       - name: Checkout repository
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v4 # Обновлено до последней версии
       - name: Login to Amazon ECR
         run: |
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
           docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-
+          echo "AWS Login completed successfully"
       - name: Set up JDK 21
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3 # Обновлено до последней версии
         with:
           distribution: temurin
           java-version: 21
           java-package: jdk
           architecture: x64
-
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5 # Обновлено до последней версии
         with:
           context: .
           push: true
           tags: |
-            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest
-            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_PRIVATE_REPOSITORY }}:latest
+            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.ref_name }}-latest
+            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v4 # Обновлено до последней версии
       - name: Set up utility functions
         run: |
+          echo "Setting up utility functions"
           cat <<- 'EOF' > /tmp/utils.sh
           #!/bin/bash
 
           run_command() {
             local command="$1"
             local instance="$2"
+            echo "Running command: $command on instance: $instance"
             command_id=$(aws ssm send-command \
               --instance-ids "$instance" \
               --document-name "AWS-RunShellScript" \
               --parameters '{"commands": ["'"$command"'"]}' \
               --query "Command.CommandId" \
               --output text)
+            echo "Command ID: $command_id"
             aws ssm wait command-executed \
               --command-id "$command_id" \
               --instance-id "$instance"
+            echo "Command executed successfully"
           }
           export -f run_command
           EOF
-
+          chmod +x /tmp/utils.sh # Даем права на выполнение
       - name: Get EC2 instances in Target Group
         id: get_instances
         run: |
-          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ env.YACHT_BACKEND_PRODUCTION_TG_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
+          echo "Fetching instances from target group"
+          instances=$(aws elbv2 describe-target-health --target-group-arn ${{ env.TARGET_GROUP_ARN }} --query 'TargetHealthDescriptions[*].Target.Id' --output text)
           echo "Instances found: $instances"
           echo "instances=$instances" >> $GITHUB_OUTPUT
-
       - name: Pull the latest Docker image
         run: |
           source /tmp/utils.sh
+          echo "Pulling latest Docker image"
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances; do
-            run_command "docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_PRIVATE_REPOSITORY }}:${{ github.ref_name }}-latest" "$instance"
+            run_command "docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.ref_name }}-latest" "$instance"
           done
-
       - name: Stop running containers
         run: |
           source /tmp/utils.sh
+          echo "Stopping running containers"
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances; do
             run_command "cd /home/ec2-user/app && docker-compose down" "$instance"
           done
-
       - name: Start containers
         run: |
           source /tmp/utils.sh
+          echo "Starting containers"
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances; do
             run_command "cd /home/ec2-user/app && docker-compose up -d" "$instance"
           done
-
       - name: Remove unused Docker images
         run: |
           source /tmp/utils.sh
+          echo "Removing unused Docker images"
           instances="${{ steps.get_instances.outputs.instances }}"
           for instance in $instances; do
             run_command "docker image prune -f" "$instance"
