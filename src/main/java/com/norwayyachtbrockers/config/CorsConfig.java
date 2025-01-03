@@ -14,7 +14,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // !WARNING! Allow requests from all origins
-        config.addAllowedOrigin("https://nyb-git-filtering-antons-projects-563e8532.vercel.app");
+        config.addAllowedOrigin("https://test.norseyacht.com");
         config.addAllowedOrigin("*");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
