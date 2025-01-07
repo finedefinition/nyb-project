@@ -10,6 +10,8 @@ import com.norwayyachtbrockers.dto.response.YachtResponseDto;
 import com.norwayyachtbrockers.dto.response.YachtShortResponseDto;
 import com.norwayyachtbrockers.service.YachtService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,8 @@ public class YachtController {
         this.yachtService = yachtService;
     }
 
+    private static final Logger log = LoggerFactory.getLogger(YachtController.class);
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<YachtResponseDto> createYachtFromFullYachtRequestDto(
@@ -45,7 +49,15 @@ public class YachtController {
             @RequestPart("mainImage") MultipartFile mainImageFile,
             @RequestPart("additionalImages") List<MultipartFile> additionalImageFiles) {
 
+        // Логирование информации о полученных файлах
+        log.info("Received yachtData: {}", dto);
+        log.info("Received mainImage: {}", mainImageFile.getOriginalFilename());
+        log.info("Number of additionalImages: {}", additionalImageFiles.size());
+
         YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
+
+        log.info("Яхта успешно сохранена с ID: {}", savedYachtDto.getId());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
     }
 

@@ -5,7 +5,7 @@ public class ApplicationConstants {
         // restrict instantiation
     }
 
-    public static final int NEXT_YEAR = 2025;
+    public static final int NEXT_YEAR = 2026;
     public static final String STATUS_200 = "200";
     public static final String MESSAGE_200 = "Request processed successfully";
     public static final String STATUS_201 = "201";
