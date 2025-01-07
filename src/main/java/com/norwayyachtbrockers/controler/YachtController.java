@@ -50,13 +50,13 @@ public class YachtController {
             @RequestPart("additionalImages") List<MultipartFile> additionalImageFiles) {
 
         // Логирование информации о полученных файлах
-        log.info("Received yachtData: {}", dto);
-        log.info("Received mainImage: {}", mainImageFile.getOriginalFilename());
-        log.info("Number of additionalImages: {}", additionalImageFiles.size());
+//        log.info("Received yachtData: {}", dto);
+//        log.info("Received mainImage: {}", mainImageFile.getOriginalFilename());
+//        log.info("Number of additionalImages: {}", additionalImageFiles.size());
 
         YachtResponseDto savedYachtDto = yachtService.save(dto, mainImageFile, additionalImageFiles);
 
-        log.info("Яхта успешно сохранена с ID: {}", savedYachtDto.getId());
+//        log.info("Яхта успешно сохранена с ID: {}", savedYachtDto.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedYachtDto);
     }
