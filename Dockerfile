@@ -1,5 +1,5 @@
-# Используйте официальный образ OpenJDK 21 в качестве базового для сборки
-FROM openjdk:21-jdk AS builder
+# Используйте официальный образ OpenJDK 17 в качестве базового для сборки
+FROM openjdk:17-jdk AS builder
 # Установите рабочую директорию
 WORKDIR /build
 # Скопируйте Maven Wrapper
@@ -14,7 +14,7 @@ RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
 # Используйте минимальный образ для выполнения
-FROM openjdk:21-jdk-slim
+FROM openjdk:17-jdk-slim
 # Установите рабочую директорию
 WORKDIR /app
 # Скопируйте JAR файл из предыдущего этапа
